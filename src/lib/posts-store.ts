@@ -1,0 +1,116 @@
+import { useCallback, useEffect, useState } from "react";
+
+export type PostStatus = "rascunho" | "agendado" | "publicado";
+
+export type Post = {
+  id: string;
+  title: string;
+  body: string;
+  hashtags: string[];
+  channel: string;
+  tone: string;
+  status: PostStatus;
+  scheduledAt: string | null;
+  createdAt: string;
+};
+
+const STORAGE_KEY = "contentflow.posts.v1";
+
+const SEED: Post[] = [
+  {
+    id: "seed-1",
+    title: "5 sinais de que seu conteúdo precisa de automação",
+    body: "Se você ainda escreve legenda em cima da hora, a sua marca está pagando caro por isso.\n\nAutomatizar não é publicar robô: é liberar tempo para estratégia.",
+    hashtags: ["marketing", "automacao", "conteudo"],
+    channel: "LinkedIn",
+    tone: "Profissional",
+    status: "agendado",
+    scheduledAt: new Date(Date.now() + 86400000).toISOString(),
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+  },
+  {
+    id: "seed-2",
+    title: "Bastidores: como criamos 30 posts em 1 hora",
+    body: "Escolhemos o tema, deixamos a IA gerar variações e aprovamos o calendário inteiro numa tacada só.",
+    hashtags: ["ia", "produtividade", "socialmedia"],
+    channel: "Instagram",
+    tone: "Descontraído",
+    status: "rascunho",
+    scheduledAt: null,
+    createdAt: new Date(Date.now() - 3600000).toISOString(),
+  },
+  {
+    id: "seed-3",
+    title: "Newsletter #12 — O calendário que se preenche sozinho",
+    body: "Nesta edição: como estruturar pautas recorrentes e deixar a IA cuidar do rascunho inicial.",
+    hashtags: ["newsletter", "conteudo"],
+    channel: "Newsletter",
+    tone: "Educativo",
+    status: "publicado",
+    scheduledAt: new Date(Date.now() - 172800000).toISOString(),
+    createdAt: new Date(Date.now() - 259200000).toISOString(),
+  },
+];
+
+function read(): Post[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED));
+      return SEED;
+    }
+    const parsed = JSON.parse(raw) as Post[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function write(posts: Post[]) {
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  window.dispatchEvent(new Event("contentflow:posts"));
+}
+
+export function usePosts() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    setPosts(read());
+    setReady(true);
+    const sync = () => setPosts(read());
+    window.addEventListener("contentflow:posts", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("contentflow:posts", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
+  const addPost = useCallback((post: Omit<Post, "id" | "createdAt">) => {
+    const next: Post = {
+      ...post,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+    };
+    write([next, ...read()]);
+    return next;
+  }, []);
+
+  const updatePost = useCallback((id: string, patch: Partial<Post>) => {
+    write(read().map((p) => (p.id === id ? { ...p, ...patch } : p)));
+  }, []);
+
+  const removePost = useCallback((id: string) => {
+    write(read().filter((p) => p.id !== id));
+  }, []);
+
+  return { posts, ready, addPost, updatePost, removePost };
+}
+
+export const statusLabel: Record<PostStatus, string> = {
+  rascunho: "Rascunho",
+  agendado: "Agendado",
+  publicado: "Publicado",
+};
