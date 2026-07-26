@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { generateText, Output } from "ai";
+import { generateText, NoObjectGeneratedError, Output } from "ai";
 import { z } from "zod";
 
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
@@ -39,7 +39,7 @@ export const generateContent = createServerFn({ method: "POST" })
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("A chave da IA não está configurada.");
 
-    const gateway = createLovableAiGatewayProvider(key);
+    const gateway = createLovableAiGatewayProvider(key, { structuredOutputs: true });
 
     const prompt = [
       `Crie ${data.variations} variação(ões) de conteúdo para ${data.channel}.`,
@@ -66,9 +66,14 @@ export const generateContent = createServerFn({ method: "POST" })
         prompt,
       });
 
-      return { ideas: output.ideas.slice(0, data.variations) };
+      return { ideas: normalize(output.ideas, data.variations) };
     } catch (error) {
+      if (NoObjectGeneratedError.isInstance(error)) {
+        const fallback = parseFallback(error.text);
+        if (fallback.length > 0) return { ideas: normalize(fallback, data.variations) };
+      }
       const message = error instanceof Error ? error.message : String(error);
+      console.error("generateContent failed:", message);
       if (message.includes("429")) {
         throw new Error("Muitas solicitações agora. Tente novamente em instantes.");
       }
@@ -78,3 +83,30 @@ export const generateContent = createServerFn({ method: "POST" })
       throw new Error("Não foi possível gerar o conteúdo. Tente novamente.");
     }
   });
+
+function normalize(ideas: GeneratedIdea[], max: number): GeneratedIdea[] {
+  return ideas
+    .filter((idea) => idea && typeof idea.title === "string" && typeof idea.body === "string")
+    .slice(0, max)
+    .map((idea) => ({
+      title: idea.title.slice(0, 120),
+      body: idea.body.slice(0, 1200),
+      hashtags: (Array.isArray(idea.hashtags) ? idea.hashtags : [])
+        .map((tag) => String(tag).replace(/^#/, "").trim())
+        .filter(Boolean)
+        .slice(0, 6),
+    }));
+}
+
+function parseFallback(text?: string): GeneratedIdea[] {
+  if (!text) return [];
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) return [];
+  try {
+    const parsed = JSON.parse(match[0]) as { ideas?: GeneratedIdea[] };
+    return Array.isArray(parsed.ideas) ? parsed.ideas : [];
+  } catch {
+    return [];
+  }
+}
+
