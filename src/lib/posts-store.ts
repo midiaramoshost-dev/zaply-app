@@ -116,4 +116,6 @@ export const statusLabel: Record<PostStatus, string> = {
   rascunho: "Rascunho",
   agendado: "Agendado",
   publicado: "Publicado",
+  cancelado: "Cancelado",
+
 };
