@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { AppSidebar } from "../components/app-sidebar";
+import { AccountButton } from "../components/account-button";
 import { SidebarProvider, SidebarTrigger } from "../components/ui/sidebar";
 import { Toaster } from "../components/ui/sonner";
 import appCss from "../styles.css?url";
@@ -140,9 +141,7 @@ function RootComponent() {
               <span className="font-display text-sm font-semibold tracking-tight">
                 ContentFlow
               </span>
-              <span className="ml-auto rounded-full border border-border bg-surface px-3 py-1 text-[11px] text-muted-foreground">
-                Workspace demo
-              </span>
+              <AccountButton />
             </header>
             <main className="flex-1 grid-backdrop">
               {/* Required: nested routes render here. */}
