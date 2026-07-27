@@ -19,7 +19,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useClients } from "@/lib/clients-store";
-import { useComments, type Comment } from "@/lib/comments-store";
+import { useComments, type Comment, type Sentiment } from "@/lib/comments-store";
 import { generateCommentReply } from "@/lib/comments.functions";
 
 export const Route = createFileRoute("/comentarios")({
@@ -45,6 +45,31 @@ export const Route = createFileRoute("/comentarios")({
 
 const CHANNELS = ["Instagram", "Facebook", "LinkedIn", "X"] as const;
 
+type FilterKey = "todos" | "nao_respondidos" | "positivos" | "negativos" | "spam";
+
+const FILTERS: { key: FilterKey; label: string }[] = [
+  { key: "todos", label: "Todos" },
+  { key: "nao_respondidos", label: "Não respondidos" },
+  { key: "positivos", label: "Positivos" },
+  { key: "negativos", label: "Negativos" },
+  { key: "spam", label: "Spam" },
+];
+
+const SENTIMENT_STYLE: Record<string, string> = {
+  positivo: "border-emerald-500/40 text-emerald-400",
+  negativo: "border-rose-500/40 text-rose-400",
+  spam: "border-amber-500/40 text-amber-400",
+  neutro: "border-border text-muted-foreground",
+};
+
+function matchesFilter(comment: Comment, filter: FilterKey) {
+  if (filter === "todos") return true;
+  if (filter === "nao_respondidos") return !comment.replied;
+  if (filter === "positivos") return comment.sentiment === "positivo";
+  if (filter === "negativos") return comment.sentiment === "negativo";
+  return comment.sentiment === "spam";
+}
+
 function CommentsPage() {
   const reply = useServerFn(generateCommentReply);
   const { comments, ready, addComment, updateComment, removeComment } = useComments();
@@ -63,6 +88,24 @@ function CommentsPage() {
   const client = useMemo(
     () => clients.find((c) => c.id === clientId) ?? clients[0],
     [clients, clientId],
+  );
+
+  const [filter, setFilter] = useState<FilterKey>("todos");
+
+  const counts = useMemo(
+    () => ({
+      todos: comments.length,
+      nao_respondidos: comments.filter((c) => !c.replied).length,
+      positivos: comments.filter((c) => c.sentiment === "positivo").length,
+      negativos: comments.filter((c) => c.sentiment === "negativo").length,
+      spam: comments.filter((c) => c.sentiment === "spam").length,
+    }),
+    [comments],
+  );
+
+  const visible = useMemo(
+    () => comments.filter((c) => matchesFilter(c, filter)),
+    [comments, filter],
   );
 
   const pending = comments.filter((c) => !c.replied);
@@ -145,14 +188,30 @@ function CommentsPage() {
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <Card className="glass-panel">
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-base">Caixa de comentários</CardTitle>
+            <CardTitle className="text-base">Caixa de entrada</CardTitle>
             <Badge variant="secondary">{pending.length} sem resposta</Badge>
           </CardHeader>
           <CardContent className="space-y-3">
-            {ready && comments.length === 0 && (
-              <p className="text-sm text-muted-foreground">Nenhum comentário por aqui.</p>
+            <div className="flex flex-wrap gap-2">
+              {FILTERS.map((f) => (
+                <Button
+                  key={f.key}
+                  size="sm"
+                  variant={filter === f.key ? "default" : "outline"}
+                  onClick={() => setFilter(f.key)}
+                >
+                  {f.label}
+                  <span className="ml-1.5 text-[11px] opacity-70">{counts[f.key]}</span>
+                </Button>
+              ))}
+            </div>
+
+            {ready && visible.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Nenhum comentário neste filtro.
+              </p>
             )}
-            {comments.map((comment) => (
+            {visible.map((comment) => (
               <div
                 key={comment.id}
                 className="rounded-xl border border-border/60 bg-background/40 p-3"
@@ -162,6 +221,12 @@ function CommentsPage() {
                   <span className="text-sm font-medium">{comment.author || "Anônimo"}</span>
                   <Badge variant="outline" className="text-[10px]">
                     {comment.channel}
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className={`text-[10px] ${SENTIMENT_STYLE[comment.sentiment ?? "neutro"]}`}
+                  >
+                    {comment.sentiment ?? "neutro"}
                   </Badge>
                   {comment.intent && (
                     <Badge variant="secondary" className="text-[10px]">
@@ -230,6 +295,23 @@ function CommentsPage() {
                       respondido
                     </Badge>
                   )}
+                  <Select
+                    value={comment.sentiment ?? "neutro"}
+                    onValueChange={(value) =>
+                      updateComment(comment.id, { sentiment: value as Sentiment })
+                    }
+                  >
+                    <SelectTrigger className="ml-auto h-8 w-[130px] text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(["positivo", "negativo", "spam", "neutro"] as Sentiment[]).map((s) => (
+                        <SelectItem key={s} value={s}>
+                          {s}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             ))}
