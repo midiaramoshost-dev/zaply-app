@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, CalendarDays, CheckCircle2, FileText, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
+import { DashboardMetricsGrid } from "@/components/dashboard-metrics";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,17 +29,10 @@ export const Route = createFileRoute("/")({
 function Dashboard() {
   const { posts, ready } = usePosts();
 
-  const drafts = posts.filter((p) => p.status === "rascunho");
   const scheduled = posts
     .filter((p) => p.status === "agendado")
     .sort((a, b) => (a.scheduledAt ?? "").localeCompare(b.scheduledAt ?? ""));
-  const published = posts.filter((p) => p.status === "publicado");
 
-  const stats = [
-    { label: "Rascunhos", value: drafts.length, icon: FileText },
-    { label: "Agendados", value: scheduled.length, icon: CalendarDays },
-    { label: "Publicados", value: published.length, icon: CheckCircle2 },
-  ];
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
@@ -70,21 +64,10 @@ function Dashboard() {
         </div>
       </section>
 
-      <section className="mt-6 grid gap-4 sm:grid-cols-3">
-        {stats.map((s) => (
-          <Card key={s.label} className="panel">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {s.label}
-              </CardTitle>
-              <s.icon className="size-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <p className="font-display text-3xl font-semibold">{ready ? s.value : "—"}</p>
-            </CardContent>
-          </Card>
-        ))}
+      <section className="mt-6">
+        <DashboardMetricsGrid posts={posts} ready={ready} />
       </section>
+
 
       <section className="mt-6 grid gap-4 lg:grid-cols-2">
         <Card className="panel">
