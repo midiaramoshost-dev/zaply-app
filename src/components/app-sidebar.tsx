@@ -6,6 +6,8 @@ import {
   FileBarChart,
   Workflow,
   CalendarDays,
+  GraduationCap,
+
   ImageIcon,
   LayoutDashboard,
   Library,
@@ -33,6 +35,7 @@ import {
 
 const items = [
   { title: "Visão geral", url: "/", icon: LayoutDashboard },
+  { title: "Como usar", url: "/tutorial", icon: GraduationCap },
   { title: "Criar com IA", url: "/criar", icon: Sparkles },
   { title: "Calendário automático", url: "/automatico", icon: Wand2 },
   { title: "Imagens", url: "/imagens", icon: ImageIcon },
@@ -47,6 +50,7 @@ const items = [
   { title: "Clientes", url: "/clientes", icon: Users },
   { title: "Planos", url: "/planos", icon: CreditCard },
 ] as const;
+
 
 
 export function AppSidebar() {
