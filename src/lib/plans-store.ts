@@ -89,8 +89,9 @@ export function formatPrice(cents: number, currency = "BRL") {
   }).format(cents / 100);
 }
 
-export function formatLimit(value: number | null, unit: string) {
-  return value === null ? `${unit} ilimitados` : `${value} ${unit}`;
+export function formatLimit(value: number | null, singular: string, plural = `${singular}s`) {
+  if (value === null) return `${plural} ilimitados`;
+  return `${value} ${value === 1 ? singular : plural}`;
 }
 
 async function fetchPlans(): Promise<Plan[]> {
