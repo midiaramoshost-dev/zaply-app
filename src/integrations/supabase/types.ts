@@ -385,10 +385,12 @@ export type Database = {
           id: string
           interval: string
           is_active: boolean
+          is_featured: boolean
           max_clients: number | null
           max_posts: number | null
           name: string
           price_cents: number
+          sort_order: number
           updated_at: string
         }
         Insert: {
@@ -400,10 +402,12 @@ export type Database = {
           id?: string
           interval?: string
           is_active?: boolean
+          is_featured?: boolean
           max_clients?: number | null
           max_posts?: number | null
           name: string
           price_cents?: number
+          sort_order?: number
           updated_at?: string
         }
         Update: {
@@ -415,10 +419,12 @@ export type Database = {
           id?: string
           interval?: string
           is_active?: boolean
+          is_featured?: boolean
           max_clients?: number | null
           max_posts?: number | null
           name?: string
           price_cents?: number
+          sort_order?: number
           updated_at?: string
         }
         Relationships: []
