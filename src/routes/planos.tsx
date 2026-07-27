@@ -49,7 +49,7 @@ function PlansPage() {
           <Sparkles className="size-3" /> Planos comerciais
         </Badge>
         <h1 className="font-display text-2xl font-semibold tracking-tight">
-          Escolha o plano do seu operação de conteúdo
+          Escolha o plano da sua operação de conteúdo
         </h1>
         <p className="max-w-2xl text-sm text-muted-foreground">
           Do primeiro cliente à agência com equipe: todos os planos incluem o gerador de conteúdo por IA,
