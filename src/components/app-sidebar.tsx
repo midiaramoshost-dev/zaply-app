@@ -8,6 +8,7 @@ import {
   MessageCircle,
   Send,
   Sparkles,
+  Wand2,
   Users,
   Zap,
 } from "lucide-react";
@@ -29,6 +30,7 @@ import {
 const items = [
   { title: "Visão geral", url: "/", icon: LayoutDashboard },
   { title: "Criar com IA", url: "/criar", icon: Sparkles },
+  { title: "Calendário automático", url: "/automatico", icon: Wand2 },
   { title: "Imagens", url: "/imagens", icon: ImageIcon },
   { title: "Biblioteca", url: "/biblioteca", icon: Library },
   { title: "Aprovação", url: "/aprovacao", icon: BadgeCheck },
