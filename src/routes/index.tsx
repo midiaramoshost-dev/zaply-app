@@ -64,21 +64,10 @@ function Dashboard() {
         </div>
       </section>
 
-      <section className="mt-6 grid gap-4 sm:grid-cols-3">
-        {stats.map((s) => (
-          <Card key={s.label} className="panel">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {s.label}
-              </CardTitle>
-              <s.icon className="size-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <p className="font-display text-3xl font-semibold">{ready ? s.value : "—"}</p>
-            </CardContent>
-          </Card>
-        ))}
+      <section className="mt-6">
+        <DashboardMetricsGrid posts={posts} ready={ready} />
       </section>
+
 
       <section className="mt-6 grid gap-4 lg:grid-cols-2">
         <Card className="panel">
