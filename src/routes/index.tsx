@@ -58,6 +58,12 @@ function Dashboard() {
             </Link>
           </Button>
           <Button asChild size="lg" variant="outline">
+            <Link to="/tutorial">
+              Como usar o app
+              <ArrowRight className="size-4" />
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline">
             <Link to="/calendario">
               Ver calendário
               <ArrowRight className="size-4" />
@@ -65,6 +71,7 @@ function Dashboard() {
           </Button>
         </div>
       </section>
+
 
       <section className="mt-6">
         <DashboardMetricsGrid posts={posts} ready={ready} clientsCount={clients.length} />
