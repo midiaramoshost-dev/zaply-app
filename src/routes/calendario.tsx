@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { useAutopilot } from "@/lib/autopilot-store";
 import { usePosts } from "@/lib/posts-store";
 
 
@@ -58,7 +59,7 @@ function CalendarPage() {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
-  const [autopilot, setAutopilot] = useState(true);
+  const { autopilot, setAutopilot } = useAutopilot();
 
   const scheduled = posts.filter((p) => p.scheduledAt);
   const days = useMemo(() => buildMonthGrid(month), [month]);

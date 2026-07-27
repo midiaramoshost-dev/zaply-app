@@ -15,6 +15,7 @@ import { Route as CriarRouteImport } from './routes/criar'
 import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as BibliotecaRouteImport } from './routes/biblioteca'
+import { Route as AprovacaoRouteImport } from './routes/aprovacao'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiGenerateImageRouteImport } from './routes/api/generate-image'
 
@@ -48,6 +49,11 @@ const BibliotecaRoute = BibliotecaRouteImport.update({
   path: '/biblioteca',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AprovacaoRoute = AprovacaoRouteImport.update({
+  id: '/aprovacao',
+  path: '/aprovacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,6 +67,7 @@ const ApiGenerateImageRoute = ApiGenerateImageRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/aprovacao': typeof AprovacaoRoute
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
   '/clientes': typeof ClientesRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aprovacao': typeof AprovacaoRoute
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
   '/clientes': typeof ClientesRoute
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/aprovacao': typeof AprovacaoRoute
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
   '/clientes': typeof ClientesRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/aprovacao'
     | '/biblioteca'
     | '/calendario'
     | '/clientes'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/aprovacao'
     | '/biblioteca'
     | '/calendario'
     | '/clientes'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/aprovacao'
     | '/biblioteca'
     | '/calendario'
     | '/clientes'
@@ -125,6 +137,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AprovacaoRoute: typeof AprovacaoRoute
   BibliotecaRoute: typeof BibliotecaRoute
   CalendarioRoute: typeof CalendarioRoute
   ClientesRoute: typeof ClientesRoute
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BibliotecaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aprovacao': {
+      id: '/aprovacao'
+      path: '/aprovacao'
+      fullPath: '/aprovacao'
+      preLoaderRoute: typeof AprovacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -197,6 +217,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AprovacaoRoute: AprovacaoRoute,
   BibliotecaRoute: BibliotecaRoute,
   CalendarioRoute: CalendarioRoute,
   ClientesRoute: ClientesRoute,

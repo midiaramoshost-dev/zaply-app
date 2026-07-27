@@ -1,5 +1,14 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { CalendarDays, ImageIcon, LayoutDashboard, Library, Sparkles, Users, Zap } from "lucide-react";
+import {
+  BadgeCheck,
+  CalendarDays,
+  ImageIcon,
+  LayoutDashboard,
+  Library,
+  Sparkles,
+  Users,
+  Zap,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -20,6 +29,7 @@ const items = [
   { title: "Criar com IA", url: "/criar", icon: Sparkles },
   { title: "Imagens", url: "/imagens", icon: ImageIcon },
   { title: "Biblioteca", url: "/biblioteca", icon: Library },
+  { title: "Aprovação", url: "/aprovacao", icon: BadgeCheck },
   { title: "Calendário", url: "/calendario", icon: CalendarDays },
   { title: "Clientes", url: "/clientes", icon: Users },
 ] as const;
