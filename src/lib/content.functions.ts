@@ -109,13 +109,21 @@ export const generateContent = createServerFn({ method: "POST" })
     }
   });
 
-function normalize(ideas: GeneratedIdea[], max: number): GeneratedIdea[] {
+function normalize(
+  ideas: Partial<GeneratedIdea>[],
+  max: number,
+  channels: string[],
+): GeneratedIdea[] {
   return ideas
     .filter((idea) => idea && typeof idea.title === "string" && typeof idea.body === "string")
     .slice(0, max)
     .map((idea) => ({
-      title: idea.title.slice(0, 120),
-      body: idea.body.slice(0, 1200),
+      channel:
+        channels.find((c) => c.toLowerCase() === String(idea.channel ?? "").toLowerCase()) ??
+        channels[0],
+      title: String(idea.title).slice(0, 120),
+      body: String(idea.body).slice(0, 1200),
+
       hashtags: (Array.isArray(idea.hashtags) ? idea.hashtags : [])
         .map((tag) => String(tag).replace(/^#/, "").trim())
         .filter(Boolean)
