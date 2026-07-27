@@ -45,6 +45,8 @@ const GenerateInput = z.object({
 export type GeneratedIdea = {
   title: string;
   body: string;
+  cta: string;
+  emojis: string[];
   hashtags: string[];
   channel: string;
 };
@@ -68,7 +70,8 @@ export const generateContent = createServerFn({ method: "POST" })
         (c) => `- ${c}: ${CHANNEL_GUIDELINES[c] ?? "Adapte ao formato usual do canal."}`,
       ),
       "Escreva em português do Brasil.",
-      'Cada item precisa de: "channel" (exatamente o nome do canal), um título curto (até 70 caracteres), um corpo pronto para publicar (com quebras de linha quando fizer sentido) e de 3 a 6 hashtags relevantes sem o símbolo #.',
+      'Cada item precisa de: "channel" (exatamente o nome do canal), "title" (título curto, até 70 caracteres), "body" (a legenda pronta para publicar, com quebras de linha quando fizer sentido e emojis já aplicados quando o canal pedir), "cta" (uma chamada para ação curta e direta, até 90 caracteres), "emojis" (de 2 a 5 emojis avulsos que combinam com o post) e "hashtags" (3 a 6 hashtags relevantes sem o símbolo #).',
+      "No X (Twitter) use no máximo 1 emoji e mantenha o texto curto; no LinkedIn evite excesso de emojis.",
     ].join("\n");
 
 
@@ -82,6 +85,8 @@ export const generateContent = createServerFn({ method: "POST" })
                 channel: z.string(),
                 title: z.string(),
                 body: z.string(),
+                cta: z.string(),
+                emojis: z.array(z.string()),
                 hashtags: z.array(z.string()),
               }),
             ),
@@ -123,6 +128,11 @@ function normalize(
         channels[0],
       title: String(idea.title).slice(0, 120),
       body: String(idea.body).slice(0, 1200),
+      cta: String(idea.cta ?? "").slice(0, 140),
+      emojis: (Array.isArray(idea.emojis) ? idea.emojis : [])
+        .map((e) => String(e).trim())
+        .filter(Boolean)
+        .slice(0, 6),
 
       hashtags: (Array.isArray(idea.hashtags) ? idea.hashtags : [])
         .map((tag) => String(tag).replace(/^#/, "").trim())
