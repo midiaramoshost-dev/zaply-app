@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { CalendarDays, LayoutDashboard, Library, Sparkles, Users, Zap } from "lucide-react";
+import { CalendarDays, ImageIcon, LayoutDashboard, Library, Sparkles, Users, Zap } from "lucide-react";
 
 import {
   Sidebar,
@@ -18,10 +18,12 @@ import {
 const items = [
   { title: "Visão geral", url: "/", icon: LayoutDashboard },
   { title: "Criar com IA", url: "/criar", icon: Sparkles },
+  { title: "Imagens", url: "/imagens", icon: ImageIcon },
   { title: "Biblioteca", url: "/biblioteca", icon: Library },
   { title: "Calendário", url: "/calendario", icon: CalendarDays },
   { title: "Clientes", url: "/clientes", icon: Users },
 ] as const;
+
 
 export function AppSidebar() {
   const { state } = useSidebar();
