@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PublicacaoRouteImport } from './routes/publicacao'
 import { Route as ImagensRouteImport } from './routes/imagens'
 import { Route as CriarRouteImport } from './routes/criar'
 import { Route as ClientesRouteImport } from './routes/clientes'
@@ -22,6 +23,11 @@ import { Route as ApiGenerateImageRouteImport } from './routes/api/generate-imag
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicacaoRoute = PublicacaoRouteImport.update({
+  id: '/publicacao',
+  path: '/publicacao',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ImagensRoute = ImagensRouteImport.update({
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/clientes': typeof ClientesRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
+  '/publicacao': typeof PublicacaoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/generate-image': typeof ApiGenerateImageRoute
 }
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/clientes': typeof ClientesRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
+  '/publicacao': typeof PublicacaoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/generate-image': typeof ApiGenerateImageRoute
 }
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/clientes': typeof ClientesRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
+  '/publicacao': typeof PublicacaoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/generate-image': typeof ApiGenerateImageRoute
 }
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/clientes'
     | '/criar'
     | '/imagens'
+    | '/publicacao'
     | '/sitemap.xml'
     | '/api/generate-image'
   fileRoutesByTo: FileRoutesByTo
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/clientes'
     | '/criar'
     | '/imagens'
+    | '/publicacao'
     | '/sitemap.xml'
     | '/api/generate-image'
   id:
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '/clientes'
     | '/criar'
     | '/imagens'
+    | '/publicacao'
     | '/sitemap.xml'
     | '/api/generate-image'
   fileRoutesById: FileRoutesById
@@ -143,6 +155,7 @@ export interface RootRouteChildren {
   ClientesRoute: typeof ClientesRoute
   CriarRoute: typeof CriarRoute
   ImagensRoute: typeof ImagensRoute
+  PublicacaoRoute: typeof PublicacaoRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiGenerateImageRoute: typeof ApiGenerateImageRoute
 }
@@ -154,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/publicacao': {
+      id: '/publicacao'
+      path: '/publicacao'
+      fullPath: '/publicacao'
+      preLoaderRoute: typeof PublicacaoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/imagens': {
@@ -223,6 +243,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClientesRoute: ClientesRoute,
   CriarRoute: CriarRoute,
   ImagensRoute: ImagensRoute,
+  PublicacaoRoute: PublicacaoRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiGenerateImageRoute: ApiGenerateImageRoute,
 }
