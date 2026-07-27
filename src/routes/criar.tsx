@@ -113,22 +113,51 @@ function CreatePage() {
               />
             </div>
 
+            <div className="space-y-2">
+              <Label>Canais</Label>
+              <div className="flex flex-wrap gap-2">
+                {CHANNELS.map((c) => {
+                  const active = channels.includes(c);
+                  return (
+                    <button
+                      key={c}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => toggleChannel(c)}
+                      className={cn(
+                        "rounded-full border border-border px-3 py-1.5 text-xs transition-colors",
+                        active
+                          ? "border-primary/60 bg-primary/15 text-primary"
+                          : "text-muted-foreground hover:bg-surface",
+                      )}
+                    >
+                      {c}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {CHANNEL_GUIDELINES[channels[channels.length - 1]]}
+              </p>
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label>Canal</Label>
-                <Select value={channel} onValueChange={setChannel}>
+                <Label>Tom de voz</Label>
+                <Select value={tone} onValueChange={setTone}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {CHANNELS.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
+                    {TONES.map((t) => (
+                      <SelectItem key={t} value={t}>
+                        {t}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
+
 
               <div className="space-y-2">
                 <Label>Tom de voz</Label>
