@@ -141,9 +141,7 @@ function RootComponent() {
               <span className="font-display text-sm font-semibold tracking-tight">
                 ContentFlow
               </span>
-              <span className="ml-auto rounded-full border border-border bg-surface px-3 py-1 text-[11px] text-muted-foreground">
-                Workspace demo
-              </span>
+              <AccountButton />
             </header>
             <main className="flex-1 grid-backdrop">
               {/* Required: nested routes render here. */}
