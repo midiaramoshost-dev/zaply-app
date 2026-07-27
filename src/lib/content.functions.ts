@@ -79,6 +79,7 @@ export const generateContent = createServerFn({ method: "POST" })
           schema: z.object({
             ideas: z.array(
               z.object({
+                channel: z.string(),
                 title: z.string(),
                 body: z.string(),
                 hashtags: z.array(z.string()),
@@ -89,12 +90,13 @@ export const generateContent = createServerFn({ method: "POST" })
         prompt,
       });
 
-      return { ideas: normalize(output.ideas, data.variations) };
+      return { ideas: normalize(output.ideas, total, data.channels) };
     } catch (error) {
       if (NoObjectGeneratedError.isInstance(error)) {
         const fallback = parseFallback(error.text);
-        if (fallback.length > 0) return { ideas: normalize(fallback, data.variations) };
+        if (fallback.length > 0) return { ideas: normalize(fallback, total, data.channels) };
       }
+
       const message = error instanceof Error ? error.message : String(error);
       console.error("generateContent failed:", message);
       if (message.includes("429")) {
