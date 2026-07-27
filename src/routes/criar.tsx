@@ -45,16 +45,21 @@ function CreatePage() {
   const { addPost } = usePosts();
 
   const [topic, setTopic] = useState("");
-  const [channel, setChannel] = useState<string>(CHANNELS[0]);
+  const [channels, setChannels] = useState<string[]>([CHANNELS[0]]);
   const [tone, setTone] = useState<string>(TONES[0]);
-  const [variations, setVariations] = useState("2");
+  const [variations, setVariations] = useState("1");
   const [ideas, setIdeas] = useState<GeneratedIdea[]>([]);
   const [scheduleAt, setScheduleAt] = useState("");
+
+  const toggleChannel = (c: string) =>
+    setChannels((prev) =>
+      prev.includes(c) ? (prev.length > 1 ? prev.filter((x) => x !== c) : prev) : [...prev, c],
+    );
 
   const mutation = useMutation({
     mutationFn: () =>
       generate({
-        data: { topic: topic.trim(), channel, tone, variations: Number(variations) },
+        data: { topic: topic.trim(), channels, tone, variations: Number(variations) },
       }),
     onSuccess: (result) => {
       setIdeas(result.ideas);
@@ -72,13 +77,14 @@ function CreatePage() {
       title: idea.title,
       body: idea.body,
       hashtags: idea.hashtags ?? [],
-      channel,
+      channel: idea.channel,
       tone,
       status: schedule ? "agendado" : "rascunho",
       scheduledAt: schedule ? new Date(scheduleAt).toISOString() : null,
     });
     toast.success(schedule ? "Publicação agendada." : "Salvo na biblioteca.");
   }
+
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
