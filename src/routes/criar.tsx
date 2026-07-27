@@ -18,7 +18,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { CHANNELS, TONES, generateContent, type GeneratedIdea } from "@/lib/content.functions";
+import { CHANNELS, CHANNEL_GUIDELINES, TONES, generateContent, type GeneratedIdea } from "@/lib/content.functions";
+import { cn } from "@/lib/utils";
 import { usePosts } from "@/lib/posts-store";
 
 export const Route = createFileRoute("/criar")({
@@ -45,16 +46,21 @@ function CreatePage() {
   const { addPost } = usePosts();
 
   const [topic, setTopic] = useState("");
-  const [channel, setChannel] = useState<string>(CHANNELS[0]);
+  const [channels, setChannels] = useState<string[]>([CHANNELS[0]]);
   const [tone, setTone] = useState<string>(TONES[0]);
-  const [variations, setVariations] = useState("2");
+  const [variations, setVariations] = useState("1");
   const [ideas, setIdeas] = useState<GeneratedIdea[]>([]);
   const [scheduleAt, setScheduleAt] = useState("");
+
+  const toggleChannel = (c: string) =>
+    setChannels((prev) =>
+      prev.includes(c) ? (prev.length > 1 ? prev.filter((x) => x !== c) : prev) : [...prev, c],
+    );
 
   const mutation = useMutation({
     mutationFn: () =>
       generate({
-        data: { topic: topic.trim(), channel, tone, variations: Number(variations) },
+        data: { topic: topic.trim(), channels, tone, variations: Number(variations) },
       }),
     onSuccess: (result) => {
       setIdeas(result.ideas);
@@ -72,13 +78,14 @@ function CreatePage() {
       title: idea.title,
       body: idea.body,
       hashtags: idea.hashtags ?? [],
-      channel,
+      channel: idea.channel,
       tone,
       status: schedule ? "agendado" : "rascunho",
       scheduledAt: schedule ? new Date(scheduleAt).toISOString() : null,
     });
     toast.success(schedule ? "Publicação agendada." : "Salvo na biblioteca.");
   }
+
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
@@ -107,23 +114,35 @@ function CreatePage() {
               />
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label>Canal</Label>
-                <Select value={channel} onValueChange={setChannel}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CHANNELS.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            <div className="space-y-2">
+              <Label>Canais</Label>
+              <div className="flex flex-wrap gap-2">
+                {CHANNELS.map((c) => {
+                  const active = channels.includes(c);
+                  return (
+                    <button
+                      key={c}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => toggleChannel(c)}
+                      className={cn(
+                        "rounded-full border border-border px-3 py-1.5 text-xs transition-colors",
+                        active
+                          ? "border-primary/60 bg-primary/15 text-primary"
+                          : "text-muted-foreground hover:bg-surface",
+                      )}
+                    >
+                      {c}
+                    </button>
+                  );
+                })}
               </div>
+              <p className="text-xs text-muted-foreground">
+                {CHANNEL_GUIDELINES[channels[channels.length - 1]]}
+              </p>
+            </div>
 
+            <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label>Tom de voz</Label>
                 <Select value={tone} onValueChange={setTone}>
@@ -143,7 +162,7 @@ function CreatePage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label>Variações</Label>
+                <Label>Variações por canal</Label>
                 <Select value={variations} onValueChange={setVariations}>
                   <SelectTrigger>
                     <SelectValue />
@@ -198,7 +217,7 @@ function CreatePage() {
             <Card className="panel">
               <CardContent className="flex items-center justify-center gap-2 py-16 text-sm text-muted-foreground">
                 <Loader2 className="size-4 animate-spin" />
-                Escrevendo variações para {channel}...
+                Escrevendo variações para {channels.join(", ")}...
               </CardContent>
             </Card>
           )}
@@ -208,7 +227,7 @@ function CreatePage() {
               <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
                 <CardTitle className="text-base leading-snug">{idea.title}</CardTitle>
                 <Badge variant="secondary" className="shrink-0">
-                  {channel}
+                  {idea.channel}
                 </Badge>
               </CardHeader>
               <CardContent className="space-y-4">
