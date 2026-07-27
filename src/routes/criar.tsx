@@ -76,7 +76,7 @@ function CreatePage() {
     }
     addPost({
       title: idea.title,
-      body: idea.body,
+      body: idea.cta ? `${idea.body}\n\n${idea.cta}` : idea.body,
       hashtags: idea.hashtags ?? [],
       channel: idea.channel,
       tone,
@@ -232,6 +232,15 @@ function CreatePage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="whitespace-pre-line text-sm text-muted-foreground">{idea.body}</p>
+                {idea.cta && (
+                  <div className="rounded-lg border border-primary/40 bg-primary/5 px-3 py-2">
+                    <p className="text-[11px] uppercase tracking-wide text-muted-foreground">CTA</p>
+                    <p className="text-sm font-medium">{idea.cta}</p>
+                  </div>
+                )}
+                {(idea.emojis ?? []).length > 0 && (
+                  <p className="text-lg leading-none">{(idea.emojis ?? []).join(" ")}</p>
+                )}
                 <div className="flex flex-wrap gap-1.5">
                   {(idea.hashtags ?? []).map((tag) => (
                     <Badge key={tag} variant="outline" className="text-[11px]">
@@ -253,7 +262,7 @@ function CreatePage() {
                     variant="ghost"
                     onClick={() => {
                       void navigator.clipboard.writeText(
-                        `${idea.title}\n\n${idea.body}\n\n${(idea.hashtags ?? [])
+                        `${idea.title}\n\n${idea.body}${idea.cta ? `\n\n${idea.cta}` : ""}\n\n${(idea.hashtags ?? [])
                           .map((t) => `#${t}`)
                           .join(" ")}`,
                       );
