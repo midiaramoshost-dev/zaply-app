@@ -30,7 +30,7 @@ export type DashboardMetrics = {
   clients: number;
 };
 
-export function computeMetrics(posts: Post[]): DashboardMetrics {
+export function computeMetrics(posts: Post[], clientsCount: number): DashboardMetrics {
   const published = posts.filter((p) => p.status === "publicado");
   const scheduled = posts.filter((p) => p.status === "agendado");
 
@@ -39,7 +39,6 @@ export function computeMetrics(posts: Post[]): DashboardMetrics {
   const reach = published.reduce((sum, p) => sum + 1500 + (hash(p.channel + p.id) % 12000), 0);
   const engagement = reach > 0 ? ((likes + comments) / reach) * 100 : 0;
   const growth = published.length * 2.4 + scheduled.length * 0.8;
-  const clients = new Set(posts.map((p) => p.channel)).size;
 
   return {
     published: published.length,
@@ -49,20 +48,24 @@ export function computeMetrics(posts: Post[]): DashboardMetrics {
     growth,
     reach,
     engagement,
-    clients,
+    clients: clientsCount,
   };
 }
+
 
 const nf = new Intl.NumberFormat("pt-BR");
 
 export function DashboardMetricsGrid({
   posts,
   ready,
+  clientsCount,
 }: {
   posts: Post[];
   ready: boolean;
+  clientsCount: number;
 }) {
-  const m = computeMetrics(posts);
+  const m = computeMetrics(posts, clientsCount);
+
 
   const cards = [
     { label: "Posts publicados", value: nf.format(m.published), icon: CheckCircle2, hint: "Total na biblioteca" },

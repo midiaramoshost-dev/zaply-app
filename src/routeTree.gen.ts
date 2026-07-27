@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as CriarRouteImport } from './routes/criar'
+import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as BibliotecaRouteImport } from './routes/biblioteca'
 import { Route as IndexRouteImport } from './routes/index'
@@ -23,6 +24,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const CriarRoute = CriarRouteImport.update({
   id: '/criar',
   path: '/criar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClientesRoute = ClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CalendarioRoute = CalendarioRouteImport.update({
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
+  '/clientes': typeof ClientesRoute
   '/criar': typeof CriarRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
+  '/clientes': typeof ClientesRoute
   '/criar': typeof CriarRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
@@ -60,19 +68,33 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
+  '/clientes': typeof ClientesRoute
   '/criar': typeof CriarRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/biblioteca' | '/calendario' | '/criar' | '/sitemap.xml'
+  fullPaths:
+    | '/'
+    | '/biblioteca'
+    | '/calendario'
+    | '/clientes'
+    | '/criar'
+    | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/biblioteca' | '/calendario' | '/criar' | '/sitemap.xml'
+  to:
+    | '/'
+    | '/biblioteca'
+    | '/calendario'
+    | '/clientes'
+    | '/criar'
+    | '/sitemap.xml'
   id:
     | '__root__'
     | '/'
     | '/biblioteca'
     | '/calendario'
+    | '/clientes'
     | '/criar'
     | '/sitemap.xml'
   fileRoutesById: FileRoutesById
@@ -81,6 +103,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BibliotecaRoute: typeof BibliotecaRoute
   CalendarioRoute: typeof CalendarioRoute
+  ClientesRoute: typeof ClientesRoute
   CriarRoute: typeof CriarRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
@@ -99,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/criar'
       fullPath: '/criar'
       preLoaderRoute: typeof CriarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clientes': {
+      id: '/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof ClientesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/calendario': {
@@ -129,6 +159,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BibliotecaRoute: BibliotecaRoute,
   CalendarioRoute: CalendarioRoute,
+  ClientesRoute: ClientesRoute,
   CriarRoute: CriarRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }

@@ -5,6 +5,7 @@ import { DashboardMetricsGrid } from "@/components/dashboard-metrics";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useClients } from "@/lib/clients-store";
 import { statusLabel, usePosts } from "@/lib/posts-store";
 
 export const Route = createFileRoute("/")({
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/")({
 
 function Dashboard() {
   const { posts, ready } = usePosts();
+  const { clients } = useClients();
 
   const scheduled = posts
     .filter((p) => p.status === "agendado")
@@ -65,7 +67,7 @@ function Dashboard() {
       </section>
 
       <section className="mt-6">
-        <DashboardMetricsGrid posts={posts} ready={ready} />
+        <DashboardMetricsGrid posts={posts} ready={ready} clientsCount={clients.length} />
       </section>
 
 
