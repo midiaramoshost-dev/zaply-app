@@ -2,6 +2,57 @@ import { useCallback, useEffect, useState } from "react";
 
 export type PostStatus = "rascunho" | "agendado" | "publicado" | "cancelado";
 
+export type PostCategory =
+  | "produtos"
+  | "promocoes"
+  | "datas"
+  | "videos"
+  | "logos"
+  | "stories"
+  | "reels";
+
+export const POST_CATEGORIES: { id: PostCategory; label: string }[] = [
+  { id: "produtos", label: "Produtos" },
+  { id: "promocoes", label: "Promoções" },
+  { id: "datas", label: "Datas" },
+  { id: "videos", label: "Vídeos" },
+  { id: "logos", label: "Logos" },
+  { id: "stories", label: "Stories" },
+  { id: "reels", label: "Reels" },
+];
+
+export const categoryLabel: Record<PostCategory, string> = POST_CATEGORIES.reduce(
+  (acc, c) => ({ ...acc, [c.id]: c.label }),
+  {} as Record<PostCategory, string>,
+);
+
+const CATEGORY_KEYWORDS: Record<PostCategory, string[]> = {
+  promocoes: ["promo", "desconto", "oferta", "cupom", "black friday", "liquida", "%"],
+  datas: ["natal", "ano novo", "dia das", "páscoa", "pascoa", "aniversário", "aniversario", "feriado", "data comemorativa"],
+  videos: ["vídeo", "video", "youtube", "tutorial em vídeo"],
+  logos: ["logo", "marca", "identidade visual", "branding"],
+  stories: ["story", "stories", "enquete", "caixinha"],
+  reels: ["reel", "reels", "tiktok", "shorts"],
+  produtos: ["produto", "lançamento", "lancamento", "catálogo", "catalogo", "serviço", "servico"],
+};
+
+/** Deduz uma categoria a partir do texto/formato quando ela ainda não foi definida. */
+export function inferCategory(input: {
+  title?: string;
+  body?: string;
+  format?: string;
+  hashtags?: string[];
+}): PostCategory {
+  const text = [input.title, input.body, input.format, ...(input.hashtags ?? [])]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  for (const [category, words] of Object.entries(CATEGORY_KEYWORDS) as [PostCategory, string[]][]) {
+    if (words.some((word) => text.includes(word))) return category;
+  }
+  return "produtos";
+}
+
 export type Post = {
   id: string;
   title: string;
@@ -15,6 +66,7 @@ export type Post = {
   imageUrl?: string | null;
   approved?: boolean;
   format?: string;
+  category?: PostCategory;
 };
 
 
@@ -95,9 +147,11 @@ export function usePosts() {
   const addPost = useCallback((post: Omit<Post, "id" | "createdAt">) => {
     const next: Post = {
       ...post,
+      category: post.category ?? inferCategory(post),
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
     };
+
     write([next, ...read()]);
     return next;
   }, []);
