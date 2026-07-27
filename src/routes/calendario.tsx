@@ -1,15 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, Rocket } from "lucide-react";
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
 
-import { Badge } from "@/components/ui/badge";
+import { PostDayCard } from "@/components/post-day-card";
 import { Button } from "@/components/ui/button";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { statusLabel, usePosts } from "@/lib/posts-store";
+import { usePosts } from "@/lib/posts-store";
 
 
 export const Route = createFileRoute("/calendario")({
@@ -210,39 +210,9 @@ function CalendarPage() {
               </p>
             )}
             {dayPosts.map((post) => (
-              <div
-                key={post.id}
-                className="rounded-xl border border-border/70 bg-surface/60 p-4"
-              >
-                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                  <Badge variant="secondary">{post.channel}</Badge>
-                  <span>
-                    {new Date(post.scheduledAt as string).toLocaleTimeString("pt-BR", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
-                  <Badge variant="outline">{statusLabel[post.status]}</Badge>
-                </div>
-                <p className="mt-2 text-sm font-medium">{post.title}</p>
-                <p className="mt-1 line-clamp-2 whitespace-pre-line text-sm text-muted-foreground">
-                  {post.body}
-                </p>
-                {post.status !== "publicado" && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="mt-3"
-                    onClick={() => {
-                      updatePost(post.id, { status: "publicado" });
-                      toast.success("Publicado.");
-                    }}
-                  >
-                    Publicar agora
-                  </Button>
-                )}
-              </div>
+              <PostDayCard key={post.id} post={post} onUpdate={updatePost} />
             ))}
+
             {autopilot && dayPosts.length > 0 && (
               <p className="text-xs text-muted-foreground">
                 Com a publicação automática ativa, estes itens saem no horário definido.

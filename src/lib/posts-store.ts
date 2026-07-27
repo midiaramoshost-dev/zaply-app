@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-export type PostStatus = "rascunho" | "agendado" | "publicado";
+export type PostStatus = "rascunho" | "agendado" | "publicado" | "cancelado";
 
 export type Post = {
   id: string;
@@ -12,7 +12,10 @@ export type Post = {
   status: PostStatus;
   scheduledAt: string | null;
   createdAt: string;
+  imageUrl?: string | null;
+  approved?: boolean;
 };
+
 
 const STORAGE_KEY = "contentflow.posts.v1";
 
@@ -113,4 +116,6 @@ export const statusLabel: Record<PostStatus, string> = {
   rascunho: "Rascunho",
   agendado: "Agendado",
   publicado: "Publicado",
+  cancelado: "Cancelado",
+
 };
