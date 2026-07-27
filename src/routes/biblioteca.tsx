@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, Copy, Trash2 } from "lucide-react";
+import { CheckCircle2, Copy, FolderOpen, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -14,7 +14,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { statusLabel, usePosts, type PostStatus } from "@/lib/posts-store";
+import {
+  POST_CATEGORIES,
+  categoryLabel,
+  inferCategory,
+  statusLabel,
+  usePosts,
+  type Post,
+  type PostCategory,
+  type PostStatus,
+} from "@/lib/posts-store";
 
 export const Route = createFileRoute("/biblioteca")({
   head: () => ({
@@ -23,12 +32,12 @@ export const Route = createFileRoute("/biblioteca")({
       {
         name: "description",
         content:
-          "Todos os rascunhos, agendamentos e publicações da sua marca organizados por canal e status.",
+          "Conteúdo organizado por produtos, promoções, datas, vídeos, logos, stories e reels — com filtros por canal e status.",
       },
       { property: "og:title", content: "Biblioteca de conteúdo — ContentFlow" },
       {
         property: "og:description",
-        content: "Filtre por canal e status, edite o status e publique com um clique.",
+        content: "Pastas por produtos, promoções, datas, vídeos, logos, stories e reels.",
       },
     ],
   }),
@@ -37,25 +46,50 @@ export const Route = createFileRoute("/biblioteca")({
 
 const statuses: (PostStatus | "todos")[] = ["todos", "rascunho", "agendado", "publicado"];
 
+function categoryOf(post: Post): PostCategory {
+  return post.category ?? inferCategory(post);
+}
+
 function LibraryPage() {
   const { posts, ready, updatePost, removePost } = usePosts();
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<PostStatus | "todos">("todos");
+  const [category, setCategory] = useState<PostCategory | "todas">("todas");
 
   const filtered = useMemo(
     () =>
       posts.filter((p) => {
         const matchStatus = status === "todos" || p.status === status;
+        const matchCategory = category === "todas" || categoryOf(p) === category;
         const q = query.trim().toLowerCase();
         const matchQuery =
           !q ||
           p.title.toLowerCase().includes(q) ||
           p.body.toLowerCase().includes(q) ||
           p.channel.toLowerCase().includes(q);
-        return matchStatus && matchQuery;
+        return matchStatus && matchCategory && matchQuery;
       }),
-    [posts, status, query],
+    [posts, status, category, query],
   );
+
+  const counts = useMemo(() => {
+    const map = new Map<PostCategory, number>();
+    posts.forEach((p) => {
+      const key = categoryOf(p);
+      map.set(key, (map.get(key) ?? 0) + 1);
+    });
+    return map;
+  }, [posts]);
+
+  const groups = useMemo(
+    () =>
+      POST_CATEGORIES.map((c) => ({
+        ...c,
+        items: filtered.filter((p) => categoryOf(p) === c.id),
+      })).filter((g) => g.items.length > 0),
+    [filtered],
+  );
+
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
