@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   BadgeCheck,
+  CreditCard,
   CalendarClock,
   FileBarChart,
   Workflow,
@@ -44,6 +45,7 @@ const items = [
   { title: "Fluxo n8n", url: "/n8n", icon: Workflow },
   { title: "Relatórios", url: "/relatorios", icon: FileBarChart },
   { title: "Clientes", url: "/clientes", icon: Users },
+  { title: "Planos", url: "/planos", icon: CreditCard },
 ] as const;
 
 
