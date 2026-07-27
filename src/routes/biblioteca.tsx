@@ -121,6 +121,32 @@ function LibraryPage() {
         </Select>
       </div>
 
+      <div className="mb-8 flex flex-wrap gap-2">
+        <Button
+          size="sm"
+          variant={category === "todas" ? "default" : "outline"}
+          onClick={() => setCategory("todas")}
+        >
+          Todas
+          <Badge variant="secondary" className="ml-1.5">
+            {posts.length}
+          </Badge>
+        </Button>
+        {POST_CATEGORIES.map((c) => (
+          <Button
+            key={c.id}
+            size="sm"
+            variant={category === c.id ? "default" : "outline"}
+            onClick={() => setCategory(c.id)}
+          >
+            {c.label}
+            <Badge variant="secondary" className="ml-1.5">
+              {counts.get(c.id) ?? 0}
+            </Badge>
+          </Button>
+        ))}
+      </div>
+
       {ready && filtered.length === 0 && (
         <Card className="panel">
           <CardContent className="py-16 text-center text-sm text-muted-foreground">
@@ -129,8 +155,17 @@ function LibraryPage() {
         </Card>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {filtered.map((post) => (
+      <div className="space-y-10">
+        {groups.map((group) => (
+          <section key={group.id} className="space-y-4">
+            <div className="flex items-center gap-2">
+              <FolderOpen className="size-4 text-primary" />
+              <h2 className="text-sm font-semibold uppercase tracking-wide">{group.label}</h2>
+              <Badge variant="secondary">{group.items.length}</Badge>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {group.items.map((post) => (
+
           <Card key={post.id} className="panel">
             <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
               <CardTitle className="text-base leading-snug">{post.title}</CardTitle>
