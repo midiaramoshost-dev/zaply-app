@@ -18,7 +18,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { CHANNELS, TONES, generateContent, type GeneratedIdea } from "@/lib/content.functions";
+import { CHANNELS, CHANNEL_GUIDELINES, TONES, generateContent, type GeneratedIdea } from "@/lib/content.functions";
+import { cn } from "@/lib/utils";
 import { usePosts } from "@/lib/posts-store";
 
 export const Route = createFileRoute("/criar")({
@@ -157,23 +158,6 @@ function CreatePage() {
                   </SelectContent>
                 </Select>
               </div>
-
-
-              <div className="space-y-2">
-                <Label>Tom de voz</Label>
-                <Select value={tone} onValueChange={setTone}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {TONES.map((t) => (
-                      <SelectItem key={t} value={t}>
-                        {t}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -233,7 +217,7 @@ function CreatePage() {
             <Card className="panel">
               <CardContent className="flex items-center justify-center gap-2 py-16 text-sm text-muted-foreground">
                 <Loader2 className="size-4 animate-spin" />
-                Escrevendo variações para {channel}...
+                Escrevendo variações para {channels.join(", ")}...
               </CardContent>
             </Card>
           )}
@@ -243,7 +227,7 @@ function CreatePage() {
               <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
                 <CardTitle className="text-base leading-snug">{idea.title}</CardTitle>
                 <Badge variant="secondary" className="shrink-0">
-                  {channel}
+                  {idea.channel}
                 </Badge>
               </CardHeader>
               <CardContent className="space-y-4">
