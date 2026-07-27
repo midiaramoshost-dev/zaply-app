@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RelatoriosRouteImport } from './routes/relatorios'
 import { Route as PublicacaoRouteImport } from './routes/publicacao'
 import { Route as ImagensRouteImport } from './routes/imagens'
 import { Route as CriarRouteImport } from './routes/criar'
@@ -26,6 +27,11 @@ import { Route as ApiGenerateImageRouteImport } from './routes/api/generate-imag
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RelatoriosRoute = RelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicacaoRoute = PublicacaoRouteImport.update({
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/publicacao': typeof PublicacaoRoute
+  '/relatorios': typeof RelatoriosRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/generate-image': typeof ApiGenerateImageRoute
 }
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/publicacao': typeof PublicacaoRoute
+  '/relatorios': typeof RelatoriosRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/generate-image': typeof ApiGenerateImageRoute
 }
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/publicacao': typeof PublicacaoRoute
+  '/relatorios': typeof RelatoriosRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/generate-image': typeof ApiGenerateImageRoute
 }
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
     | '/criar'
     | '/imagens'
     | '/publicacao'
+    | '/relatorios'
     | '/sitemap.xml'
     | '/api/generate-image'
   fileRoutesByTo: FileRoutesByTo
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/criar'
     | '/imagens'
     | '/publicacao'
+    | '/relatorios'
     | '/sitemap.xml'
     | '/api/generate-image'
   id:
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '/criar'
     | '/imagens'
     | '/publicacao'
+    | '/relatorios'
     | '/sitemap.xml'
     | '/api/generate-image'
   fileRoutesById: FileRoutesById
@@ -195,6 +207,7 @@ export interface RootRouteChildren {
   CriarRoute: typeof CriarRoute
   ImagensRoute: typeof ImagensRoute
   PublicacaoRoute: typeof PublicacaoRoute
+  RelatoriosRoute: typeof RelatoriosRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiGenerateImageRoute: typeof ApiGenerateImageRoute
 }
@@ -206,6 +219,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/relatorios': {
+      id: '/relatorios'
+      path: '/relatorios'
+      fullPath: '/relatorios'
+      preLoaderRoute: typeof RelatoriosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/publicacao': {
@@ -307,6 +327,7 @@ const rootRouteChildren: RootRouteChildren = {
   CriarRoute: CriarRoute,
   ImagensRoute: ImagensRoute,
   PublicacaoRoute: PublicacaoRoute,
+  RelatoriosRoute: RelatoriosRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiGenerateImageRoute: ApiGenerateImageRoute,
 }
