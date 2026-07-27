@@ -165,75 +165,97 @@ function LibraryPage() {
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {group.items.map((post) => (
-
-          <Card key={post.id} className="panel">
-            <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
-              <CardTitle className="text-base leading-snug">{post.title}</CardTitle>
-              <Badge
-                variant={post.status === "publicado" ? "default" : "secondary"}
-                className="shrink-0"
-              >
-                {statusLabel[post.status]}
-              </Badge>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                <Badge variant="outline">{post.channel}</Badge>
-                <span>{post.tone}</span>
-                {post.scheduledAt && (
-                  <span>
-                    ·{" "}
-                    {new Date(post.scheduledAt).toLocaleString("pt-BR", {
-                      dateStyle: "short",
-                      timeStyle: "short",
-                    })}
-                  </span>
-                )}
-              </div>
-              <p className="line-clamp-4 whitespace-pre-line text-sm text-muted-foreground">
-                {post.body}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {post.status !== "publicado" && (
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      updatePost(post.id, { status: "publicado" });
-                      toast.success("Conteúdo marcado como publicado.");
-                    }}
-                  >
-                    <CheckCircle2 className="size-4" />
-                    Publicar agora
-                  </Button>
-                )}
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => {
-                    void navigator.clipboard.writeText(`${post.title}\n\n${post.body}`);
-                    toast.success("Copiado.");
-                  }}
-                >
-                  <Copy className="size-4" />
-                  Copiar
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-destructive hover:text-destructive"
-                  onClick={() => {
-                    removePost(post.id);
-                    toast.success("Conteúdo removido.");
-                  }}
-                >
-                  <Trash2 className="size-4" />
-                  Excluir
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                <Card key={post.id} className="panel">
+                  <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
+                    <CardTitle className="text-base leading-snug">{post.title}</CardTitle>
+                    <Badge
+                      variant={post.status === "publicado" ? "default" : "secondary"}
+                      className="shrink-0"
+                    >
+                      {statusLabel[post.status]}
+                    </Badge>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                      <Badge variant="outline">{post.channel}</Badge>
+                      <Badge variant="outline">{categoryLabel[categoryOf(post)]}</Badge>
+                      <span>{post.tone}</span>
+                      {post.scheduledAt && (
+                        <span>
+                          ·{" "}
+                          {new Date(post.scheduledAt).toLocaleString("pt-BR", {
+                            dateStyle: "short",
+                            timeStyle: "short",
+                          })}
+                        </span>
+                      )}
+                    </div>
+                    <p className="line-clamp-4 whitespace-pre-line text-sm text-muted-foreground">
+                      {post.body}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {post.status !== "publicado" && (
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            updatePost(post.id, { status: "publicado" });
+                            toast.success("Conteúdo marcado como publicado.");
+                          }}
+                        >
+                          <CheckCircle2 className="size-4" />
+                          Publicar agora
+                        </Button>
+                      )}
+                      <Select
+                        value={categoryOf(post)}
+                        onValueChange={(v) => {
+                          updatePost(post.id, { category: v as PostCategory });
+                          toast.success("Pasta atualizada.");
+                        }}
+                      >
+                        <SelectTrigger className="h-8 w-[140px] text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {POST_CATEGORIES.map((c) => (
+                            <SelectItem key={c.id} value={c.id}>
+                              {c.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          void navigator.clipboard.writeText(`${post.title}\n\n${post.body}`);
+                          toast.success("Copiado.");
+                        }}
+                      >
+                        <Copy className="size-4" />
+                        Copiar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-destructive hover:text-destructive"
+                        onClick={() => {
+                          removePost(post.id);
+                          toast.success("Conteúdo removido.");
+                        }}
+                      >
+                        <Trash2 className="size-4" />
+                        Excluir
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
         ))}
       </div>
     </div>
   );
 }
+
