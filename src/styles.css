@@ -179,3 +179,8 @@
     linear-gradient(to bottom, oklch(1 0 0 / 0.03) 1px, transparent 1px);
   background-size: 44px 44px;
 }
+
+
+#lovable-badge {
+  display: none !important;
+}
