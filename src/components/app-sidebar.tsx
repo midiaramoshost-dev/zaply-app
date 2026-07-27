@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   BadgeCheck,
+  CalendarClock,
   CalendarDays,
   ImageIcon,
   LayoutDashboard,
@@ -37,6 +38,7 @@ const items = [
   { title: "Publicação", url: "/publicacao", icon: Send },
   { title: "Comentários", url: "/comentarios", icon: MessageCircle },
   { title: "Calendário", url: "/calendario", icon: CalendarDays },
+  { title: "Agendamento", url: "/agendamento", icon: CalendarClock },
   { title: "Clientes", url: "/clientes", icon: Users },
 ] as const;
 

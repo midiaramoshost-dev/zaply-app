@@ -28,6 +28,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { CHANNELS, TONES } from "@/lib/content.functions";
 import { generateCaptions, generateIdeas, type PlanCaption } from "@/lib/plan.functions";
+import { formatSlot, nextSlotDates, useSchedule } from "@/lib/schedule-store";
+import { Switch } from "@/components/ui/switch";
 import { usePosts } from "@/lib/posts-store";
 import { streamImage } from "@/lib/stream-image";
 
@@ -61,6 +63,8 @@ function AutoCalendarPage() {
   const ideasFn = useServerFn(generateIdeas);
   const captionsFn = useServerFn(generateCaptions);
   const { addPost } = usePosts();
+  const { slots } = useSchedule();
+  const [useGrid, setUseGrid] = useState(true);
 
   const [profile, setProfile] = useState("Sou dentista.");
   const [channel, setChannel] = useState<string>("Instagram");
@@ -160,13 +164,20 @@ function AutoCalendarPage() {
   const runSchedule = () => {
     setStep("agenda");
     const [hour, minute] = time.split(":").map(Number);
+    const base0 = new Date(`${startDate}T00:00:00`);
+    const slotDates = useGrid ? nextSlotDates(slots, base0, items.length) : [];
     let saved = 0;
     let droppedImages = false;
 
     items.forEach((item, index) => {
-      const date = new Date(`${startDate}T00:00:00`);
-      date.setDate(date.getDate() + index);
-      date.setHours(hour || 9, minute || 0, 0, 0);
+      let date: Date;
+      if (useGrid && slotDates[index]) {
+        date = slotDates[index];
+      } else {
+        date = new Date(`${startDate}T00:00:00`);
+        date.setDate(date.getDate() + index);
+        date.setHours(hour || 9, minute || 0, 0, 0);
+      }
 
       const base = {
         title: item.title,
@@ -192,6 +203,7 @@ function AutoCalendarPage() {
         }
       }
     });
+
 
     setScheduled(saved);
     setStep(null);
@@ -384,19 +396,35 @@ function AutoCalendarPage() {
                 onChange={(e) => setStartDate(e.target.value)}
               />
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="time">Horário</Label>
-              <Input
-                id="time"
-                type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-              />
+            {!useGrid && (
+              <div className="space-y-1.5">
+                <Label htmlFor="time">Horário</Label>
+                <Input
+                  id="time"
+                  type="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                />
+              </div>
+            )}
+            <div className="flex items-center gap-2 pb-2">
+              <Switch id="grid" checked={useGrid} onCheckedChange={setUseGrid} />
+              <Label htmlFor="grid" className="text-sm font-normal">
+                Respeitar a grade de agendamento
+              </Label>
             </div>
             <Button onClick={runSchedule} disabled={busy}>
               <CalendarDays className="mr-1.5 size-4" />
-              Agendar {items.length} posts (1 por dia)
+              Agendar {items.length} posts
             </Button>
+            {useGrid && (
+              <p className="w-full text-xs text-muted-foreground">
+                {slots.length > 0
+                  ? `A IA respeita os horários: ${slots.map(formatSlot).join(" · ")}`
+                  : "Nenhum horário configurado em Agendamento — será 1 post por dia."}
+              </p>
+            )}
+
             {scheduled > 0 && (
               <Badge variant="secondary" className="h-9 px-3">
                 <Check className="mr-1.5 size-3.5" /> {scheduled} agendados
