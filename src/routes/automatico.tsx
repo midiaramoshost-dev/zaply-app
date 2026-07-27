@@ -160,13 +160,20 @@ function AutoCalendarPage() {
   const runSchedule = () => {
     setStep("agenda");
     const [hour, minute] = time.split(":").map(Number);
+    const base0 = new Date(`${startDate}T00:00:00`);
+    const slotDates = useGrid ? nextSlotDates(slots, base0, items.length) : [];
     let saved = 0;
     let droppedImages = false;
 
     items.forEach((item, index) => {
-      const date = new Date(`${startDate}T00:00:00`);
-      date.setDate(date.getDate() + index);
-      date.setHours(hour || 9, minute || 0, 0, 0);
+      let date: Date;
+      if (useGrid && slotDates[index]) {
+        date = slotDates[index];
+      } else {
+        date = new Date(`${startDate}T00:00:00`);
+        date.setDate(date.getDate() + index);
+        date.setHours(hour || 9, minute || 0, 0, 0);
+      }
 
       const base = {
         title: item.title,
@@ -192,6 +199,7 @@ function AutoCalendarPage() {
         }
       }
     });
+
 
     setScheduled(saved);
     setStep(null);
