@@ -3,6 +3,7 @@ import {
   BadgeCheck,
   CalendarClock,
   FileBarChart,
+  Workflow,
   CalendarDays,
   ImageIcon,
   LayoutDashboard,
@@ -40,6 +41,7 @@ const items = [
   { title: "Comentários", url: "/comentarios", icon: MessageCircle },
   { title: "Calendário", url: "/calendario", icon: CalendarDays },
   { title: "Agendamento", url: "/agendamento", icon: CalendarClock },
+  { title: "Fluxo n8n", url: "/n8n", icon: Workflow },
   { title: "Relatórios", url: "/relatorios", icon: FileBarChart },
   { title: "Clientes", url: "/clientes", icon: Users },
 ] as const;
