@@ -11,7 +11,22 @@ export type Comment = {
   replied?: boolean;
   intent?: string;
   needsHuman?: boolean;
+  sentiment?: Sentiment;
 };
+
+export type Sentiment = "positivo" | "negativo" | "spam" | "neutro";
+
+const POSITIVE = ["amei", "amo", "adorei", "top", "excelente", "otimo", "ótimo", "maravilh", "parabens", "parabéns", "show", "incrivel", "incrível", "perfeito", "obrigad", "sucesso", "melhor", "gostei", "lindo"];
+const NEGATIVE = ["pessimo", "péssimo", "horrivel", "horrível", "ruim", "odiei", "decepcion", "demora", "caro demais", "nao gostei", "não gostei", "golpe", "reclama", "problema", "atraso", "cancelar"];
+const SPAM = ["ganhe dinheiro", "clique aqui", "http://", "https://", "promo\u00e7\u00e3o imperd", "whatsapp.com", "bit.ly", "siga de volta", "segue de volta", "curso gratis", "curso grátis", "🔞", "investimento garantido"];
+
+export function classifySentiment(text: string): Sentiment {
+  const t = text.toLowerCase();
+  if (SPAM.some((w) => t.includes(w))) return "spam";
+  if (NEGATIVE.some((w) => t.includes(w))) return "negativo";
+  if (POSITIVE.some((w) => t.includes(w))) return "positivo";
+  return "neutro";
+}
 
 const STORAGE_KEY = "contentflow.comments.v1";
 const EVENT = "contentflow:comments";
@@ -24,6 +39,7 @@ const SEED: Comment[] = [
     channel: "Instagram",
     postTitle: "Bastidores: como criamos 30 posts em 1 hora",
     createdAt: new Date(Date.now() - 1800000).toISOString(),
+    sentiment: "neutro",
   },
   {
     id: "cmt-2",
@@ -32,6 +48,7 @@ const SEED: Comment[] = [
     channel: "Facebook",
     postTitle: "Novidades da semana",
     createdAt: new Date(Date.now() - 5400000).toISOString(),
+    sentiment: "neutro",
   },
   {
     id: "cmt-3",
@@ -40,6 +57,34 @@ const SEED: Comment[] = [
     channel: "LinkedIn",
     postTitle: "5 sinais de que seu conteúdo precisa de automação",
     createdAt: new Date(Date.now() - 9000000).toISOString(),
+    sentiment: "neutro",
+  },
+  {
+    id: "cmt-4",
+    author: "Bruno Tavares",
+    text: "Amei o conteúdo, parabéns pelo trabalho!",
+    channel: "Instagram",
+    postTitle: "Bastidores: como criamos 30 posts em 1 hora",
+    createdAt: new Date(Date.now() - 12600000).toISOString(),
+    sentiment: "positivo",
+  },
+  {
+    id: "cmt-5",
+    author: "Carla Souza",
+    text: "Péssimo atendimento, esperei dias e ninguém respondeu.",
+    channel: "Facebook",
+    postTitle: "Novidades da semana",
+    createdAt: new Date(Date.now() - 16200000).toISOString(),
+    sentiment: "negativo",
+  },
+  {
+    id: "cmt-6",
+    author: "promo_ofertas",
+    text: "Ganhe dinheiro rápido, clique aqui: bit.ly/oferta",
+    channel: "X",
+    postTitle: "5 sinais de que seu conteúdo precisa de automação",
+    createdAt: new Date(Date.now() - 19800000).toISOString(),
+    sentiment: "spam",
   },
 ];
 
@@ -84,6 +129,7 @@ export function useComments() {
       ...comment,
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
+      sentiment: comment.sentiment ?? classifySentiment(comment.text),
     };
     write([next, ...read()]);
     return next;
