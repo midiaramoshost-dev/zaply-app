@@ -7,6 +7,8 @@ export type Client = {
   niche: string;
   goals: string;
   audience: string;
+  address: string;
+  contact: string;
   tone: string;
   bannedWords: string[];
   colors: string[];
@@ -24,6 +26,8 @@ const SEED: Client[] = [
     niche: "Design e branding",
     goals: "Gerar autoridade no LinkedIn e captar 10 leads qualificados por mês.",
     audience: "Fundadores de startups B2B entre 28 e 45 anos.",
+    address: "Rua das Laranjeiras, 220 — Pinheiros, São Paulo/SP",
+    contact: "contato@aurorastudio.com · (11) 99999-0001",
     tone: "Profissional",
     bannedWords: ["barato", "milagroso"],
     colors: ["#7C5CFF", "#22D3EE", "#0F172A"],
@@ -37,6 +41,8 @@ const SEED: Client[] = [
     niche: "Alimentação saudável",
     goals: "Aumentar o engajamento no Instagram e divulgar o clube de assinatura.",
     audience: "Mulheres de 25 a 40 anos interessadas em bem-estar.",
+    address: "Av. Beira Mar, 1500 — Loja 12, Florianópolis/SC",
+    contact: "oi@verdevida.com.br · (48) 98888-0002",
     tone: "Descontraído",
     bannedWords: ["dieta restritiva", "detox"],
     colors: ["#34D399", "#166534", "#F8FAFC"],
@@ -108,6 +114,8 @@ export const emptyClient: Omit<Client, "id" | "createdAt"> = {
   niche: "",
   goals: "",
   audience: "",
+  address: "",
+  contact: "",
   tone: "Profissional",
   bannedWords: [],
   colors: ["#7C5CFF"],

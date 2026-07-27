@@ -13,6 +13,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PublicacaoRouteImport } from './routes/publicacao'
 import { Route as ImagensRouteImport } from './routes/imagens'
 import { Route as CriarRouteImport } from './routes/criar'
+import { Route as ComentariosRouteImport } from './routes/comentarios'
 import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as BibliotecaRouteImport } from './routes/biblioteca'
@@ -38,6 +39,11 @@ const ImagensRoute = ImagensRouteImport.update({
 const CriarRoute = CriarRouteImport.update({
   id: '/criar',
   path: '/criar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComentariosRoute = ComentariosRouteImport.update({
+  id: '/comentarios',
+  path: '/comentarios',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ClientesRoute = ClientesRouteImport.update({
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
   '/clientes': typeof ClientesRoute
+  '/comentarios': typeof ComentariosRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/publicacao': typeof PublicacaoRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
   '/clientes': typeof ClientesRoute
+  '/comentarios': typeof ComentariosRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/publicacao': typeof PublicacaoRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
   '/clientes': typeof ClientesRoute
+  '/comentarios': typeof ComentariosRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/publicacao': typeof PublicacaoRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/biblioteca'
     | '/calendario'
     | '/clientes'
+    | '/comentarios'
     | '/criar'
     | '/imagens'
     | '/publicacao'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/biblioteca'
     | '/calendario'
     | '/clientes'
+    | '/comentarios'
     | '/criar'
     | '/imagens'
     | '/publicacao'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/biblioteca'
     | '/calendario'
     | '/clientes'
+    | '/comentarios'
     | '/criar'
     | '/imagens'
     | '/publicacao'
@@ -153,6 +165,7 @@ export interface RootRouteChildren {
   BibliotecaRoute: typeof BibliotecaRoute
   CalendarioRoute: typeof CalendarioRoute
   ClientesRoute: typeof ClientesRoute
+  ComentariosRoute: typeof ComentariosRoute
   CriarRoute: typeof CriarRoute
   ImagensRoute: typeof ImagensRoute
   PublicacaoRoute: typeof PublicacaoRoute
@@ -188,6 +201,13 @@ declare module '@tanstack/react-router' {
       path: '/criar'
       fullPath: '/criar'
       preLoaderRoute: typeof CriarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comentarios': {
+      id: '/comentarios'
+      path: '/comentarios'
+      fullPath: '/comentarios'
+      preLoaderRoute: typeof ComentariosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/clientes': {
@@ -241,6 +261,7 @@ const rootRouteChildren: RootRouteChildren = {
   BibliotecaRoute: BibliotecaRoute,
   CalendarioRoute: CalendarioRoute,
   ClientesRoute: ClientesRoute,
+  ComentariosRoute: ComentariosRoute,
   CriarRoute: CriarRoute,
   ImagensRoute: ImagensRoute,
   PublicacaoRoute: PublicacaoRoute,

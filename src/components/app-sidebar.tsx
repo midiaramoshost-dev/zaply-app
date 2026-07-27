@@ -5,6 +5,7 @@ import {
   ImageIcon,
   LayoutDashboard,
   Library,
+  MessageCircle,
   Send,
   Sparkles,
   Users,
@@ -32,6 +33,7 @@ const items = [
   { title: "Biblioteca", url: "/biblioteca", icon: Library },
   { title: "Aprovação", url: "/aprovacao", icon: BadgeCheck },
   { title: "Publicação", url: "/publicacao", icon: Send },
+  { title: "Comentários", url: "/comentarios", icon: MessageCircle },
   { title: "Calendário", url: "/calendario", icon: CalendarDays },
   { title: "Clientes", url: "/clientes", icon: Users },
 ] as const;
