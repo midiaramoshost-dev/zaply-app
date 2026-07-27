@@ -20,6 +20,7 @@ import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as BibliotecaRouteImport } from './routes/biblioteca'
 import { Route as AutomaticoRouteImport } from './routes/automatico'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AprovacaoRouteImport } from './routes/aprovacao'
 import { Route as AgendamentoRouteImport } from './routes/agendamento'
 import { Route as IndexRouteImport } from './routes/index'
@@ -80,6 +81,11 @@ const AutomaticoRoute = AutomaticoRouteImport.update({
   path: '/automatico',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AprovacaoRoute = AprovacaoRouteImport.update({
   id: '/aprovacao',
   path: '/aprovacao',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agendamento': typeof AgendamentoRoute
   '/aprovacao': typeof AprovacaoRoute
+  '/auth': typeof AuthRoute
   '/automatico': typeof AutomaticoRoute
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agendamento': typeof AgendamentoRoute
   '/aprovacao': typeof AprovacaoRoute
+  '/auth': typeof AuthRoute
   '/automatico': typeof AutomaticoRoute
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/agendamento': typeof AgendamentoRoute
   '/aprovacao': typeof AprovacaoRoute
+  '/auth': typeof AuthRoute
   '/automatico': typeof AutomaticoRoute
   '/biblioteca': typeof BibliotecaRoute
   '/calendario': typeof CalendarioRoute
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/'
     | '/agendamento'
     | '/aprovacao'
+    | '/auth'
     | '/automatico'
     | '/biblioteca'
     | '/calendario'
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/'
     | '/agendamento'
     | '/aprovacao'
+    | '/auth'
     | '/automatico'
     | '/biblioteca'
     | '/calendario'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/'
     | '/agendamento'
     | '/aprovacao'
+    | '/auth'
     | '/automatico'
     | '/biblioteca'
     | '/calendario'
@@ -211,6 +223,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AgendamentoRoute: typeof AgendamentoRoute
   AprovacaoRoute: typeof AprovacaoRoute
+  AuthRoute: typeof AuthRoute
   AutomaticoRoute: typeof AutomaticoRoute
   BibliotecaRoute: typeof BibliotecaRoute
   CalendarioRoute: typeof CalendarioRoute
@@ -304,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AutomaticoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/aprovacao': {
       id: '/aprovacao'
       path: '/aprovacao'
@@ -339,6 +359,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AgendamentoRoute: AgendamentoRoute,
   AprovacaoRoute: AprovacaoRoute,
+  AuthRoute: AuthRoute,
   AutomaticoRoute: AutomaticoRoute,
   BibliotecaRoute: BibliotecaRoute,
   CalendarioRoute: CalendarioRoute,
