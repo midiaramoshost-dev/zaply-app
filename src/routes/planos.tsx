@@ -93,8 +93,8 @@ function PlansPage() {
               </div>
 
               <div className="flex flex-wrap gap-2 text-[11px]">
-                <Badge variant="secondary">{formatLimit(plan.max_clients, "clientes")}</Badge>
-                <Badge variant="secondary">{formatLimit(plan.max_posts, "posts/mês")}</Badge>
+                <Badge variant="secondary">{formatLimit(plan.max_clients, "cliente")}</Badge>
+                <Badge variant="secondary">{formatLimit(plan.max_posts, "post/mês", "posts/mês")}</Badge>
               </div>
 
               <ul className="flex-1 space-y-2 text-sm">
