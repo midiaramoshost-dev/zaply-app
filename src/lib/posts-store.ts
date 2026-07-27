@@ -14,6 +14,7 @@ export type Post = {
   createdAt: string;
   imageUrl?: string | null;
   approved?: boolean;
+  format?: string;
 };
 
 
