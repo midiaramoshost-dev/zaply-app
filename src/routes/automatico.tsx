@@ -28,6 +28,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { CHANNELS, TONES } from "@/lib/content.functions";
 import { generateCaptions, generateIdeas, type PlanCaption } from "@/lib/plan.functions";
+import { formatSlot, nextSlotDates, useSchedule } from "@/lib/schedule-store";
+import { Switch } from "@/components/ui/switch";
 import { usePosts } from "@/lib/posts-store";
 import { streamImage } from "@/lib/stream-image";
 
@@ -61,6 +63,8 @@ function AutoCalendarPage() {
   const ideasFn = useServerFn(generateIdeas);
   const captionsFn = useServerFn(generateCaptions);
   const { addPost } = usePosts();
+  const { slots } = useSchedule();
+  const [useGrid, setUseGrid] = useState(true);
 
   const [profile, setProfile] = useState("Sou dentista.");
   const [channel, setChannel] = useState<string>("Instagram");
