@@ -147,9 +147,11 @@ export function usePosts() {
   const addPost = useCallback((post: Omit<Post, "id" | "createdAt">) => {
     const next: Post = {
       ...post,
+      category: post.category ?? inferCategory(post),
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
     };
+
     write([next, ...read()]);
     return next;
   }, []);
