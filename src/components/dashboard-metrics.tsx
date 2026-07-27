@@ -58,11 +58,14 @@ const nf = new Intl.NumberFormat("pt-BR");
 export function DashboardMetricsGrid({
   posts,
   ready,
+  clientsCount,
 }: {
   posts: Post[];
   ready: boolean;
+  clientsCount: number;
 }) {
-  const m = computeMetrics(posts);
+  const m = computeMetrics(posts, clientsCount);
+
 
   const cards = [
     { label: "Posts publicados", value: nf.format(m.published), icon: CheckCircle2, hint: "Total na biblioteca" },
