@@ -80,14 +80,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ContentFlow — Conteúdo com IA" },
+      { title: "Painel — ContentFlow, conteúdo com IA" },
       {
         name: "description",
         content:
-          "Plataforma de IA para criar, gerenciar e publicar conteúdo automaticamente em todos os seus canais.",
+          "Acompanhe rascunhos, agendamentos e publicações da sua operação de conteúdo em um único painel.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "Painel — ContentFlow, conteúdo com IA" },
+      { name: "twitter:title", content: "Painel — ContentFlow, conteúdo com IA" },
+      { property: "og:description", content: "Acompanhe rascunhos, agendamentos e publicações da sua operação de conteúdo em um único painel." },
+      { name: "twitter:description", content: "Acompanhe rascunhos, agendamentos e publicações da sua operação de conteúdo em um único painel." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d614c1e2-dfee-46e4-b091-42e1d55966a5/id-preview-7ab63993--2bc7c7cd-fdab-409c-a67d-231d61a13c6f.lovable.app-1785109986344.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d614c1e2-dfee-46e4-b091-42e1d55966a5/id-preview-7ab63993--2bc7c7cd-fdab-409c-a67d-231d61a13c6f.lovable.app-1785109986344.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

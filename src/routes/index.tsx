@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Painel — ContentFlow, conteúdo com IA" },
       {
         property: "og:description",
-        content: "Crie, organize e agende conteúdo para todos os seus canais com IA.",
+        content: "Acompanhe rascunhos, agendamentos e publicações da sua operação de conteúdo em um único painel.",
       },
     ],
   }),
