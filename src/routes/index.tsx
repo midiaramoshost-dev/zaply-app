@@ -29,17 +29,10 @@ export const Route = createFileRoute("/")({
 function Dashboard() {
   const { posts, ready } = usePosts();
 
-  const drafts = posts.filter((p) => p.status === "rascunho");
   const scheduled = posts
     .filter((p) => p.status === "agendado")
     .sort((a, b) => (a.scheduledAt ?? "").localeCompare(b.scheduledAt ?? ""));
-  const published = posts.filter((p) => p.status === "publicado");
 
-  const stats = [
-    { label: "Rascunhos", value: drafts.length, icon: FileText },
-    { label: "Agendados", value: scheduled.length, icon: CalendarDays },
-    { label: "Publicados", value: published.length, icon: CheckCircle2 },
-  ];
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
