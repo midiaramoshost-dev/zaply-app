@@ -162,7 +162,7 @@ function CreatePage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label>Variações</Label>
+                <Label>Variações por canal</Label>
                 <Select value={variations} onValueChange={setVariations}>
                   <SelectTrigger>
                     <SelectValue />
