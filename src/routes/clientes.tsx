@@ -139,6 +139,7 @@ function ClientsPage() {
             <CardContent className="space-y-3 text-sm">
               <Field label="Objetivos" value={client.goals} />
               <Field label="Público-alvo" value={client.audience} />
+              {client.address && <Field label="Endereço" value={client.address} />}
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="secondary">Tom: {client.tone}</Badge>
                 {client.fonts.map((font) => (
@@ -227,6 +228,26 @@ function ClientsPage() {
                 value={draft.audience}
                 onChange={(e) => setDraft({ ...draft, audience: e.target.value })}
               />
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="address">Endereço</Label>
+                <Input
+                  id="address"
+                  placeholder="Rua, número, bairro, cidade"
+                  value={draft.address}
+                  onChange={(e) => setDraft({ ...draft, address: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact">Contato</Label>
+                <Input
+                  id="contact"
+                  placeholder="E-mail ou telefone"
+                  value={draft.contact}
+                  onChange={(e) => setDraft({ ...draft, contact: e.target.value })}
+                />
+              </div>
             </div>
             <div className="space-y-2">
               <Label>Tom de voz</Label>
