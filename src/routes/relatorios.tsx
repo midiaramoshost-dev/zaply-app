@@ -54,7 +54,7 @@ export const Route = createFileRoute("/relatorios")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: ReportsPage;
+  component: ReportsPage,
 });
 
 const nf = new Intl.NumberFormat("pt-BR");
