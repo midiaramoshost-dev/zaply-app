@@ -14,7 +14,9 @@ export type N8nStepId =
   | "instagram"
   | "facebook"
   | "linkedin"
-  | "x";
+  | "x"
+  | "links"
+  | "relatorio";
 
 export const N8N_STEPS: { id: N8nStepId; label: string; hint: string }[] = [
   { id: "cron", label: "Cron", hint: "Dispara conforme a grade de agendamento" },
