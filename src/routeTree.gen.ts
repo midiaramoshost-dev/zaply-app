@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RelatoriosRouteImport } from './routes/relatorios'
 import { Route as PublicacaoRouteImport } from './routes/publicacao'
+import { Route as N8nRouteImport } from './routes/n8n'
 import { Route as ImagensRouteImport } from './routes/imagens'
 import { Route as CriarRouteImport } from './routes/criar'
 import { Route as ComentariosRouteImport } from './routes/comentarios'
@@ -37,6 +38,11 @@ const RelatoriosRoute = RelatoriosRouteImport.update({
 const PublicacaoRoute = PublicacaoRouteImport.update({
   id: '/publicacao',
   path: '/publicacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const N8nRoute = N8nRouteImport.update({
+  id: '/n8n',
+  path: '/n8n',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ImagensRoute = ImagensRouteImport.update({
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/comentarios': typeof ComentariosRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
+  '/n8n': typeof N8nRoute
   '/publicacao': typeof PublicacaoRoute
   '/relatorios': typeof RelatoriosRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/comentarios': typeof ComentariosRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
+  '/n8n': typeof N8nRoute
   '/publicacao': typeof PublicacaoRoute
   '/relatorios': typeof RelatoriosRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/comentarios': typeof ComentariosRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
+  '/n8n': typeof N8nRoute
   '/publicacao': typeof PublicacaoRoute
   '/relatorios': typeof RelatoriosRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
     | '/comentarios'
     | '/criar'
     | '/imagens'
+    | '/n8n'
     | '/publicacao'
     | '/relatorios'
     | '/sitemap.xml'
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
     | '/comentarios'
     | '/criar'
     | '/imagens'
+    | '/n8n'
     | '/publicacao'
     | '/relatorios'
     | '/sitemap.xml'
@@ -189,6 +200,7 @@ export interface FileRouteTypes {
     | '/comentarios'
     | '/criar'
     | '/imagens'
+    | '/n8n'
     | '/publicacao'
     | '/relatorios'
     | '/sitemap.xml'
@@ -206,6 +218,7 @@ export interface RootRouteChildren {
   ComentariosRoute: typeof ComentariosRoute
   CriarRoute: typeof CriarRoute
   ImagensRoute: typeof ImagensRoute
+  N8nRoute: typeof N8nRoute
   PublicacaoRoute: typeof PublicacaoRoute
   RelatoriosRoute: typeof RelatoriosRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -233,6 +246,13 @@ declare module '@tanstack/react-router' {
       path: '/publicacao'
       fullPath: '/publicacao'
       preLoaderRoute: typeof PublicacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/n8n': {
+      id: '/n8n'
+      path: '/n8n'
+      fullPath: '/n8n'
+      preLoaderRoute: typeof N8nRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/imagens': {
@@ -326,6 +346,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComentariosRoute: ComentariosRoute,
   CriarRoute: CriarRoute,
   ImagensRoute: ImagensRoute,
+  N8nRoute: N8nRoute,
   PublicacaoRoute: PublicacaoRoute,
   RelatoriosRoute: RelatoriosRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
