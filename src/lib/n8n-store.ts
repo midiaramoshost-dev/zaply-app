@@ -28,6 +28,8 @@ export const N8N_STEPS: { id: N8nStepId; label: string; hint: string }[] = [
   { id: "facebook", label: "Publicar Facebook", hint: "Página" },
   { id: "linkedin", label: "Publicar LinkedIn", hint: "Perfil ou empresa" },
   { id: "x", label: "Publicar X", hint: "Tweet até 280 caracteres" },
+  { id: "links", label: "Salvar links", hint: "Guarda as URLs de cada publicação" },
+  { id: "relatorio", label: "Enviar relatório", hint: "Consolidado do período por e-mail" },
 ];
 
 export type N8nConfig = {
