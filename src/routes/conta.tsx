@@ -32,7 +32,7 @@ export const Route = createFileRoute("/conta")({
 function AccountPage() {
   const { user, signOut } = useAuth();
   const { isAdmin } = useRole();
-  const { posts } = usePosts();
+  const { posts, ready } = usePosts();
   const { clients } = useClients();
 
   if (!user) {
@@ -90,7 +90,7 @@ function AccountPage() {
         </div>
       </header>
 
-      <DashboardMetricsGrid posts={posts} clientsCount={clients.length} />
+      <DashboardMetricsGrid posts={posts} ready={ready} clientsCount={clients.length} />
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="panel">

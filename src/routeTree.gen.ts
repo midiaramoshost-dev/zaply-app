@@ -17,6 +17,7 @@ import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as N8nRouteImport } from './routes/n8n'
 import { Route as ImagensRouteImport } from './routes/imagens'
 import { Route as CriarRouteImport } from './routes/criar'
+import { Route as ContaRouteImport } from './routes/conta'
 import { Route as ComentariosRouteImport } from './routes/comentarios'
 import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as CalendarioRouteImport } from './routes/calendario'
@@ -67,6 +68,11 @@ const ImagensRoute = ImagensRouteImport.update({
 const CriarRoute = CriarRouteImport.update({
   id: '/criar',
   path: '/criar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContaRoute = ContaRouteImport.update({
+  id: '/conta',
+  path: '/conta',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComentariosRoute = ComentariosRouteImport.update({
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/calendario': typeof CalendarioRoute
   '/clientes': typeof ClientesRoute
   '/comentarios': typeof ComentariosRoute
+  '/conta': typeof ContaRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/calendario': typeof CalendarioRoute
   '/clientes': typeof ClientesRoute
   '/comentarios': typeof ComentariosRoute
+  '/conta': typeof ContaRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/calendario': typeof CalendarioRoute
   '/clientes': typeof ClientesRoute
   '/comentarios': typeof ComentariosRoute
+  '/conta': typeof ContaRoute
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/calendario'
     | '/clientes'
     | '/comentarios'
+    | '/conta'
     | '/criar'
     | '/imagens'
     | '/n8n'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/calendario'
     | '/clientes'
     | '/comentarios'
+    | '/conta'
     | '/criar'
     | '/imagens'
     | '/n8n'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/calendario'
     | '/clientes'
     | '/comentarios'
+    | '/conta'
     | '/criar'
     | '/imagens'
     | '/n8n'
@@ -266,6 +278,7 @@ export interface RootRouteChildren {
   CalendarioRoute: typeof CalendarioRoute
   ClientesRoute: typeof ClientesRoute
   ComentariosRoute: typeof ComentariosRoute
+  ContaRoute: typeof ContaRoute
   CriarRoute: typeof CriarRoute
   ImagensRoute: typeof ImagensRoute
   N8nRoute: typeof N8nRoute
@@ -333,6 +346,13 @@ declare module '@tanstack/react-router' {
       path: '/criar'
       fullPath: '/criar'
       preLoaderRoute: typeof CriarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conta': {
+      id: '/conta'
+      path: '/conta'
+      fullPath: '/conta'
+      preLoaderRoute: typeof ContaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comentarios': {
@@ -426,6 +446,7 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarioRoute: CalendarioRoute,
   ClientesRoute: ClientesRoute,
   ComentariosRoute: ComentariosRoute,
+  ContaRoute: ContaRoute,
   CriarRoute: CriarRoute,
   ImagensRoute: ImagensRoute,
   N8nRoute: N8nRoute,
