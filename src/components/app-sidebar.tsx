@@ -39,7 +39,7 @@ const groups = [
   {
     label: "Início",
     items: [
-      { title: "Visão geral", url: "/", icon: LayoutDashboard },
+      { title: "Visão geral", url: "/painel", icon: LayoutDashboard },
       { title: "Como usar", url: "/tutorial", icon: GraduationCap },
     ],
   },

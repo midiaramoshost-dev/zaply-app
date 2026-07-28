@@ -131,8 +131,9 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 const PAGE_TITLES: Record<string, string> = {
-  "/": "Visão geral",
+  "/painel": "Visão geral",
   "/tutorial": "Como usar",
+
   "/criar": "Criar com IA",
   "/automatico": "Calendário automático",
   "/imagens": "Imagens",
@@ -176,6 +177,17 @@ function AppHeader() {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (r) => r.location.pathname });
+  const isLanding = pathname === "/";
+
+  if (isLanding) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <Outlet />
+        <Toaster position="top-center" />
+      </QueryClientProvider>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -195,3 +207,4 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
+

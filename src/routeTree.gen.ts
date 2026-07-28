@@ -14,6 +14,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RelatoriosRouteImport } from './routes/relatorios'
 import { Route as PublicacaoRouteImport } from './routes/publicacao'
 import { Route as PlanosRouteImport } from './routes/planos'
+import { Route as PainelRouteImport } from './routes/painel'
 import { Route as N8nRouteImport } from './routes/n8n'
 import { Route as ImagensRouteImport } from './routes/imagens'
 import { Route as CriarRouteImport } from './routes/criar'
@@ -53,6 +54,11 @@ const PublicacaoRoute = PublicacaoRouteImport.update({
 const PlanosRoute = PlanosRouteImport.update({
   id: '/planos',
   path: '/planos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PainelRoute = PainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const N8nRoute = N8nRouteImport.update({
@@ -146,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
+  '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
   '/publicacao': typeof PublicacaoRoute
   '/relatorios': typeof RelatoriosRoute
@@ -168,6 +175,7 @@ export interface FileRoutesByTo {
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
+  '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
   '/publicacao': typeof PublicacaoRoute
   '/relatorios': typeof RelatoriosRoute
@@ -191,6 +199,7 @@ export interface FileRoutesById {
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
+  '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
   '/publicacao': typeof PublicacaoRoute
   '/relatorios': typeof RelatoriosRoute
@@ -215,6 +224,7 @@ export interface FileRouteTypes {
     | '/criar'
     | '/imagens'
     | '/n8n'
+    | '/painel'
     | '/planos'
     | '/publicacao'
     | '/relatorios'
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/criar'
     | '/imagens'
     | '/n8n'
+    | '/painel'
     | '/planos'
     | '/publicacao'
     | '/relatorios'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/criar'
     | '/imagens'
     | '/n8n'
+    | '/painel'
     | '/planos'
     | '/publicacao'
     | '/relatorios'
@@ -282,6 +294,7 @@ export interface RootRouteChildren {
   CriarRoute: typeof CriarRoute
   ImagensRoute: typeof ImagensRoute
   N8nRoute: typeof N8nRoute
+  PainelRoute: typeof PainelRoute
   PlanosRoute: typeof PlanosRoute
   PublicacaoRoute: typeof PublicacaoRoute
   RelatoriosRoute: typeof RelatoriosRoute
@@ -325,6 +338,13 @@ declare module '@tanstack/react-router' {
       path: '/planos'
       fullPath: '/planos'
       preLoaderRoute: typeof PlanosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/painel': {
+      id: '/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof PainelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/n8n': {
@@ -450,6 +470,7 @@ const rootRouteChildren: RootRouteChildren = {
   CriarRoute: CriarRoute,
   ImagensRoute: ImagensRoute,
   N8nRoute: N8nRoute,
+  PainelRoute: PainelRoute,
   PlanosRoute: PlanosRoute,
   PublicacaoRoute: PublicacaoRoute,
   RelatoriosRoute: RelatoriosRoute,
