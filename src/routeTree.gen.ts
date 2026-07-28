@@ -25,6 +25,7 @@ import { Route as AutomaticoRouteImport } from './routes/automatico'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AprovacaoRouteImport } from './routes/aprovacao'
 import { Route as AgendamentoRouteImport } from './routes/agendamento'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiGenerateImageRouteImport } from './routes/api/generate-image'
 
@@ -108,6 +109,11 @@ const AgendamentoRoute = AgendamentoRouteImport.update({
   path: '/agendamento',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -121,6 +127,7 @@ const ApiGenerateImageRoute = ApiGenerateImageRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/agendamento': typeof AgendamentoRoute
   '/aprovacao': typeof AprovacaoRoute
   '/auth': typeof AuthRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/agendamento': typeof AgendamentoRoute
   '/aprovacao': typeof AprovacaoRoute
   '/auth': typeof AuthRoute
@@ -162,6 +170,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/agendamento': typeof AgendamentoRoute
   '/aprovacao': typeof AprovacaoRoute
   '/auth': typeof AuthRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/agendamento'
     | '/aprovacao'
     | '/auth'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/agendamento'
     | '/aprovacao'
     | '/auth'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/agendamento'
     | '/aprovacao'
     | '/auth'
@@ -245,6 +257,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   AgendamentoRoute: typeof AgendamentoRoute
   AprovacaoRoute: typeof AprovacaoRoute
   AuthRoute: typeof AuthRoute
@@ -378,6 +391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgendamentoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -397,6 +417,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   AgendamentoRoute: AgendamentoRoute,
   AprovacaoRoute: AprovacaoRoute,
   AuthRoute: AuthRoute,
