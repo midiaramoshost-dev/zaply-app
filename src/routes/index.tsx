@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeCheck, CalendarDays, Sparkles, Wand2 } from "lucide-react";
 
 import { DashboardMetricsGrid } from "@/components/dashboard-metrics";
 import { Badge } from "@/components/ui/badge";
