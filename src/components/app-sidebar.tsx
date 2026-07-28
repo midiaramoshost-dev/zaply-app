@@ -7,7 +7,6 @@ import {
   Workflow,
   CalendarDays,
   GraduationCap,
-
   ImageIcon,
   LayoutDashboard,
   Library,
@@ -33,25 +32,48 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const items = [
-  { title: "Visão geral", url: "/", icon: LayoutDashboard },
-  { title: "Como usar", url: "/tutorial", icon: GraduationCap },
-  { title: "Criar com IA", url: "/criar", icon: Sparkles },
-  { title: "Calendário automático", url: "/automatico", icon: Wand2 },
-  { title: "Imagens", url: "/imagens", icon: ImageIcon },
-  { title: "Biblioteca", url: "/biblioteca", icon: Library },
-  { title: "Aprovação", url: "/aprovacao", icon: BadgeCheck },
-  { title: "Publicação", url: "/publicacao", icon: Send },
-  { title: "Comentários", url: "/comentarios", icon: MessageCircle },
-  { title: "Calendário", url: "/calendario", icon: CalendarDays },
-  { title: "Agendamento", url: "/agendamento", icon: CalendarClock },
-  { title: "Fluxo n8n", url: "/n8n", icon: Workflow },
-  { title: "Relatórios", url: "/relatorios", icon: FileBarChart },
-  { title: "Clientes", url: "/clientes", icon: Users },
-  { title: "Planos", url: "/planos", icon: CreditCard },
+const groups = [
+  {
+    label: "Início",
+    items: [
+      { title: "Visão geral", url: "/", icon: LayoutDashboard },
+      { title: "Como usar", url: "/tutorial", icon: GraduationCap },
+    ],
+  },
+  {
+    label: "Criar",
+    items: [
+      { title: "Criar com IA", url: "/criar", icon: Sparkles },
+      { title: "Calendário automático", url: "/automatico", icon: Wand2 },
+      { title: "Imagens", url: "/imagens", icon: ImageIcon },
+      { title: "Biblioteca", url: "/biblioteca", icon: Library },
+    ],
+  },
+  {
+    label: "Publicar",
+    items: [
+      { title: "Aprovação", url: "/aprovacao", icon: BadgeCheck },
+      { title: "Calendário", url: "/calendario", icon: CalendarDays },
+      { title: "Agendamento", url: "/agendamento", icon: CalendarClock },
+      { title: "Publicação", url: "/publicacao", icon: Send },
+    ],
+  },
+  {
+    label: "Acompanhar",
+    items: [
+      { title: "Comentários", url: "/comentarios", icon: MessageCircle },
+      { title: "Relatórios", url: "/relatorios", icon: FileBarChart },
+      { title: "Fluxo n8n", url: "/n8n", icon: Workflow },
+    ],
+  },
+  {
+    label: "Conta",
+    items: [
+      { title: "Clientes", url: "/clientes", icon: Users },
+      { title: "Planos", url: "/planos", icon: CreditCard },
+    ],
+  },
 ] as const;
-
-
 
 export function AppSidebar() {
   const { state } = useSidebar();
@@ -60,8 +82,8 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-3">
+      <SidebarHeader className="border-b border-sidebar-border/70">
+        <div className="flex items-center gap-2.5 px-2 py-3">
           <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary glow">
             <Zap className="size-4" />
           </span>
@@ -74,30 +96,39 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Operação</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton asChild isActive={currentPath === item.url}>
-                    <Link to={item.url} className="flex items-center gap-2">
-                      <item.icon className="size-4" />
-                      {!collapsed && <span>{item.title}</span>}
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+      <SidebarContent className="gap-0">
+        {groups.map((group) => (
+          <SidebarGroup key={group.label}>
+            <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/70">
+              {group.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.items.map((item) => (
+                  <SidebarMenuItem key={item.url}>
+                    <SidebarMenuButton
+                      asChild
+                      tooltip={item.title}
+                      isActive={currentPath === item.url}
+                      className="data-[active=true]:bg-primary/12 data-[active=true]:text-primary data-[active=true]:font-medium"
+                    >
+                      <Link to={item.url} className="flex items-center gap-2.5">
+                        <item.icon className="size-4" />
+                        {!collapsed && <span className="truncate">{item.title}</span>}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter>
         {!collapsed && (
-          <p className="px-2 pb-2 text-[11px] leading-relaxed text-muted-foreground">
-            Publicação automática em modo simulado. Conecte suas redes para publicar de verdade.
+          <p className="rounded-lg border border-sidebar-border/70 bg-sidebar-accent/40 px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
+            Publicação em modo simulado. Conecte suas redes para publicar de verdade.
           </p>
         )}
       </SidebarFooter>

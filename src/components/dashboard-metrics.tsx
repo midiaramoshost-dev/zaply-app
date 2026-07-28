@@ -79,16 +79,22 @@ export function DashboardMetricsGrid({
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {cards.map((c) => (
-        <Card key={c.label} className="panel">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">{c.label}</CardTitle>
-            <c.icon className="size-4 text-primary" />
+        <Card key={c.label} className="panel panel-hover gap-0 py-4">
+          <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 px-4 pb-2">
+            <CardTitle className="truncate text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              {c.label}
+            </CardTitle>
+            <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+              <c.icon className="size-3.5" />
+            </span>
           </CardHeader>
-          <CardContent>
-            <p className="font-display text-3xl font-semibold">{ready ? c.value : "—"}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{c.hint}</p>
+          <CardContent className="px-4">
+            <p className="font-display text-[28px] font-semibold leading-none tabular-nums">
+              {ready ? c.value : "—"}
+            </p>
+            <p className="mt-1.5 text-xs text-muted-foreground">{c.hint}</p>
           </CardContent>
         </Card>
       ))}

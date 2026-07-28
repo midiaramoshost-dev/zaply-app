@@ -10,13 +10,13 @@ export function AccountButton() {
 
   if (loading) {
     return (
-      <span className="ml-auto h-7 w-24 animate-pulse rounded-full border border-border bg-surface" />
+      <span className="h-7 w-24 animate-pulse rounded-full border border-border bg-surface" />
     );
   }
 
   if (!user) {
     return (
-      <Button asChild size="sm" variant="outline" className="ml-auto h-8">
+      <Button asChild size="sm" variant="outline" className="h-8">
         <Link to="/auth">
           <UserRound className="size-3.5" />
           Entrar
@@ -28,7 +28,7 @@ export function AccountButton() {
   const label = (user.user_metadata?.full_name as string | undefined) ?? user.email;
 
   return (
-    <div className="ml-auto flex items-center gap-2">
+    <div className="flex items-center gap-2">
       <span className="hidden max-w-[180px] truncate rounded-full border border-border bg-surface px-3 py-1 text-[11px] text-muted-foreground sm:inline">
         {label}
       </span>
