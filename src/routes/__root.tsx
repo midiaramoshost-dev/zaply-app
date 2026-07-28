@@ -4,13 +4,16 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { Sparkles } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
 import { AppSidebar } from "../components/app-sidebar";
 import { AccountButton } from "../components/account-button";
+import { Button } from "../components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "../components/ui/sidebar";
 import { Toaster } from "../components/ui/sonner";
 import appCss from "../styles.css?url";
@@ -127,6 +130,50 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+const PAGE_TITLES: Record<string, string> = {
+  "/": "Visão geral",
+  "/tutorial": "Como usar",
+  "/criar": "Criar com IA",
+  "/automatico": "Calendário automático",
+  "/imagens": "Imagens",
+  "/biblioteca": "Biblioteca",
+  "/aprovacao": "Aprovação",
+  "/calendario": "Calendário",
+  "/agendamento": "Agendamento",
+  "/publicacao": "Publicação",
+  "/comentarios": "Comentários",
+  "/relatorios": "Relatórios",
+  "/n8n": "Fluxo n8n",
+  "/clientes": "Clientes",
+  "/planos": "Planos",
+  "/auth": "Entrar",
+};
+
+function AppHeader() {
+  const pathname = useRouterState({ select: (r) => r.location.pathname });
+  const title = PAGE_TITLES[pathname] ?? "ContentFlow";
+
+  return (
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border/70 bg-background/70 px-4 backdrop-blur-xl">
+      <SidebarTrigger />
+      <div className="flex min-w-0 items-center gap-2 text-sm">
+        <span className="hidden text-muted-foreground sm:inline">ContentFlow</span>
+        <span className="hidden text-muted-foreground/50 sm:inline">/</span>
+        <span className="truncate font-display font-semibold tracking-tight">{title}</span>
+      </div>
+      <div className="ml-auto flex items-center gap-2">
+        <Button asChild size="sm" className="hidden sm:inline-flex">
+          <Link to="/criar">
+            <Sparkles className="size-4" />
+            Criar com IA
+          </Link>
+        </Button>
+        <AccountButton />
+      </div>
+    </header>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -136,13 +183,7 @@ function RootComponent() {
         <div className="flex min-h-screen w-full bg-background">
           <AppSidebar />
           <div className="flex min-w-0 flex-1 flex-col">
-            <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border/70 bg-background/80 px-4 backdrop-blur">
-              <SidebarTrigger />
-              <span className="font-display text-sm font-semibold tracking-tight">
-                ContentFlow
-              </span>
-              <AccountButton />
-            </header>
+            <AppHeader />
             <main className="flex-1 grid-backdrop">
               {/* Required: nested routes render here. */}
               <Outlet />
