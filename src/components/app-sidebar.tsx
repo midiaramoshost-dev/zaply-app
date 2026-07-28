@@ -15,6 +15,8 @@ import {
   Sparkles,
   Wand2,
   Users,
+  ShieldCheck,
+  UserRound,
   Zap,
 } from "lucide-react";
 
@@ -31,6 +33,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useRole } from "@/hooks/use-role";
 
 const groups = [
   {
@@ -69,6 +72,7 @@ const groups = [
   {
     label: "Conta",
     items: [
+      { title: "Meu painel", url: "/conta", icon: UserRound },
       { title: "Clientes", url: "/clientes", icon: Users },
       { title: "Planos", url: "/planos", icon: CreditCard },
     ],
@@ -79,6 +83,17 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const currentPath = useRouterState({ select: (r) => r.location.pathname });
+  const { isAdmin } = useRole();
+
+  const visibleGroups = isAdmin
+    ? [
+        ...groups,
+        {
+          label: "Administração",
+          items: [{ title: "Painel master", url: "/admin" as const, icon: ShieldCheck }],
+        },
+      ]
+    : groups;
 
   return (
     <Sidebar collapsible="icon">
@@ -97,7 +112,7 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="gap-0">
-        {groups.map((group) => (
+        {visibleGroups.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/70">
               {group.label}

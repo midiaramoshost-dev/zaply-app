@@ -29,9 +29,12 @@ export function AccountButton() {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="hidden max-w-[180px] truncate rounded-full border border-border bg-surface px-3 py-1 text-[11px] text-muted-foreground sm:inline">
+      <Link
+        to="/conta"
+        className="hidden max-w-[180px] truncate rounded-full border border-border bg-surface px-3 py-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground sm:inline"
+      >
         {label}
-      </span>
+      </Link>
       <Button
         size="sm"
         variant="ghost"
