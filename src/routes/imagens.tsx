@@ -204,12 +204,20 @@ function ImagesPage() {
                   <figure className="space-y-3">
                     <img
                       src={preview}
-                      alt={prompt || "Imagem gerada por IA"}
+                      alt={
+                        prompt
+                          ? `Imagem gerada por IA: ${prompt}`
+                          : "Imagem gerada por inteligência artificial"
+                      }
                       className={cn(
                         "w-full rounded-xl border border-border transition-[filter] duration-300",
                         isFinal ? "blur-0" : "blur-2xl",
                       )}
                     />
+                    <figcaption className="text-xs text-muted-foreground">
+                      {isFinal ? "Imagem gerada por IA" : "Gerando imagem..."}
+                      {prompt ? ` — ${prompt}` : ""}
+                    </figcaption>
                     {isFinal && (
                       <div className="flex gap-2">
                         <Button asChild size="sm" variant="outline">
