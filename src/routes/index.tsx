@@ -16,6 +16,7 @@ import {
 
 import heroDashboard from "@/assets/hero-dashboard.jpg";
 import { Badge } from "@/components/ui/badge";
+import { BrandMark } from "@/components/brand-mark";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
