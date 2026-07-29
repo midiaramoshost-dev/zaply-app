@@ -12,11 +12,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-type Search = { next?: string };
+type Search = { next?: string; mode?: "entrar" | "criar" };
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (search: Record<string, unknown>): Search => ({
     next: typeof search.next === "string" ? search.next : undefined,
+    mode: search.mode === "criar" ? "criar" : search.mode === "entrar" ? "entrar" : undefined,
   }),
   head: () => ({
     meta: [
@@ -53,7 +54,7 @@ function safeNext(next?: string) {
 }
 
 function AuthPage() {
-  const { next } = useSearch({ from: "/auth" });
+  const { next, mode } = useSearch({ from: "/auth" });
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [email, setEmail] = useState("");
