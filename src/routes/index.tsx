@@ -328,9 +328,9 @@ function LandingPage() {
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-4 px-4 py-8 text-xs text-muted-foreground sm:px-6">
           <div className="flex items-center gap-2">
             <span className="grid size-7 place-items-center rounded-lg bg-primary/15 text-primary">
-              <Zap className="size-3.5" />
-            </span>
+            <BrandMark className="size-7 rounded-lg" />
             <span className="font-display text-sm font-semibold text-foreground">Zaply</span>
+
           </div>
           <nav className="flex flex-wrap gap-4">
             <Link to="/painel" className="transition-colors hover:text-foreground">
