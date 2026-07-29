@@ -34,6 +34,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useRole } from "@/hooks/use-role";
+import { BrandMark } from "@/components/brand-mark";
+
 
 const groups = [
   {

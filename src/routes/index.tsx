@@ -120,11 +120,10 @@ function LandingPage() {
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/70 backdrop-blur-xl">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2.5">
-            <span className="grid size-9 place-items-center rounded-xl bg-primary/15 text-primary glow">
-              <Zap className="size-4" />
-            </span>
+            <BrandMark className="size-9" />
             <span className="font-display text-base font-semibold tracking-tight">Zaply</span>
           </Link>
+
           <nav className="ml-8 hidden items-center gap-6 text-sm text-muted-foreground md:flex">
             <a href="#recursos" className="transition-colors hover:text-foreground">
               Recursos
