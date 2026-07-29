@@ -176,14 +176,14 @@ function LandingPage() {
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Button asChild size="lg">
-                  <Link to="/criar">
+                  <Link to="/auth" search={{ mode: "criar" }}>
                     <Sparkles className="size-4" />
-                    Começar a criar
+                    Criar conta grátis
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline">
-                  <Link to="/planos">
-                    Ver planos
+                  <Link to="/auth" search={{ mode: "entrar" }}>
+                    Já tenho conta — entrar
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
