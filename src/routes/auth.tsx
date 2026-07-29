@@ -12,11 +12,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-type Search = { next?: string };
+type Search = { next?: string; mode?: "entrar" | "criar" };
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (search: Record<string, unknown>): Search => ({
     next: typeof search.next === "string" ? search.next : undefined,
+    mode: search.mode === "criar" ? "criar" : search.mode === "entrar" ? "entrar" : undefined,
   }),
   head: () => ({
     meta: [
@@ -49,11 +50,11 @@ export const Route = createFileRoute("/auth")({
 });
 
 function safeNext(next?: string) {
-  return next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
+  return next && next.startsWith("/") && !next.startsWith("//") ? next : "/painel";
 }
 
 function AuthPage() {
-  const { next } = useSearch({ from: "/auth" });
+  const { next, mode } = useSearch({ from: "/auth" });
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [email, setEmail] = useState("");
@@ -111,9 +112,13 @@ function AuthPage() {
           <span className="grid size-11 place-items-center rounded-xl bg-primary/15 text-primary glow">
             <Zap className="size-5" />
           </span>
-          <CardTitle className="font-display">Acessar o ContentFlow</CardTitle>
+          <CardTitle className="font-display">
+            {mode === "criar" ? "Criar sua conta grátis" : "Acessar o ContentFlow"}
+          </CardTitle>
           <CardDescription>
-            Entre para salvar seus clientes, posts e agendamentos na nuvem.
+            {mode === "criar"
+              ? "Comece em minutos: cadastre a marca e deixe a IA preencher o calendário."
+              : "Entre para salvar seus clientes, posts e agendamentos na nuvem."}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -125,7 +130,7 @@ function AuthPage() {
             <span className="h-px flex-1 bg-border" /> ou <span className="h-px flex-1 bg-border" />
           </div>
 
-          <Tabs defaultValue="entrar">
+          <Tabs defaultValue={mode === "criar" ? "criar" : "entrar"}>
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="entrar">Entrar</TabsTrigger>
               <TabsTrigger value="criar">Criar conta</TabsTrigger>

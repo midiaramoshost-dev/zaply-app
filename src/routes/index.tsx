@@ -141,11 +141,13 @@ function LandingPage() {
           </nav>
           <div className="ml-auto flex items-center gap-2">
             <Button asChild variant="ghost" size="sm">
-              <Link to="/auth">Entrar</Link>
+              <Link to="/auth" search={{ mode: "entrar" }}>
+                Entrar
+              </Link>
             </Button>
             <Button asChild size="sm">
-              <Link to="/painel">
-                Abrir painel
+              <Link to="/auth" search={{ mode: "criar" }}>
+                Criar conta grátis
                 <ArrowRight className="size-4" />
               </Link>
             </Button>
@@ -174,14 +176,14 @@ function LandingPage() {
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Button asChild size="lg">
-                  <Link to="/criar">
+                  <Link to="/auth" search={{ mode: "criar" }}>
                     <Sparkles className="size-4" />
-                    Começar a criar
+                    Criar conta grátis
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline">
-                  <Link to="/planos">
-                    Ver planos
+                  <Link to="/auth" search={{ mode: "entrar" }}>
+                    Já tenho conta — entrar
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
@@ -306,13 +308,15 @@ function LandingPage() {
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Button asChild size="lg">
-                  <Link to="/auth">
+                  <Link to="/auth" search={{ mode: "criar" }}>
                     Criar conta grátis
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline">
-                  <Link to="/tutorial">Ver o passo a passo</Link>
+                  <Link to="/auth" search={{ mode: "entrar" }}>
+                    Entrar
+                  </Link>
                 </Button>
               </div>
             </div>
