@@ -179,11 +179,16 @@ export function PostDayCard({
                 />
               </div>
               {imageUrl && (
-                <img
-                  src={imageUrl}
-                  alt="Pré-visualização da nova imagem"
-                  className="aspect-video w-full rounded-lg object-cover"
-                />
+                <figure>
+                  <img
+                    src={imageUrl}
+                    alt={`Pré-visualização da nova imagem do post “${post.title}”`}
+                    className="aspect-video w-full rounded-lg object-cover"
+                  />
+                  <figcaption className="mt-1.5 text-xs text-muted-foreground">
+                    Pré-visualização da nova imagem
+                  </figcaption>
+                </figure>
               )}
             </div>
           )}
