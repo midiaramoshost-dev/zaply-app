@@ -57,13 +57,13 @@ const TEMPLATES = [
 export const Route = createFileRoute("/imagens")({
   head: () => ({
     meta: [
-      { title: "Gerador de imagens — ContentFlow" },
+      { title: "Gerador de imagens — Zaply" },
       {
         name: "description",
         content:
           "Crie banners, mockups, ilustrações e fotos realistas com IA, use templates prontos ou guarde tudo na sua biblioteca.",
       },
-      { property: "og:title", content: "Gerador de imagens — ContentFlow" },
+      { property: "og:title", content: "Gerador de imagens — Zaply" },
       {
         property: "og:description",
         content: "Imagens por IA, templates do Canva e biblioteca própria em um só lugar.",
@@ -305,7 +305,7 @@ function ImagesPage() {
                       alt={
                         image.prompt
                           ? `${image.source === "ia" ? "Imagem gerada por IA" : "Imagem enviada"}: ${image.prompt}`
-                          : "Imagem da biblioteca do ContentFlow"
+                          : "Imagem da biblioteca do Zaply"
                       }
                       className="h-44 w-full object-cover"
                       loading="lazy"

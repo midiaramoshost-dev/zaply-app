@@ -22,13 +22,13 @@ import { usePosts, type Post } from "@/lib/posts-store";
 export const Route = createFileRoute("/aprovacao")({
   head: () => ({
     meta: [
-      { title: "Aprovação de conteúdo — ContentFlow" },
+      { title: "Aprovação de conteúdo — Zaply" },
       {
         name: "description",
         content:
           "Fluxo de aprovação: a IA gera, o cliente aprova e o post vai para publicação manual ou automática.",
       },
-      { property: "og:title", content: "Aprovação de conteúdo — ContentFlow" },
+      { property: "og:title", content: "Aprovação de conteúdo — Zaply" },
       {
         property: "og:description",
         content: "Aprove, reprove e publique conteúdos gerados por IA em um fluxo único.",

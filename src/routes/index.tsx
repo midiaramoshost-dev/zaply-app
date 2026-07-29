@@ -11,17 +11,17 @@ import {
   Sparkles,
   Wand2,
   Workflow,
-  Zap,
 } from "lucide-react";
 
 import heroDashboard from "@/assets/hero-dashboard.jpg";
 import { Badge } from "@/components/ui/badge";
+import { BrandMark } from "@/components/brand-mark";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ContentFlow — conteúdo com IA, do briefing à publicação" },
+      { title: "Zaply — conteúdo com IA, do briefing à publicação" },
       {
         name: "description",
         content:
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "ContentFlow — conteúdo com IA, do briefing à publicação" },
+      { property: "og:title", content: "Zaply — conteúdo com IA, do briefing à publicação" },
       {
         property: "og:description",
         content:
@@ -120,11 +120,10 @@ function LandingPage() {
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/70 backdrop-blur-xl">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2.5">
-            <span className="grid size-9 place-items-center rounded-xl bg-primary/15 text-primary glow">
-              <Zap className="size-4" />
-            </span>
-            <span className="font-display text-base font-semibold tracking-tight">ContentFlow</span>
+            <BrandMark className="size-9" />
+            <span className="font-display text-base font-semibold tracking-tight">Zaply</span>
           </Link>
+
           <nav className="ml-8 hidden items-center gap-6 text-sm text-muted-foreground md:flex">
             <a href="#recursos" className="transition-colors hover:text-foreground">
               Recursos
@@ -171,7 +170,7 @@ function LandingPage() {
                 <span className="gradient-text">sem tirar o pé do estúdio</span>
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-                O ContentFlow gera, organiza, aprova, agenda e publica o conteúdo das suas marcas em
+                O Zaply gera, organiza, aprova, agenda e publica o conteúdo das suas marcas em
                 todas as redes — com a consistência de uma agência e a velocidade de um robô.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -201,7 +200,7 @@ function LandingPage() {
             <div className="panel glow mt-14 overflow-hidden p-1.5">
               <img
                 src={heroDashboard}
-                alt="Painel do ContentFlow com calendário editorial e métricas de desempenho"
+                alt="Painel do Zaply com calendário editorial e métricas de desempenho"
                 width={1600}
                 height={1008}
                 className="w-full rounded-[calc(var(--radius-xl)-6px)]"
@@ -327,10 +326,10 @@ function LandingPage() {
       <footer className="border-t border-border/60">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-4 px-4 py-8 text-xs text-muted-foreground sm:px-6">
           <div className="flex items-center gap-2">
-            <span className="grid size-7 place-items-center rounded-lg bg-primary/15 text-primary">
-              <Zap className="size-3.5" />
-            </span>
-            <span className="font-display text-sm font-semibold text-foreground">ContentFlow</span>
+            <BrandMark className="size-7 rounded-lg" />
+            <span className="font-display text-sm font-semibold text-foreground">Zaply</span>
+
+
           </div>
           <nav className="flex flex-wrap gap-4">
             <Link to="/painel" className="transition-colors hover:text-foreground">
@@ -346,7 +345,7 @@ function LandingPage() {
               Entrar
             </Link>
           </nav>
-          <p className="ml-auto">© {new Date().getFullYear()} ContentFlow. Conteúdo com IA.</p>
+          <p className="ml-auto">© {new Date().getFullYear()} Zaply. Conteúdo com IA.</p>
         </div>
       </footer>
     </div>

@@ -25,7 +25,7 @@ import {
 export const Route = createFileRoute("/agendamento")({
   head: () => ({
     meta: [
-      { title: "Agendamento — grade de horários da IA | ContentFlow" },
+      { title: "Agendamento — grade de horários da IA | Zaply" },
       {
         name: "description",
         content:

@@ -36,13 +36,13 @@ import { streamImage } from "@/lib/stream-image";
 export const Route = createFileRoute("/automatico")({
   head: () => ({
     meta: [
-      { title: "Calendário automático — ContentFlow" },
+      { title: "Calendário automático — Zaply" },
       {
         name: "description",
         content:
           "Diga o seu nicho e a IA gera 30 ideias, 30 legendas, 30 imagens e agenda o mês inteiro automaticamente.",
       },
-      { property: "og:title", content: "Calendário automático — ContentFlow" },
+      { property: "og:title", content: "Calendário automático — Zaply" },
       {
         property: "og:description",
         content: "Do nicho ao mês agendado em quatro etapas automáticas.",

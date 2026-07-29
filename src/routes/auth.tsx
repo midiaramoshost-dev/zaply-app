@@ -21,23 +21,23 @@ export const Route = createFileRoute("/auth")({
   }),
   head: () => ({
     meta: [
-      { title: "Entrar — ContentFlow" },
+      { title: "Entrar — Zaply" },
       {
         name: "description",
         content:
-          "Acesse sua conta ContentFlow para criar, aprovar e publicar conteúdo com inteligência artificial.",
+          "Acesse sua conta Zaply para criar, aprovar e publicar conteúdo com inteligência artificial.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "Entrar — ContentFlow" },
+      { property: "og:title", content: "Entrar — Zaply" },
       {
         property: "og:description",
-        content: "Acesse sua conta ContentFlow para criar, aprovar e publicar conteúdo com IA.",
+        content: "Acesse sua conta Zaply para criar, aprovar e publicar conteúdo com IA.",
       },
-      { name: "twitter:title", content: "Entrar — ContentFlow" },
+      { name: "twitter:title", content: "Entrar — Zaply" },
       {
         name: "twitter:description",
-        content: "Acesse sua conta ContentFlow para criar, aprovar e publicar conteúdo com IA.",
+        content: "Acesse sua conta Zaply para criar, aprovar e publicar conteúdo com IA.",
       },
     ],
   }),
@@ -113,7 +113,7 @@ function AuthPage() {
             <Zap className="size-5" />
           </span>
           <CardTitle className="font-display">
-            {mode === "criar" ? "Criar sua conta grátis" : "Acessar o ContentFlow"}
+            {mode === "criar" ? "Criar sua conta grátis" : "Acessar o Zaply"}
           </CardTitle>
           <CardDescription>
             {mode === "criar"

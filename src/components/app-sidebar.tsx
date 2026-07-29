@@ -34,6 +34,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useRole } from "@/hooks/use-role";
+import { BrandMark } from "@/components/brand-mark";
+
 
 const groups = [
   {
@@ -99,17 +101,16 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border/70">
         <div className="flex items-center gap-2.5 px-2 py-3">
-          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary glow">
-            <Zap className="size-4" />
-          </span>
+          <BrandMark className="size-9" />
           {!collapsed && (
             <div className="leading-tight">
-              <p className="font-display text-sm font-semibold">ContentFlow</p>
+              <p className="font-display text-sm font-semibold tracking-tight">Zaply</p>
               <p className="text-[11px] text-muted-foreground">Conteúdo com IA</p>
             </div>
           )}
         </div>
       </SidebarHeader>
+
 
       <SidebarContent className="gap-0">
         {visibleGroups.map((group) => (
