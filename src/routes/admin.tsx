@@ -40,6 +40,9 @@ type Stats = {
 type Member = {
   id: string;
   full_name: string | null;
+  email: string | null;
+  approved: boolean;
+  requested_plan: string | null;
   created_at: string;
   role: "admin" | "user";
   companies: number;
@@ -56,7 +59,10 @@ function AdminPage() {
     setBusy(true);
     const [statsRes, profilesRes, rolesRes, companiesRes, postsRes] = await Promise.all([
       supabase.rpc("admin_platform_stats"),
-      supabase.from("profiles").select("id, full_name, created_at").order("created_at", { ascending: false }),
+      supabase
+        .from("profiles")
+        .select("id, full_name, email, approved, requested_plan, created_at")
+        .order("created_at", { ascending: false }),
       supabase.from("user_roles").select("user_id, role"),
       supabase.from("companies").select("owner_id"),
       supabase.from("posts").select("user_id"),
@@ -95,6 +101,9 @@ function AdminPage() {
       (profilesRes.data ?? []).map((p) => ({
         id: p.id,
         full_name: p.full_name,
+        email: p.email,
+        approved: Boolean(p.approved),
+        requested_plan: p.requested_plan,
         created_at: p.created_at,
         role: roleMap.get(p.id) ?? "user",
         companies: companyCount.get(p.id) ?? 0,
@@ -107,6 +116,21 @@ function AdminPage() {
   useEffect(() => {
     if (isAdmin) void load();
   }, [isAdmin, load]);
+
+  async function toggleApproval(member: Member) {
+    const next = !member.approved;
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        approved: next,
+        approved_at: next ? new Date().toISOString() : null,
+        approved_by: next ? (user?.id ?? null) : null,
+      })
+      .eq("id", member.id);
+    if (error) return toast.error("Não foi possível atualizar a liberação.");
+    toast.success(next ? "Acesso liberado." : "Acesso bloqueado.");
+    void load();
+  }
 
   async function toggleAdmin(member: Member) {
     if (member.id === user?.id) {
@@ -169,6 +193,8 @@ function AdminPage() {
     );
   }
 
+  const pending = members.filter((m) => !m.approved).length;
+
   const cards = [
     { label: "Usuários", value: stats?.total_users ?? 0, icon: Users },
     { label: "Empresas/clientes", value: stats?.total_companies ?? 0, icon: Building2 },
@@ -213,13 +239,22 @@ function AdminPage() {
 
       <Card className="panel">
         <CardHeader>
-          <CardTitle className="text-base">Usuários da plataforma</CardTitle>
+          <CardTitle className="text-base">
+            Usuários da plataforma
+            {pending > 0 && (
+              <Badge variant="outline" className="ml-2 border-primary/50 text-primary">
+                {pending} aguardando liberação
+              </Badge>
+            )}
+          </CardTitle>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Usuário</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Plano pedido</TableHead>
                 <TableHead>Papel</TableHead>
                 <TableHead className="text-right">Clientes</TableHead>
                 <TableHead className="text-right">Posts</TableHead>
@@ -230,9 +265,24 @@ function AdminPage() {
             <TableBody>
               {members.map((m) => (
                 <TableRow key={m.id}>
-                  <TableCell className="max-w-[220px] truncate">
-                    {m.full_name || m.id.slice(0, 8)}
-                    {m.id === user.id && <span className="ml-2 text-xs text-muted-foreground">(você)</span>}
+                  <TableCell className="max-w-[220px]">
+                    <span className="block truncate">
+                      {m.full_name || m.email || m.id.slice(0, 8)}
+                      {m.id === user.id && (
+                        <span className="ml-2 text-xs text-muted-foreground">(você)</span>
+                      )}
+                    </span>
+                    {m.email && (
+                      <span className="block truncate text-xs text-muted-foreground">{m.email}</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={m.approved ? "default" : "outline"}>
+                      {m.approved ? "Liberado" : "Aguardando"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-xs uppercase text-muted-foreground">
+                    {m.requested_plan || "—"}
                   </TableCell>
                   <TableCell>
                     <Badge variant={m.role === "admin" ? "default" : "secondary"}>
@@ -245,20 +295,30 @@ function AdminPage() {
                     {new Date(m.created_at).toLocaleDateString("pt-BR")}
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={m.id === user.id}
-                      onClick={() => void toggleAdmin(m)}
-                    >
-                      {m.role === "admin" ? "Remover admin" : "Tornar admin"}
-                    </Button>
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        size="sm"
+                        variant={m.approved ? "outline" : "default"}
+                        disabled={m.id === user.id}
+                        onClick={() => void toggleApproval(m)}
+                      >
+                        {m.approved ? "Bloquear" : "Liberar"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={m.id === user.id}
+                        onClick={() => void toggleAdmin(m)}
+                      >
+                        {m.role === "admin" ? "Remover admin" : "Tornar admin"}
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
               {!members.length && (
                 <TableRow>
-                  <TableCell colSpan={6} className="py-8 text-center text-sm text-muted-foreground">
+                  <TableCell colSpan={8} className="py-8 text-center text-sm text-muted-foreground">
                     Nenhum usuário cadastrado ainda.
                   </TableCell>
                 </TableRow>

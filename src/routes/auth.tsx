@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import { Loader2, Zap } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,18 +91,6 @@ function AuthPage() {
     toast.success("Conta criada! Confirme o e-mail para entrar.");
   }
 
-  async function google() {
-    setBusy(true);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      setBusy(false);
-      return toast.error("Não foi possível entrar com o Google.");
-    }
-    if (result.redirected) return;
-    navigate({ to: safeNext(next), replace: true });
-  }
 
   return (
     <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center px-4 py-10">
@@ -122,13 +109,12 @@ function AuthPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button variant="outline" className="w-full" onClick={google} disabled={busy}>
-            Continuar com Google
-          </Button>
+          <p className="rounded-xl border border-border/70 bg-surface/60 px-3 py-2 text-[11px] text-muted-foreground">
+            Após criar a conta, o acesso é liberado pelo administrador master mediante a escolha e o
+            pagamento de um plano.
+          </p>
 
-          <div className="flex items-center gap-3 text-[11px] uppercase tracking-wide text-muted-foreground">
-            <span className="h-px flex-1 bg-border" /> ou <span className="h-px flex-1 bg-border" />
-          </div>
+
 
           <Tabs defaultValue={mode === "criar" ? "criar" : "entrar"}>
             <TabsList className="grid w-full grid-cols-2">
