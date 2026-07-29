@@ -92,18 +92,6 @@ function AuthPage() {
     toast.success("Conta criada! Confirme o e-mail para entrar.");
   }
 
-  async function google() {
-    setBusy(true);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      setBusy(false);
-      return toast.error("Não foi possível entrar com o Google.");
-    }
-    if (result.redirected) return;
-    navigate({ to: safeNext(next), replace: true });
-  }
 
   return (
     <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center px-4 py-10">

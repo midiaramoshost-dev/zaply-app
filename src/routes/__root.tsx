@@ -13,6 +13,9 @@ import { useEffect, type ReactNode } from "react";
 
 import { AppSidebar } from "../components/app-sidebar";
 import { AccountButton } from "../components/account-button";
+import { FloatingContact } from "../components/floating-contact";
+import { PendingApprovalScreen } from "../components/pending-approval-screen";
+import { useProfileAccess } from "../hooks/use-profile-access";
 import { Button } from "../components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "../components/ui/sidebar";
 import { Toaster } from "../components/ui/sonner";
@@ -175,6 +178,45 @@ function AppHeader() {
   );
 }
 
+function AppShell() {
+  const { loading, blocked, profile, reload } = useProfileAccess();
+
+  if (loading) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
+        Carregando sua conta…
+      </div>
+    );
+  }
+
+  if (blocked) {
+    return (
+      <div className="min-h-screen bg-background grid-backdrop">
+        <PendingApprovalScreen
+          requestedPlan={profile?.requestedPlan ?? null}
+          onRequested={() => void reload()}
+        />
+        <FloatingContact />
+      </div>
+    );
+  }
+
+  return (
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-background">
+        <AppSidebar />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <AppHeader />
+          <main className="flex-1 grid-backdrop">
+            {/* Required: nested routes render here. */}
+            <Outlet />
+          </main>
+        </div>
+      </div>
+    </SidebarProvider>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (r) => r.location.pathname });
@@ -191,19 +233,8 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full bg-background">
-          <AppSidebar />
-          <div className="flex min-w-0 flex-1 flex-col">
-            <AppHeader />
-            <main className="flex-1 grid-backdrop">
-              {/* Required: nested routes render here. */}
-              <Outlet />
-            </main>
-          </div>
-        </div>
-        <Toaster position="top-center" />
-      </SidebarProvider>
+      <AppShell />
+      <Toaster position="top-center" />
     </QueryClientProvider>
   );
 }
