@@ -112,9 +112,13 @@ function AuthPage() {
           <span className="grid size-11 place-items-center rounded-xl bg-primary/15 text-primary glow">
             <Zap className="size-5" />
           </span>
-          <CardTitle className="font-display">Acessar o ContentFlow</CardTitle>
+          <CardTitle className="font-display">
+            {mode === "criar" ? "Criar sua conta grátis" : "Acessar o ContentFlow"}
+          </CardTitle>
           <CardDescription>
-            Entre para salvar seus clientes, posts e agendamentos na nuvem.
+            {mode === "criar"
+              ? "Comece em minutos: cadastre a marca e deixe a IA preencher o calendário."
+              : "Entre para salvar seus clientes, posts e agendamentos na nuvem."}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
