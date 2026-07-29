@@ -205,7 +205,7 @@ function LandingPage() {
 
           <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-28 lg:pt-24">
             <div>
-              <Badge variant="outline" className="border-primary/40 text-primary">
+              <Badge variant="outline" className="gap-1.5 border-primary/40 py-1 text-primary">
                 <Sparkles className="size-3" />
                 Plataforma de conteúdo com IA
               </Badge>
