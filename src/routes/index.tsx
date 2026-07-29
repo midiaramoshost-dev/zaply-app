@@ -141,11 +141,13 @@ function LandingPage() {
           </nav>
           <div className="ml-auto flex items-center gap-2">
             <Button asChild variant="ghost" size="sm">
-              <Link to="/auth">Entrar</Link>
+              <Link to="/auth" search={{ mode: "entrar" }}>
+                Entrar
+              </Link>
             </Button>
             <Button asChild size="sm">
-              <Link to="/painel">
-                Abrir painel
+              <Link to="/auth" search={{ mode: "criar" }}>
+                Criar conta grátis
                 <ArrowRight className="size-4" />
               </Link>
             </Button>
