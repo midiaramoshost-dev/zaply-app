@@ -11,7 +11,6 @@ import {
   Sparkles,
   Wand2,
   Workflow,
-  Zap,
 } from "lucide-react";
 
 import heroDashboard from "@/assets/hero-dashboard.jpg";
