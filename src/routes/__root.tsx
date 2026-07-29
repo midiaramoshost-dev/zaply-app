@@ -178,9 +178,9 @@ function AppHeader() {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (r) => r.location.pathname });
-  const isLanding = pathname === "/";
+  const isPublic = pathname === "/" || pathname.startsWith("/auth");
 
-  if (isLanding) {
+  if (isPublic) {
     return (
       <QueryClientProvider client={queryClient}>
         <Outlet />
