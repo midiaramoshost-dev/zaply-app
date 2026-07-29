@@ -204,12 +204,20 @@ function ImagesPage() {
                   <figure className="space-y-3">
                     <img
                       src={preview}
-                      alt={prompt || "Imagem gerada por IA"}
+                      alt={
+                        prompt
+                          ? `Imagem gerada por IA: ${prompt}`
+                          : "Imagem gerada por inteligência artificial"
+                      }
                       className={cn(
                         "w-full rounded-xl border border-border transition-[filter] duration-300",
                         isFinal ? "blur-0" : "blur-2xl",
                       )}
                     />
+                    <figcaption className="text-xs text-muted-foreground">
+                      {isFinal ? "Imagem gerada por IA" : "Gerando imagem..."}
+                      {prompt ? ` — ${prompt}` : ""}
+                    </figcaption>
                     {isFinal && (
                       <div className="flex gap-2">
                         <Button asChild size="sm" variant="outline">
@@ -291,12 +299,21 @@ function ImagesPage() {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {images.map((image) => (
                 <Card key={image.id} className="panel overflow-hidden">
-                  <img
-                    src={image.url}
-                    alt={image.prompt}
-                    className="h-44 w-full object-cover"
-                    loading="lazy"
-                  />
+                  <figure>
+                    <img
+                      src={image.url}
+                      alt={
+                        image.prompt
+                          ? `${image.source === "ia" ? "Imagem gerada por IA" : "Imagem enviada"}: ${image.prompt}`
+                          : "Imagem da biblioteca do ContentFlow"
+                      }
+                      className="h-44 w-full object-cover"
+                      loading="lazy"
+                    />
+                    <figcaption className="px-4 pt-3 text-xs text-muted-foreground">
+                      {image.source === "ia" ? "Imagem gerada por IA" : "Imagem enviada por você"}
+                    </figcaption>
+                  </figure>
                   <CardContent className="space-y-3 p-4">
                     <p className="line-clamp-2 text-sm">{image.prompt}</p>
                     <div className="flex items-center justify-between gap-2">

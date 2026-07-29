@@ -66,12 +66,17 @@ export function PostDayCard({
       </div>
 
       {post.imageUrl && (
-        <img
-          src={post.imageUrl}
-          alt={`Imagem do post ${post.title}`}
-          loading="lazy"
-          className="mt-3 aspect-video w-full rounded-lg object-cover"
-        />
+        <figure className="mt-3">
+          <img
+            src={post.imageUrl}
+            alt={`Imagem do post “${post.title}” para ${post.channel}`}
+            loading="lazy"
+            className="aspect-video w-full rounded-lg object-cover"
+          />
+          <figcaption className="mt-1.5 text-xs text-muted-foreground">
+            Imagem do post — {post.channel}
+          </figcaption>
+        </figure>
       )}
 
       <p className="mt-2 text-sm font-medium">{post.title}</p>
@@ -174,11 +179,16 @@ export function PostDayCard({
                 />
               </div>
               {imageUrl && (
-                <img
-                  src={imageUrl}
-                  alt="Pré-visualização da nova imagem"
-                  className="aspect-video w-full rounded-lg object-cover"
-                />
+                <figure>
+                  <img
+                    src={imageUrl}
+                    alt={`Pré-visualização da nova imagem do post “${post.title}”`}
+                    className="aspect-video w-full rounded-lg object-cover"
+                  />
+                  <figcaption className="mt-1.5 text-xs text-muted-foreground">
+                    Pré-visualização da nova imagem
+                  </figcaption>
+                </figure>
               )}
             </div>
           )}
