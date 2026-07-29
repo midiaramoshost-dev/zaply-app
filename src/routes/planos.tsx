@@ -10,13 +10,13 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/planos")({
   head: () => ({
     meta: [
-      { title: "Planos e preços — Starter, Pro e Agency | ContentFlow" },
+      { title: "Planos e preços — Starter, Pro e Agency | Zaply" },
       {
         name: "description",
         content:
-          "Compare os planos do ContentFlow: Starter com 1 cliente e 100 posts/mês, Pro com 5 clientes e IA ilimitada, Agency com clientes ilimitados e marca branca.",
+          "Compare os planos do Zaply: Starter com 1 cliente e 100 posts/mês, Pro com 5 clientes e IA ilimitada, Agency com clientes ilimitados e marca branca.",
       },
-      { property: "og:title", content: "Planos e preços do ContentFlow" },
+      { property: "og:title", content: "Planos e preços do Zaply" },
       {
         property: "og:description",
         content: "Starter, Pro e Agency: escolha o plano certo para produzir e publicar conteúdo com IA.",

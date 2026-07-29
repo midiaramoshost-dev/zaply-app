@@ -24,13 +24,13 @@ import { emptyClient, splitList, useClients, type Client } from "@/lib/clients-s
 export const Route = createFileRoute("/clientes")({
   head: () => ({
     meta: [
-      { title: "Clientes — ContentFlow" },
+      { title: "Clientes — Zaply" },
       {
         name: "description",
         content:
           "Cadastre marcas com nicho, objetivos, público-alvo, tom de voz, palavras proibidas, cores e fontes.",
       },
-      { property: "og:title", content: "Clientes — ContentFlow" },
+      { property: "og:title", content: "Clientes — Zaply" },
       {
         property: "og:description",
         content: "Central de marcas: identidade, diretrizes de conteúdo e restrições de linguagem.",

@@ -104,7 +104,7 @@ export function AppSidebar() {
           </span>
           {!collapsed && (
             <div className="leading-tight">
-              <p className="font-display text-sm font-semibold">ContentFlow</p>
+              <p className="font-display text-sm font-semibold">Zaply</p>
               <p className="text-[11px] text-muted-foreground">Conteúdo com IA</p>
             </div>
           )}

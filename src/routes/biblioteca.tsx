@@ -28,13 +28,13 @@ import {
 export const Route = createFileRoute("/biblioteca")({
   head: () => ({
     meta: [
-      { title: "Biblioteca de conteúdo — ContentFlow" },
+      { title: "Biblioteca de conteúdo — Zaply" },
       {
         name: "description",
         content:
           "Conteúdo organizado por produtos, promoções, datas, vídeos, logos, stories e reels — com filtros por canal e status.",
       },
-      { property: "og:title", content: "Biblioteca de conteúdo — ContentFlow" },
+      { property: "og:title", content: "Biblioteca de conteúdo — Zaply" },
       {
         property: "og:description",
         content: "Pastas por produtos, promoções, datas, vídeos, logos, stories e reels.",

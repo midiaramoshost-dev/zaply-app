@@ -20,7 +20,7 @@ import {
 export const Route = createFileRoute("/n8n")({
   head: () => ({
     meta: [
-      { title: "Fluxo n8n — automação de publicação | ContentFlow" },
+      { title: "Fluxo n8n — automação de publicação | Zaply" },
       {
         name: "description",
         content:

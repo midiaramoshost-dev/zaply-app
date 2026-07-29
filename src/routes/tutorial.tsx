@@ -28,25 +28,25 @@ import {
 export const Route = createFileRoute("/tutorial")({
   head: () => ({
     meta: [
-      { title: "Como usar — Tutorial do ContentFlow" },
+      { title: "Como usar — Tutorial do Zaply" },
       {
         name: "description",
         content:
-          "Passo a passo completo do ContentFlow: cadastre o cliente, gere conteúdo com IA, aprove, agende e publique nas redes.",
+          "Passo a passo completo do Zaply: cadastre o cliente, gere conteúdo com IA, aprove, agende e publique nas redes.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "Como usar — Tutorial do ContentFlow" },
+      { property: "og:title", content: "Como usar — Tutorial do Zaply" },
       {
         property: "og:description",
         content:
-          "Guia rápido em 8 passos para criar, aprovar, agendar e publicar conteúdo com IA no ContentFlow.",
+          "Guia rápido em 8 passos para criar, aprovar, agendar e publicar conteúdo com IA no Zaply.",
       },
-      { name: "twitter:title", content: "Como usar — Tutorial do ContentFlow" },
+      { name: "twitter:title", content: "Como usar — Tutorial do Zaply" },
       {
         name: "twitter:description",
         content:
-          "Guia rápido em 8 passos para criar, aprovar, agendar e publicar conteúdo com IA no ContentFlow.",
+          "Guia rápido em 8 passos para criar, aprovar, agendar e publicar conteúdo com IA no Zaply.",
       },
     ],
   }),
@@ -192,7 +192,7 @@ function TutorialPage() {
           Guia de uso
         </Badge>
         <h1 className="mt-4 max-w-2xl text-3xl font-semibold sm:text-4xl">
-          Como usar o <span className="gradient-text">ContentFlow</span> em 8 passos
+          Como usar o <span className="gradient-text">Zaply</span> em 8 passos
         </h1>
         <p className="mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
           Do cadastro da marca até a publicação automática. Siga na ordem na primeira vez — depois

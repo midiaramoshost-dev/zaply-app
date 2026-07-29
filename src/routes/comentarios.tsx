@@ -25,13 +25,13 @@ import { generateCommentReply } from "@/lib/comments.functions";
 export const Route = createFileRoute("/comentarios")({
   head: () => ({
     meta: [
-      { title: "Comentários com IA — ContentFlow" },
+      { title: "Comentários com IA — Zaply" },
       {
         name: "description",
         content:
           "A IA lê os comentários das suas redes e sugere respostas usando o tom de voz, o endereço e os dados cadastrados do cliente.",
       },
-      { property: "og:title", content: "Comentários com IA — ContentFlow" },
+      { property: "og:title", content: "Comentários com IA — Zaply" },
       {
         property: "og:description",
         content: "Respostas automáticas para dúvidas de preço, localização e atendimento.",

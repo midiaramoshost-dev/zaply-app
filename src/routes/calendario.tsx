@@ -16,13 +16,13 @@ import { usePosts } from "@/lib/posts-store";
 export const Route = createFileRoute("/calendario")({
   head: () => ({
     meta: [
-      { title: "Calendário editorial — ContentFlow" },
+      { title: "Calendário editorial — Zaply" },
       {
         name: "description",
         content:
           "Veja o calendário de publicações agendadas por dia e ative a publicação automática.",
       },
-      { property: "og:title", content: "Calendário editorial — ContentFlow" },
+      { property: "og:title", content: "Calendário editorial — Zaply" },
       {
         property: "og:description",
         content: "Planeje o mês inteiro e deixe a publicação acontecer no horário certo.",

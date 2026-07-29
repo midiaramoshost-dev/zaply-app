@@ -11,13 +11,13 @@ import { statusLabel, usePosts } from "@/lib/posts-store";
 export const Route = createFileRoute("/painel")({
   head: () => ({
     meta: [
-      { title: "Painel — ContentFlow, conteúdo com IA" },
+      { title: "Painel — Zaply, conteúdo com IA" },
       {
         name: "description",
         content:
           "Acompanhe rascunhos, agendamentos e publicações da sua operação de conteúdo em um único painel.",
       },
-      { property: "og:title", content: "Painel — ContentFlow, conteúdo com IA" },
+      { property: "og:title", content: "Painel — Zaply, conteúdo com IA" },
       {
         property: "og:description",
         content: "Acompanhe rascunhos, agendamentos e publicações da sua operação de conteúdo em um único painel.",

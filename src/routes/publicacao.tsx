@@ -26,13 +26,13 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/publicacao")({
   head: () => ({
     meta: [
-      { title: "Publicação nas redes — ContentFlow" },
+      { title: "Publicação nas redes — Zaply" },
       {
         name: "description",
         content:
           "Publique no Instagram (feed, carrossel, reels), página do Facebook, perfil e empresa no LinkedIn e tweets no X.",
       },
-      { property: "og:title", content: "Publicação nas redes — ContentFlow" },
+      { property: "og:title", content: "Publicação nas redes — Zaply" },
       {
         property: "og:description",
         content: "Escolha o destino e o formato de cada post antes de publicar.",

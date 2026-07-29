@@ -13,15 +13,15 @@ import { useRole } from "@/hooks/use-role";
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Painel do administrador — ContentFlow" },
+      { title: "Painel do administrador — Zaply" },
       {
         name: "description",
-        content: "Painel master: usuários, empresas, posts e comentários de toda a plataforma ContentFlow.",
+        content: "Painel master: usuários, empresas, posts e comentários de toda a plataforma Zaply.",
       },
-      { property: "og:title", content: "Painel do administrador — ContentFlow" },
+      { property: "og:title", content: "Painel do administrador — Zaply" },
       {
         property: "og:description",
-        content: "Painel master: usuários, empresas, posts e comentários de toda a plataforma ContentFlow.",
+        content: "Painel master: usuários, empresas, posts e comentários de toda a plataforma Zaply.",
       },
     ],
   }),
@@ -187,7 +187,7 @@ function AdminPage() {
           </Badge>
           <h1 className="font-display text-2xl font-semibold">Painel da plataforma</h1>
           <p className="text-sm text-muted-foreground">
-            Visão consolidada de todas as contas, empresas e conteúdos do ContentFlow.
+            Visão consolidada de todas as contas, empresas e conteúdos do Zaply.
           </p>
         </div>
         <Button size="sm" variant="outline" onClick={() => void load()} disabled={busy}>

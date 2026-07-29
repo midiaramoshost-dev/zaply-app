@@ -25,13 +25,13 @@ import { usePosts } from "@/lib/posts-store";
 export const Route = createFileRoute("/criar")({
   head: () => ({
     meta: [
-      { title: "Criar com IA — ContentFlow" },
+      { title: "Criar com IA — Zaply" },
       {
         name: "description",
         content:
           "Gere variações de posts prontos para Instagram, LinkedIn, X, blog e newsletter com IA.",
       },
-      { property: "og:title", content: "Criar com IA — ContentFlow" },
+      { property: "og:title", content: "Criar com IA — Zaply" },
       {
         property: "og:description",
         content: "Descreva o tema e receba conteúdo pronto para publicar em cada canal.",

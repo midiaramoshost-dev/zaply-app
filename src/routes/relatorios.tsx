@@ -39,7 +39,7 @@ import {
 export const Route = createFileRoute("/relatorios")({
   head: () => ({
     meta: [
-      { title: "Relatórios mensais em PDF e Excel | ContentFlow" },
+      { title: "Relatórios mensais em PDF e Excel | Zaply" },
       {
         name: "description",
         content:
@@ -67,7 +67,7 @@ function ReportsPage() {
 
   const months = useMemo(() => availableMonths(posts), [posts]);
   const report = useMemo(() => buildMonthlyReport(posts, month), [posts, month]);
-  const brand = clients[0]?.name ?? "ContentFlow";
+  const brand = clients[0]?.name ?? "Zaply";
 
   const run = async (kind: "pdf" | "xlsx") => {
     setBusy(kind);

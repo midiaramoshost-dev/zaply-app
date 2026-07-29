@@ -14,15 +14,15 @@ import { usePosts } from "@/lib/posts-store";
 export const Route = createFileRoute("/conta")({
   head: () => ({
     meta: [
-      { title: "Meu painel — ContentFlow" },
+      { title: "Meu painel — Zaply" },
       {
         name: "description",
-        content: "Seu painel pessoal no ContentFlow: dados da conta, plano, clientes e desempenho do seu conteúdo.",
+        content: "Seu painel pessoal no Zaply: dados da conta, plano, clientes e desempenho do seu conteúdo.",
       },
-      { property: "og:title", content: "Meu painel — ContentFlow" },
+      { property: "og:title", content: "Meu painel — Zaply" },
       {
         property: "og:description",
-        content: "Seu painel pessoal no ContentFlow: dados da conta, plano, clientes e desempenho do seu conteúdo.",
+        content: "Seu painel pessoal no Zaply: dados da conta, plano, clientes e desempenho do seu conteúdo.",
       },
     ],
   }),
