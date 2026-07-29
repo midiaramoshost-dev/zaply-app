@@ -50,7 +50,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 function safeNext(next?: string) {
-  return next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
+  return next && next.startsWith("/") && !next.startsWith("//") ? next : "/painel";
 }
 
 function AuthPage() {
