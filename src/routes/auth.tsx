@@ -130,7 +130,7 @@ function AuthPage() {
             <span className="h-px flex-1 bg-border" /> ou <span className="h-px flex-1 bg-border" />
           </div>
 
-          <Tabs defaultValue="entrar">
+          <Tabs defaultValue={mode === "criar" ? "criar" : "entrar"}>
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="entrar">Entrar</TabsTrigger>
               <TabsTrigger value="criar">Criar conta</TabsTrigger>
