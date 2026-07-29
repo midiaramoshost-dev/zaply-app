@@ -308,13 +308,15 @@ function LandingPage() {
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Button asChild size="lg">
-                  <Link to="/auth">
+                  <Link to="/auth" search={{ mode: "criar" }}>
                     Criar conta grátis
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline">
-                  <Link to="/tutorial">Ver o passo a passo</Link>
+                  <Link to="/auth" search={{ mode: "entrar" }}>
+                    Entrar
+                  </Link>
                 </Button>
               </div>
             </div>
