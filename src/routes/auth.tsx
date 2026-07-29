@@ -110,13 +110,12 @@ function AuthPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button variant="outline" className="w-full" onClick={google} disabled={busy}>
-            Continuar com Google
-          </Button>
+          <p className="rounded-xl border border-border/70 bg-surface/60 px-3 py-2 text-[11px] text-muted-foreground">
+            Após criar a conta, o acesso é liberado pelo administrador master mediante a escolha e o
+            pagamento de um plano.
+          </p>
 
-          <div className="flex items-center gap-3 text-[11px] uppercase tracking-wide text-muted-foreground">
-            <span className="h-px flex-1 bg-border" /> ou <span className="h-px flex-1 bg-border" />
-          </div>
+
 
           <Tabs defaultValue={mode === "criar" ? "criar" : "entrar"}>
             <TabsList className="grid w-full grid-cols-2">
