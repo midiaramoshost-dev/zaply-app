@@ -14,10 +14,11 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   requestedPlan: string | null;
+  trialExpired?: boolean;
   onRequested: () => void;
 };
 
-export function PendingApprovalScreen({ requestedPlan, onRequested }: Props) {
+export function PendingApprovalScreen({ requestedPlan, trialExpired, onRequested }: Props) {
   const { user, signOut } = useAuth();
   const { plans, loading } = usePlans();
   const [busy, setBusy] = useState<string | null>(null);
@@ -48,14 +49,17 @@ export function PendingApprovalScreen({ requestedPlan, onRequested }: Props) {
         <div className="flex items-center gap-3">
           <BrandMark className="size-9" />
           <Badge variant="outline" className="gap-1 border-primary/40 text-primary">
-            <Clock className="size-3" /> Aguardando liberação
+            <Clock className="size-3" />{" "}
+            {trialExpired ? "Teste de 4h encerrado" : "Aguardando liberação"}
           </Badge>
         </div>
         <h1 className="font-display text-2xl font-semibold tracking-tight">
-          Sua conta foi criada e está em análise
+          {trialExpired
+            ? "Seu teste gratuito de 4 horas terminou"
+            : "Sua conta foi criada e está em análise"}
         </h1>
         <p className="max-w-2xl text-sm text-muted-foreground">
-          Escolha abaixo o plano desejado e fale com o administrador master pelo menu flutuante para
+          {trialExpired ? "Para continuar usando o Zaply, escolha abaixo o plano desejado" : "Escolha abaixo o plano desejado"} e fale com o administrador master pelo menu flutuante para
           concluir o pagamento. Assim que a liberação for feita, o painel completo abre
           automaticamente.
         </p>
