@@ -54,16 +54,17 @@ function AdminPage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
   const [busy, setBusy] = useState(false);
+  const fetchUsers = useServerFn(listPlatformUsers);
 
   const load = useCallback(async () => {
     setBusy(true);
-    const [statsRes, profilesRes, rolesRes, companiesRes, postsRes] = await Promise.all([
+    const [statsRes, usersRes, companiesRes, postsRes] = await Promise.all([
       supabase.rpc("admin_platform_stats"),
-      supabase
-        .from("profiles")
-        .select("id, full_name, email, approved, requested_plan, created_at")
-        .order("created_at", { ascending: false }),
-      supabase.from("user_roles").select("user_id, role"),
+      fetchUsers().catch((e) => {
+        console.error(e);
+        toast.error("Não foi possível carregar os usuários cadastrados.");
+        return [] as PlatformUser[];
+      }),
       supabase.from("companies").select("owner_id"),
       supabase.from("posts").select("user_id"),
     ]);
@@ -80,11 +81,6 @@ function AdminPage() {
       });
     }
 
-    const roleMap = new Map<string, "admin" | "user">();
-    for (const r of rolesRes.data ?? []) {
-      if (r.role === "admin") roleMap.set(r.user_id, "admin");
-      else if (!roleMap.has(r.user_id)) roleMap.set(r.user_id, "user");
-    }
     const countBy = (rows: { [k: string]: unknown }[] | null, key: string) => {
       const m = new Map<string, number>();
       for (const r of rows ?? []) {
@@ -98,20 +94,20 @@ function AdminPage() {
     const postCount = countBy(postsRes.data as never, "user_id");
 
     setMembers(
-      (profilesRes.data ?? []).map((p) => ({
+      (usersRes ?? []).map((p) => ({
         id: p.id,
         full_name: p.full_name,
         email: p.email,
-        approved: Boolean(p.approved),
+        approved: p.approved,
         requested_plan: p.requested_plan,
         created_at: p.created_at,
-        role: roleMap.get(p.id) ?? "user",
+        role: p.role,
         companies: companyCount.get(p.id) ?? 0,
         posts: postCount.get(p.id) ?? 0,
       })),
     );
     setBusy(false);
-  }, []);
+  }, [fetchUsers]);
 
   useEffect(() => {
     if (isAdmin) void load();
