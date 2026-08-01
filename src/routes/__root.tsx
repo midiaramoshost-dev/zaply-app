@@ -181,10 +181,24 @@ function AppHeader({ isAdmin }: { isAdmin: boolean }) {
 }
 
 
-function AppShell() {
-  const { loading, blocked, profile, reload } = useProfileAccess();
+const ADMIN_ALLOWED = ["/admin", "/conta"];
 
-  if (loading) {
+function AppShell() {
+  const { loading, blocked, profile, reload, isAdmin } = useProfileAccess();
+  const pathname = useRouterState({ select: (r) => r.location.pathname });
+  const router = useRouter();
+
+  // Admin master usa um painel próprio, separado dos módulos de usuário.
+  const adminOutOfScope =
+    !loading && isAdmin && !ADMIN_ALLOWED.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+
+  useEffect(() => {
+    if (adminOutOfScope) {
+      void router.navigate({ to: "/admin", replace: true });
+    }
+  }, [adminOutOfScope, router]);
+
+  if (loading || adminOutOfScope) {
     return (
       <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
         Carregando sua conta…
@@ -209,7 +223,7 @@ function AppShell() {
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex min-w-0 flex-1 flex-col">
-          <AppHeader />
+          <AppHeader isAdmin={isAdmin} />
           <main className="flex-1 grid-backdrop">
             {/* Required: nested routes render here. */}
             <Outlet />
@@ -219,6 +233,7 @@ function AppShell() {
     </SidebarProvider>
   );
 }
+
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
