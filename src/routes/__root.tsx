@@ -153,9 +153,9 @@ const PAGE_TITLES: Record<string, string> = {
   "/auth": "Entrar",
 };
 
-function AppHeader() {
+function AppHeader({ isAdmin }: { isAdmin: boolean }) {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
-  const title = PAGE_TITLES[pathname] ?? "Zaply";
+  const title = PAGE_TITLES[pathname] ?? (isAdmin ? "Painel master" : "Zaply");
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border/70 bg-background/70 px-4 backdrop-blur-xl">
@@ -166,17 +166,20 @@ function AppHeader() {
         <span className="truncate font-display font-semibold tracking-tight">{title}</span>
       </div>
       <div className="ml-auto flex items-center gap-2">
-        <Button asChild size="sm" className="hidden sm:inline-flex">
-          <Link to="/criar">
-            <Sparkles className="size-4" />
-            Criar com IA
-          </Link>
-        </Button>
+        {!isAdmin && (
+          <Button asChild size="sm" className="hidden sm:inline-flex">
+            <Link to="/criar">
+              <Sparkles className="size-4" />
+              Criar com IA
+            </Link>
+          </Button>
+        )}
         <AccountButton />
       </div>
     </header>
   );
 }
+
 
 function AppShell() {
   const { loading, blocked, profile, reload } = useProfileAccess();
