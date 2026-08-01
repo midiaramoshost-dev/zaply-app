@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { ShieldCheck, Users, Building2, FileText, CalendarClock, Send, MessageCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
+import { listPlatformUsers, type PlatformUser } from "@/lib/admin.functions";
 import { useRole } from "@/hooks/use-role";
 
 export const Route = createFileRoute("/admin")({
