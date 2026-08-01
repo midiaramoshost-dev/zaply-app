@@ -6,6 +6,7 @@ import { DashboardMetricsGrid } from "@/components/dashboard-metrics";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CreditsCard } from "@/components/credits-card";
 import { useAuth } from "@/hooks/use-auth";
 import { useRole } from "@/hooks/use-role";
 import { useClients } from "@/lib/clients-store";
@@ -93,6 +94,7 @@ function AccountPage() {
       <DashboardMetricsGrid posts={posts} ready={ready} clientsCount={clients.length} />
 
       <div className="grid gap-4 md:grid-cols-2">
+        <CreditsCard />
         <Card className="panel">
           <CardHeader>
             <CardTitle className="text-base">Seu conteúdo</CardTitle>
