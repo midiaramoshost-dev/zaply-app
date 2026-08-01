@@ -16,6 +16,7 @@ import { AccountButton } from "../components/account-button";
 import { FloatingContact } from "../components/floating-contact";
 import { PendingApprovalScreen } from "../components/pending-approval-screen";
 import { useProfileAccess } from "../hooks/use-profile-access";
+import { TrialBanner } from "../components/trial-banner";
 import { Button } from "../components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "../components/ui/sidebar";
 import { Toaster } from "../components/ui/sonner";
@@ -226,6 +227,7 @@ function AppShell() {
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex min-w-0 flex-1 flex-col">
+          {trialActive && <TrialBanner msLeft={trialMsLeft} />}
           <AppHeader isAdmin={isAdmin} />
           <main className="flex-1 grid-backdrop">
             {/* Required: nested routes render here. */}
