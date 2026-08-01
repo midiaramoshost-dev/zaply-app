@@ -62,7 +62,7 @@ function AdminPage() {
     setBusy(true);
     const [statsRes, usersRes, companiesRes, postsRes] = await Promise.all([
       supabase.rpc("admin_platform_stats"),
-      fetchUsers().catch((e) => {
+      fetchUsers().catch((e: unknown) => {
         console.error(e);
         toast.error("Não foi possível carregar os usuários cadastrados.");
         return [] as PlatformUser[];
