@@ -41,7 +41,7 @@ export function CreditsDialog({ userId, name, balance, onDone }: Props) {
     const { data, error } = await supabase.rpc("grant_user_credits", {
       _user_id: userId,
       _amount: Math.trunc(value),
-      _reason: reason.trim() || null,
+      _reason: reason.trim() || undefined,
     });
     setBusy(false);
     if (error) {
