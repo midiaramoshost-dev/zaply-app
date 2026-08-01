@@ -153,9 +153,9 @@ const PAGE_TITLES: Record<string, string> = {
   "/auth": "Entrar",
 };
 
-function AppHeader() {
+function AppHeader({ isAdmin }: { isAdmin: boolean }) {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
-  const title = PAGE_TITLES[pathname] ?? "Zaply";
+  const title = PAGE_TITLES[pathname] ?? (isAdmin ? "Painel master" : "Zaply");
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border/70 bg-background/70 px-4 backdrop-blur-xl">
@@ -166,22 +166,39 @@ function AppHeader() {
         <span className="truncate font-display font-semibold tracking-tight">{title}</span>
       </div>
       <div className="ml-auto flex items-center gap-2">
-        <Button asChild size="sm" className="hidden sm:inline-flex">
-          <Link to="/criar">
-            <Sparkles className="size-4" />
-            Criar com IA
-          </Link>
-        </Button>
+        {!isAdmin && (
+          <Button asChild size="sm" className="hidden sm:inline-flex">
+            <Link to="/criar">
+              <Sparkles className="size-4" />
+              Criar com IA
+            </Link>
+          </Button>
+        )}
         <AccountButton />
       </div>
     </header>
   );
 }
 
-function AppShell() {
-  const { loading, blocked, profile, reload } = useProfileAccess();
 
-  if (loading) {
+const ADMIN_ALLOWED = ["/admin", "/conta"];
+
+function AppShell() {
+  const { loading, blocked, profile, reload, isAdmin } = useProfileAccess();
+  const pathname = useRouterState({ select: (r) => r.location.pathname });
+  const router = useRouter();
+
+  // Admin master usa um painel próprio, separado dos módulos de usuário.
+  const adminOutOfScope =
+    !loading && isAdmin && !ADMIN_ALLOWED.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+
+  useEffect(() => {
+    if (adminOutOfScope) {
+      void router.navigate({ to: "/admin", replace: true });
+    }
+  }, [adminOutOfScope, router]);
+
+  if (loading || adminOutOfScope) {
     return (
       <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
         Carregando sua conta…
@@ -206,7 +223,7 @@ function AppShell() {
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex min-w-0 flex-1 flex-col">
-          <AppHeader />
+          <AppHeader isAdmin={isAdmin} />
           <main className="flex-1 grid-backdrop">
             {/* Required: nested routes render here. */}
             <Outlet />
@@ -216,6 +233,7 @@ function AppShell() {
     </SidebarProvider>
   );
 }
+
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();

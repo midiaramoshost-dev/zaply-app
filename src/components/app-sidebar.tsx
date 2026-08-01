@@ -87,15 +87,19 @@ export function AppSidebar() {
   const currentPath = useRouterState({ select: (r) => r.location.pathname });
   const { isAdmin } = useRole();
 
+  // O admin master tem um painel separado: nada dos módulos de usuário.
   const visibleGroups = isAdmin
     ? [
-        ...groups,
         {
           label: "Administração",
-          items: [{ title: "Painel master", url: "/admin" as const, icon: ShieldCheck }],
+          items: [
+            { title: "Painel master", url: "/admin" as const, icon: ShieldCheck },
+            { title: "Minha conta", url: "/conta" as const, icon: UserRound },
+          ],
         },
       ]
     : groups;
+
 
   return (
     <Sidebar collapsible="icon">
