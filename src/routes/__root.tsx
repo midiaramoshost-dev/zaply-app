@@ -184,7 +184,8 @@ function AppHeader({ isAdmin }: { isAdmin: boolean }) {
 const ADMIN_ALLOWED = ["/admin", "/conta"];
 
 function AppShell() {
-  const { loading, blocked, profile, reload, isAdmin } = useProfileAccess();
+  const { loading, blocked, profile, reload, isAdmin, trialActive, trialExpired, trialMsLeft } =
+    useProfileAccess();
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const router = useRouter();
 
@@ -211,12 +212,14 @@ function AppShell() {
       <div className="min-h-screen bg-background grid-backdrop">
         <PendingApprovalScreen
           requestedPlan={profile?.requestedPlan ?? null}
+          trialExpired={trialExpired}
           onRequested={() => void reload()}
         />
         <FloatingContact />
       </div>
     );
   }
+
 
   return (
     <SidebarProvider>
