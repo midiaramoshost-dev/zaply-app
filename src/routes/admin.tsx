@@ -332,8 +332,9 @@ function AdminPage() {
                   </TableCell>
 
                   <TableCell className="text-xs uppercase text-muted-foreground">
-                    {m.requested_plan || "—"}
+                    {m.role === "admin" ? "—" : m.requested_plan || "—"}
                   </TableCell>
+
                   <TableCell>
                     <Badge variant={m.role === "admin" ? "default" : "secondary"}>
                       {m.role === "admin" ? "Admin master" : "Usuário"}
