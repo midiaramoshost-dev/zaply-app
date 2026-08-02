@@ -1,11 +1,14 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import { Check, Crown, Sparkles, Users } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatLimit, formatPrice, usePlans } from "@/lib/plans-store";
+import { PlanCheckoutDialog } from "@/components/plan-checkout-dialog";
+import { formatLimit, formatPrice, usePlans, type Plan } from "@/lib/plans-store";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/planos")({
   head: () => ({
@@ -41,6 +44,8 @@ const COMPARISON: { label: string; values: Record<string, string> }[] = [
 
 function PlansPage() {
   const { plans, loading } = usePlans();
+  const [selected, setSelected] = useState<Plan | null>(null);
+
 
   return (
     <div className="space-y-8">
@@ -106,9 +111,14 @@ function PlansPage() {
                 ))}
               </ul>
 
-              <Button asChild variant={plan.is_featured ? "default" : "outline"} className="w-full">
-                <Link to="/auth">Começar com {plan.name}</Link>
+              <Button
+                variant={plan.is_featured ? "default" : "outline"}
+                className="w-full"
+                onClick={() => setSelected(plan)}
+              >
+                Contratar {plan.name}
               </Button>
+
             </CardContent>
           </Card>
         ))}
@@ -146,6 +156,13 @@ function PlansPage() {
           </CardContent>
         </Card>
       </section>
+
+      <PlanCheckoutDialog
+        plan={selected}
+        open={Boolean(selected)}
+        onOpenChange={(next) => !next && setSelected(null)}
+      />
     </div>
+
   );
 }
