@@ -27,11 +27,13 @@ export type PlatformStats = {
 export const getPlatformStats = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<PlatformStats> => {
-    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (roleError || !isAdmin) throw new Response("Forbidden", { status: 403 });
+    const { data: adminRole, error: roleError } = await context.supabase
+      .from("user_roles")
+      .select("id")
+      .eq("user_id", context.userId)
+      .eq("role", "admin")
+      .maybeSingle();
+    if (roleError || !adminRole) throw new Response("Forbidden", { status: 403 });
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const [profiles, companies, posts, comments] = await Promise.all([
@@ -55,11 +57,13 @@ export const grantUserCredits = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { userId: string; amount: number; reason?: string }) => input)
   .handler(async ({ data, context }): Promise<number> => {
-    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (roleError || !isAdmin) throw new Response("Forbidden", { status: 403 });
+    const { data: adminRole, error: roleError } = await context.supabase
+      .from("user_roles")
+      .select("id")
+      .eq("user_id", context.userId)
+      .eq("role", "admin")
+      .maybeSingle();
+    if (roleError || !adminRole) throw new Response("Forbidden", { status: 403 });
     if (!Number.isSafeInteger(data.amount) || data.amount === 0) {
       throw new Response("Invalid amount", { status: 400 });
     }
@@ -94,11 +98,13 @@ export const grantUserCredits = createServerFn({ method: "POST" })
 export const listPlatformUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<PlatformUser[]> => {
-    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (roleError || !isAdmin) {
+    const { data: adminRole, error: roleError } = await context.supabase
+      .from("user_roles")
+      .select("id")
+      .eq("user_id", context.userId)
+      .eq("role", "admin")
+      .maybeSingle();
+    if (roleError || !adminRole) {
       throw new Response("Forbidden", { status: 403 });
     }
 
