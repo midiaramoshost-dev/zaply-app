@@ -3,6 +3,7 @@ import { CreditCard, LogOut, ShieldCheck, UserRound } from "lucide-react";
 import { toast } from "sonner";
 
 import { DashboardMetricsGrid } from "@/components/dashboard-metrics";
+import { PageHeader } from "@/components/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,42 +57,44 @@ function AccountPage() {
 
   return (
     <div className="space-y-6">
-      <header className="panel flex flex-wrap items-center justify-between gap-4 rounded-2xl p-6">
-        <div className="flex items-center gap-4">
-          <span className="grid size-12 place-items-center rounded-2xl bg-primary/12 text-primary">
-            <UserRound className="size-5" />
-          </span>
-          <div className="space-y-1">
-            <h1 className="font-display text-2xl font-semibold">{name}</h1>
-            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <span>{user.email}</span>
-              <Badge variant={isAdmin ? "default" : "secondary"} className="gap-1">
-                {isAdmin ? <ShieldCheck className="size-3" /> : null}
-                {isAdmin ? "Admin master" : "Usuário"}
-              </Badge>
-            </div>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          {isAdmin && (
-            <Button asChild size="sm" variant="outline">
-              <Link to="/admin">Painel do administrador</Link>
+      <PageHeader
+        eyebrow="Minha conta"
+        title={name}
+        icon={UserRound}
+        actions={
+          <>
+            {isAdmin && (
+              <Button asChild size="sm" variant="outline">
+                <Link to="/admin">Painel do administrador</Link>
+              </Button>
+            )}
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={async () => {
+                await signOut();
+                toast.success("Você saiu da conta.");
+              }}
+            >
+              <LogOut className="size-3.5" /> Sair
             </Button>
-          )}
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={async () => {
-              await signOut();
-              toast.success("Você saiu da conta.");
-            }}
-          >
-            <LogOut className="size-3.5" /> Sair
-          </Button>
+          </>
+        }
+      >
+        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+          <span className="panel-quiet px-2.5 py-1">{user.email}</span>
+          <Badge variant={isAdmin ? "default" : "secondary"} className="gap-1">
+            {isAdmin ? <ShieldCheck className="size-3" /> : null}
+            {isAdmin ? "Admin master" : "Usuário"}
+          </Badge>
         </div>
-      </header>
+      </PageHeader>
 
-      <DashboardMetricsGrid posts={posts} ready={ready} clientsCount={clients.length} />
+      <section>
+        <h2 className="eyebrow mb-3">Desempenho</h2>
+        <DashboardMetricsGrid posts={posts} ready={ready} clientsCount={clients.length} />
+      </section>
+
 
       <div className="grid gap-4 md:grid-cols-2">
         <CreditsCard />
