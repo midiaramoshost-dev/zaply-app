@@ -156,6 +156,13 @@ function PlansPage() {
           </CardContent>
         </Card>
       </section>
+
+      <PlanCheckoutDialog
+        plan={selected}
+        open={Boolean(selected)}
+        onOpenChange={(next) => !next && setSelected(null)}
+      />
     </div>
+
   );
 }
