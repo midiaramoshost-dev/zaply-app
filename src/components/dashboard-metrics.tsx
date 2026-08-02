@@ -9,7 +9,7 @@ import {
   Users,
 } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import type { Post } from "@/lib/posts-store";
 
 /** Métricas simuladas e determinísticas, derivadas da biblioteca de posts. */

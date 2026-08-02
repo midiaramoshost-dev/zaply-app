@@ -65,67 +65,54 @@ function Dashboard() {
     .sort((a, b) => (a.scheduledAt ?? "").localeCompare(b.scheduledAt ?? ""));
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
-      <section className="panel relative overflow-hidden px-6 py-8 sm:px-9 sm:py-10">
-        <div className="pointer-events-none absolute -right-28 -top-28 size-72 rounded-full bg-primary/15 blur-3xl" />
-        <div className="relative">
-          <Badge variant="outline" className="border-primary/40 text-primary">
-            Plataforma de conteúdo com IA
-          </Badge>
-          <h1 className="mt-4 max-w-2xl text-3xl font-semibold sm:text-[2.6rem] sm:leading-[1.1]">
-            Crie, organize e publique <span className="gradient-text">no piloto automático</span>
-          </h1>
-          <p className="mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
-            Gere variações de conteúdo para cada canal, aprove em segundos e deixe o calendário
-            cuidar da publicação.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Button asChild size="lg">
+    <div className="mx-auto w-full max-w-6xl space-y-6 px-4 py-8 sm:px-6 lg:py-10">
+      <PageHeader
+        eyebrow="Plataforma de conteúdo com IA"
+        title="Sua operação de conteúdo, em um só lugar"
+        description="Gere variações para cada canal, aprove em segundos e deixe o calendário cuidar da publicação."
+        icon={Sparkles}
+        actions={
+          <>
+            <Button asChild size="sm">
               <Link to="/criar">
                 <Sparkles className="size-4" />
                 Gerar conteúdo
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="sm" variant="outline">
               <Link to="/tutorial">
-                Como usar o app
+                Como usar
                 <ArrowRight className="size-4" />
               </Link>
             </Button>
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-6">
-        <h2 className="section-title mb-3 text-sm uppercase tracking-[0.12em] text-muted-foreground">
-          Ações rápidas
-        </h2>
+          </>
+        }
+      >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {quickActions.map((action) => (
             <Link
               key={action.to}
               to={action.to}
-              className="panel panel-hover group flex flex-col gap-2 p-4"
+              className="panel-quiet group flex flex-col gap-2 p-4 transition-colors hover:border-primary/40 hover:bg-surface-2/50"
             >
-              <span className="grid size-9 place-items-center rounded-xl bg-primary/12 text-primary">
+              <span className="grid size-9 place-items-center rounded-xl bg-primary/12 text-primary ring-1 ring-primary/15">
                 <action.icon className="size-4" />
               </span>
               <span className="mt-1 flex items-center gap-1.5 text-sm font-medium">
                 {action.title}
                 <ArrowRight className="size-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
               </span>
-              <span className="text-xs text-muted-foreground">{action.text}</span>
+              <span className="text-xs leading-relaxed text-muted-foreground">{action.text}</span>
             </Link>
           ))}
         </div>
-      </section>
+      </PageHeader>
 
-      <section className="mt-6">
-        <h2 className="section-title mb-3 text-sm uppercase tracking-[0.12em] text-muted-foreground">
-          Desempenho
-        </h2>
+      <section>
+        <h2 className="eyebrow mb-3">Desempenho</h2>
         <DashboardMetricsGrid posts={posts} ready={ready} clientsCount={clients.length} />
       </section>
+
 
       <section className="mt-6 grid gap-4 lg:grid-cols-2">
         <Card className="panel">
