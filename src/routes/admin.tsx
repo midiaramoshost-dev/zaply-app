@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { listPlatformUsers, type PlatformUser } from "@/lib/admin.functions";
 import { useRole } from "@/hooks/use-role";
 import { CreditsDialog } from "@/components/credits-dialog";
+import { PageHeader } from "@/components/page-header";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -207,36 +208,41 @@ function AdminPage() {
 
   return (
     <div className="space-y-6">
-      <header className="panel flex flex-wrap items-center justify-between gap-4 rounded-2xl p-6">
-        <div className="space-y-1">
-          <Badge variant="outline" className="gap-1 text-primary">
-            <ShieldCheck className="size-3" /> Administrador master
-          </Badge>
-          <h1 className="font-display text-2xl font-semibold">Painel da plataforma</h1>
-          <p className="text-sm text-muted-foreground">
-            Visão consolidada de todas as contas, empresas e conteúdos do Zaply.
-          </p>
-        </div>
-        <Button size="sm" variant="outline" onClick={() => void load()} disabled={busy}>
-          {busy ? <Loader2 className="size-3.5 animate-spin" /> : null} Atualizar
-        </Button>
-      </header>
+      <PageHeader
+        eyebrow="Administrador master"
+        title="Painel da plataforma"
+        description="Visão consolidada de todas as contas, empresas e conteúdos do Zaply."
+        icon={ShieldCheck}
+        actions={
+          <>
+            {pending > 0 && (
+              <Badge variant="outline" className="border-warning/50 text-warning">
+                {pending} aguardando liberação
+              </Badge>
+            )}
+            <Button size="sm" variant="outline" onClick={() => void load()} disabled={busy}>
+              {busy ? <Loader2 className="size-3.5 animate-spin" /> : null} Atualizar
+            </Button>
+          </>
+        }
+      />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {cards.map((c) => (
-          <Card key={c.label} className="panel">
-            <CardContent className="flex items-center gap-4 p-5">
-              <span className="grid size-10 place-items-center rounded-xl bg-primary/12 text-primary">
-                <c.icon className="size-4" />
-              </span>
-              <div>
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">{c.label}</p>
-                <p className="font-display text-2xl font-semibold">{c.value}</p>
-              </div>
-            </CardContent>
-          </Card>
+          <article key={c.label} className="kpi-card flex items-center gap-4 p-5">
+            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-primary/12 text-primary ring-1 ring-primary/20">
+              <c.icon className="size-4" />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+                {c.label}
+              </p>
+              <p className="font-display text-2xl font-semibold tabular-nums">{c.value}</p>
+            </div>
+          </article>
         ))}
       </div>
+
 
       <Card className="panel">
         <CardHeader>

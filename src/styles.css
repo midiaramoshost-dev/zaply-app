@@ -197,6 +197,76 @@
   box-shadow: var(--glow-primary);
 }
 
+/* Painel translúcido, mais leve que .panel — usado em cartões internos */
+@utility panel-quiet {
+  background-color: color-mix(in oklab, var(--color-surface) 55%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-border) 75%, transparent);
+  border-radius: var(--radius-lg);
+}
+
+/* Cartão de indicador com brilho sutil no topo */
+@utility kpi-card {
+  position: relative;
+  overflow: hidden;
+  background-image: var(--gradient-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-panel);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklab, var(--color-primary) 55%, transparent),
+      transparent
+    );
+    opacity: 0.7;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in oklab, var(--color-primary) 40%, transparent);
+    box-shadow: 0 26px 54px -32px oklch(0.05 0.02 250 / 0.95);
+  }
+}
+
+/* Cabeçalho de página padrão dos painéis */
+@utility page-header {
+  position: relative;
+  overflow: hidden;
+  background-image: var(--gradient-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-panel);
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: -6rem;
+    top: -8rem;
+    width: 20rem;
+    height: 20rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-primary) 16%, transparent);
+    filter: blur(64px);
+    pointer-events: none;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-muted-foreground) 90%, transparent);
+}
+
+
 @utility grid-backdrop {
   background-image:
     radial-gradient(
