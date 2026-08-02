@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { ShieldCheck, Users, Building2, FileText, CalendarClock, Send, MessageCircle, Loader2 } from "lucide-react";
+import { ShieldCheck, Users, Building2, FileText, CalendarClock, Send, MessageCircle, Loader2, Coins } from "lucide-react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -62,7 +62,7 @@ function AdminPage() {
 
   const load = useCallback(async () => {
     setBusy(true);
-    const [statsRes, usersRes, companiesRes, postsRes, creditsRes] = await Promise.all([
+    const [statsRes, usersRes, companiesRes, postsRes] = await Promise.all([
       supabase.rpc("admin_platform_stats"),
       fetchUsers().catch((e: unknown) => {
         console.error(e);
@@ -71,12 +71,7 @@ function AdminPage() {
       }),
       supabase.from("companies").select("owner_id"),
       supabase.from("posts").select("user_id"),
-      supabase.from("user_credits").select("user_id, balance"),
     ]);
-
-    const creditMap = new Map(
-      (creditsRes.data ?? []).map((c) => [c.user_id, Number(c.balance)]),
-    );
 
     const row = (statsRes.data as Stats[] | null)?.[0];
     if (row) {
@@ -113,7 +108,7 @@ function AdminPage() {
         role: p.role,
         companies: companyCount.get(p.id) ?? 0,
         posts: postCount.get(p.id) ?? 0,
-        credits: creditMap.get(p.id) ?? 0,
+        credits: p.credits,
       })),
     );
     setBusy(false);
@@ -245,6 +240,43 @@ function AdminPage() {
 
       <Card className="panel">
         <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Coins className="size-4 text-primary" /> Gestão de créditos
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Gere ou retire créditos diretamente para cada conta cadastrada.
+          </p>
+        </CardHeader>
+        <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {members.map((member) => (
+            <div
+              key={member.id}
+              className="flex min-w-0 items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 p-3"
+            >
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">
+                  {member.full_name || member.email || member.id.slice(0, 8)}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Saldo: <span className="font-semibold text-primary">{member.credits}</span>
+                </p>
+              </div>
+              <CreditsDialog
+                userId={member.id}
+                name={member.full_name || member.email || member.id.slice(0, 8)}
+                balance={member.credits}
+                onDone={() => void load()}
+              />
+            </div>
+          ))}
+          {!members.length && !busy && (
+            <p className="text-sm text-muted-foreground">Nenhuma conta cadastrada.</p>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="panel">
+        <CardHeader>
           <CardTitle className="text-base">
             Usuários da plataforma
             {pending > 0 && (
@@ -264,7 +296,6 @@ function AdminPage() {
                 <TableHead>Papel</TableHead>
                 <TableHead className="text-right">Clientes</TableHead>
                 <TableHead className="text-right">Posts</TableHead>
-                <TableHead className="text-right">Créditos</TableHead>
                 <TableHead>Desde</TableHead>
                 <TableHead className="text-right">Ação</TableHead>
               </TableRow>
@@ -298,7 +329,6 @@ function AdminPage() {
                   </TableCell>
                   <TableCell className="text-right">{m.companies}</TableCell>
                   <TableCell className="text-right">{m.posts}</TableCell>
-                  <TableCell className="text-right font-medium text-primary">{m.credits}</TableCell>
                   <TableCell className="text-xs text-muted-foreground">
                     {new Date(m.created_at).toLocaleDateString("pt-BR")}
                   </TableCell>
@@ -312,12 +342,6 @@ function AdminPage() {
                       >
                         {m.approved ? "Bloquear" : "Liberar"}
                       </Button>
-                      <CreditsDialog
-                        userId={m.id}
-                        name={m.full_name || m.email || m.id.slice(0, 8)}
-                        balance={m.credits}
-                        onDone={() => void load()}
-                      />
                       <Button
                         size="sm"
                         variant="outline"
@@ -332,7 +356,7 @@ function AdminPage() {
               ))}
               {!members.length && (
                 <TableRow>
-                  <TableCell colSpan={9} className="py-8 text-center text-sm text-muted-foreground">
+                    <TableCell colSpan={8} className="py-8 text-center text-sm text-muted-foreground">
                     Nenhum usuário cadastrado ainda.
                   </TableCell>
                 </TableRow>
