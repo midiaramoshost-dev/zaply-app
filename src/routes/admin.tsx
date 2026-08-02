@@ -1,12 +1,27 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { ShieldCheck, Users, Building2, FileText, CalendarClock, Send, MessageCircle, Loader2, Coins } from "lucide-react";
+import {
+  ShieldCheck,
+  Users,
+  Building2,
+  FileText,
+  CalendarClock,
+  Send,
+  MessageCircle,
+  Loader2,
+  Coins,
+  Search,
+  UserCheck,
+  Clock3,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -32,6 +47,8 @@ export const Route = createFileRoute("/admin")({
         property: "og:description",
         content: "Painel master: usuários, empresas, posts e comentários de toda a plataforma Zaply.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AdminPage,
@@ -50,11 +67,37 @@ type Member = {
   credits: number;
 };
 
+type Filter = "todos" | "aguardando" | "liberados" | "admins";
+
+function displayName(member: Member) {
+  return member.full_name || member.email || member.id.slice(0, 8);
+}
+
+function initials(member: Member) {
+  const source = member.full_name || member.email || "U";
+  return source
+    .split(/[\s@.]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+}
+
+function Avatar({ member }: { member: Member }) {
+  return (
+    <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/12 text-xs font-semibold text-primary ring-1 ring-primary/20">
+      {initials(member)}
+    </span>
+  );
+}
+
 function AdminPage() {
   const { isAdmin, loading, user } = useRole();
   const [stats, setStats] = useState<PlatformStats | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
   const [busy, setBusy] = useState(false);
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<Filter>("todos");
   const fetchUsers = useServerFn(listPlatformUsers);
   const fetchStats = useServerFn(getPlatformStats);
 
@@ -71,15 +114,14 @@ function AdminPage() {
       supabase.from("posts").select("user_id"),
     ]);
 
-    const row = statsRes;
-    if (row) {
+    if (statsRes) {
       setStats({
-        total_users: Number(row.total_users),
-        total_companies: Number(row.total_companies),
-        total_posts: Number(row.total_posts),
-        scheduled_posts: Number(row.scheduled_posts),
-        published_posts: Number(row.published_posts),
-        total_comments: Number(row.total_comments),
+        total_users: Number(statsRes.total_users),
+        total_companies: Number(statsRes.total_companies),
+        total_posts: Number(statsRes.total_posts),
+        scheduled_posts: Number(statsRes.scheduled_posts),
+        published_posts: Number(statsRes.published_posts),
+        total_comments: Number(statsRes.total_comments),
       });
     }
 
@@ -152,6 +194,20 @@ function AdminPage() {
     void load();
   }
 
+  const regularMembers = useMemo(() => members.filter((m) => m.role !== "admin"), [members]);
+  const pending = regularMembers.filter((m) => !m.approved).length;
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return members.filter((m) => {
+      if (filter === "aguardando" && (m.role === "admin" || m.approved)) return false;
+      if (filter === "liberados" && (m.role === "admin" || !m.approved)) return false;
+      if (filter === "admins" && m.role !== "admin") return false;
+      if (!q) return true;
+      return `${m.full_name ?? ""} ${m.email ?? ""}`.toLowerCase().includes(q);
+    });
+  }, [members, filter, query]);
+
   if (loading) {
     return (
       <div className="flex items-center gap-2 p-8 text-sm text-muted-foreground">
@@ -192,192 +248,229 @@ function AdminPage() {
     );
   }
 
-  // Contas de administrador master têm acesso total: não precisam de créditos nem de liberação.
-  const regularMembers = members.filter((m) => m.role !== "admin");
-  const pending = regularMembers.filter((m) => !m.approved).length;
-
-
   const cards = [
-    { label: "Usuários", value: stats?.total_users ?? 0, icon: Users },
-    { label: "Empresas/clientes", value: stats?.total_companies ?? 0, icon: Building2 },
-    { label: "Posts criados", value: stats?.total_posts ?? 0, icon: FileText },
-    { label: "Agendados", value: stats?.scheduled_posts ?? 0, icon: CalendarClock },
-    { label: "Publicados", value: stats?.published_posts ?? 0, icon: Send },
-    { label: "Comentários", value: stats?.total_comments ?? 0, icon: MessageCircle },
+    { label: "Usuários", value: stats?.total_users ?? 0, icon: Users, hint: "contas cadastradas" },
+    { label: "Empresas/clientes", value: stats?.total_companies ?? 0, icon: Building2, hint: "marcas ativas" },
+    { label: "Posts criados", value: stats?.total_posts ?? 0, icon: FileText, hint: "total na plataforma" },
+    { label: "Agendados", value: stats?.scheduled_posts ?? 0, icon: CalendarClock, hint: "na fila" },
+    { label: "Publicados", value: stats?.published_posts ?? 0, icon: Send, hint: "já no ar" },
+    { label: "Comentários", value: stats?.total_comments ?? 0, icon: MessageCircle, hint: "recebidos" },
+  ];
+
+  const filters: { key: Filter; label: string; count: number }[] = [
+    { key: "todos", label: "Todos", count: members.length },
+    { key: "aguardando", label: "Aguardando", count: pending },
+    { key: "liberados", label: "Liberados", count: regularMembers.filter((m) => m.approved).length },
+    { key: "admins", label: "Admins", count: members.length - regularMembers.length },
   ];
 
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="Administrador master"
-        title="Painel da plataforma"
-        description="Visão consolidada de todas as contas, empresas e conteúdos do Zaply."
+        title="Central de controle"
+        description="Acompanhe a operação da plataforma, libere acessos e distribua créditos em um só lugar."
         icon={ShieldCheck}
         actions={
           <>
             {pending > 0 && (
               <Badge variant="outline" className="border-warning/50 text-warning">
-                {pending} aguardando liberação
+                <Clock3 className="mr-1 size-3" /> {pending} aguardando
               </Badge>
             )}
             <Button size="sm" variant="outline" onClick={() => void load()} disabled={busy}>
-              {busy ? <Loader2 className="size-3.5 animate-spin" /> : null} Atualizar
+              {busy ? <Loader2 className="mr-1.5 size-3.5 animate-spin" /> : null} Atualizar
             </Button>
           </>
         }
-      />
-
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {cards.map((c) => (
-          <article key={c.label} className="kpi-card flex items-center gap-4 p-5">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-primary/12 text-primary ring-1 ring-primary/20">
-              <c.icon className="size-4" />
-            </span>
-            <div className="min-w-0">
-              <p className="truncate text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
-                {c.label}
-              </p>
-              <p className="font-display text-2xl font-semibold tabular-nums">{c.value}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-
-
-      <Card className="panel">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Coins className="size-4 text-primary" /> Gestão de créditos
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Gere ou retire créditos das contas de usuário. Administradores master têm acesso total e
-            não usam créditos.
-          </p>
-        </CardHeader>
-        <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {regularMembers.map((member) => (
-            <div
-              key={member.id}
-              className="flex min-w-0 items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 p-3"
-            >
+      >
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {cards.map((c) => (
+            <article key={c.label} className="kpi-card flex items-center gap-4 p-4">
+              <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-primary/12 text-primary ring-1 ring-primary/20">
+                <c.icon className="size-4" />
+              </span>
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium">
-                  {member.full_name || member.email || member.id.slice(0, 8)}
+                <p className="truncate text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+                  {c.label}
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  Saldo: <span className="font-semibold text-primary">{member.credits}</span>
-                </p>
+                <p className="font-display text-2xl font-semibold tabular-nums leading-tight">{c.value}</p>
+                <p className="truncate text-[11px] text-muted-foreground/80">{c.hint}</p>
               </div>
-              <CreditsDialog
-                userId={member.id}
-                name={member.full_name || member.email || member.id.slice(0, 8)}
-                balance={member.credits}
-                onDone={() => void load()}
-              />
-            </div>
+            </article>
           ))}
-          {!regularMembers.length && !busy && (
-            <p className="text-sm text-muted-foreground">Nenhuma conta de usuário cadastrada.</p>
-          )}
+        </div>
+      </PageHeader>
 
-        </CardContent>
-      </Card>
+      <Tabs defaultValue="usuarios" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="usuarios">
+            <UserCheck className="mr-1.5 size-3.5" /> Usuários
+          </TabsTrigger>
+          <TabsTrigger value="creditos">
+            <Coins className="mr-1.5 size-3.5" /> Créditos
+          </TabsTrigger>
+        </TabsList>
 
-      <Card className="panel">
-        <CardHeader>
-          <CardTitle className="text-base">
-            Usuários da plataforma
-            {pending > 0 && (
-              <Badge variant="outline" className="ml-2 border-primary/50 text-primary">
-                {pending} aguardando liberação
-              </Badge>
-            )}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Usuário</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Plano pedido</TableHead>
-                <TableHead>Papel</TableHead>
-                <TableHead className="text-right">Clientes</TableHead>
-                <TableHead className="text-right">Posts</TableHead>
-                <TableHead>Desde</TableHead>
-                <TableHead className="text-right">Ação</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {members.map((m) => (
-                <TableRow key={m.id}>
-                  <TableCell className="max-w-[220px]">
-                    <span className="block truncate">
-                      {m.full_name || m.email || m.id.slice(0, 8)}
-                      {m.id === user.id && (
-                        <span className="ml-2 text-xs text-muted-foreground">(você)</span>
-                      )}
-                    </span>
-                    {m.email && (
-                      <span className="block truncate text-xs text-muted-foreground">{m.email}</span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={m.role === "admin" || m.approved ? "default" : "outline"}>
-                      {m.role === "admin" ? "Acesso total" : m.approved ? "Liberado" : "Aguardando"}
-                    </Badge>
-                  </TableCell>
+        <TabsContent value="usuarios" className="space-y-4">
+          <Card className="panel">
+            <CardHeader className="gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <CardTitle className="text-base">Usuários da plataforma</CardTitle>
+                <div className="relative w-full max-w-xs">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Buscar por nome ou e-mail"
+                    className="pl-9"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {filters.map((f) => (
+                  <Button
+                    key={f.key}
+                    size="sm"
+                    variant={filter === f.key ? "default" : "outline"}
+                    onClick={() => setFilter(f.key)}
+                  >
+                    {f.label}
+                    <span className="ml-1.5 tabular-nums opacity-70">{f.count}</span>
+                  </Button>
+                ))}
+              </div>
+            </CardHeader>
+            <CardContent className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Usuário</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Plano pedido</TableHead>
+                    <TableHead>Papel</TableHead>
+                    <TableHead className="text-right">Clientes</TableHead>
+                    <TableHead className="text-right">Posts</TableHead>
+                    <TableHead>Desde</TableHead>
+                    <TableHead className="text-right">Ação</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map((m) => (
+                    <TableRow key={m.id}>
+                      <TableCell className="max-w-[260px]">
+                        <div className="flex items-center gap-3">
+                          <Avatar member={m} />
+                          <div className="min-w-0">
+                            <span className="block truncate text-sm font-medium">
+                              {displayName(m)}
+                              {m.id === user.id && (
+                                <span className="ml-2 text-xs text-muted-foreground">(você)</span>
+                              )}
+                            </span>
+                            {m.email && (
+                              <span className="block truncate text-xs text-muted-foreground">{m.email}</span>
+                            )}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={m.role === "admin" || m.approved ? "default" : "outline"}>
+                          {m.role === "admin" ? "Acesso total" : m.approved ? "Liberado" : "Aguardando"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-xs uppercase text-muted-foreground">
+                        {m.role === "admin" ? "—" : m.requested_plan || "—"}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={m.role === "admin" ? "default" : "secondary"}>
+                          {m.role === "admin" ? "Admin master" : "Usuário"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right tabular-nums">{m.companies}</TableCell>
+                      <TableCell className="text-right tabular-nums">{m.posts}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground">
+                        {new Date(m.created_at).toLocaleDateString("pt-BR")}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          {m.role !== "admin" && (
+                            <Button
+                              size="sm"
+                              variant={m.approved ? "outline" : "default"}
+                              disabled={m.id === user.id}
+                              onClick={() => void toggleApproval(m)}
+                            >
+                              {m.approved ? "Bloquear" : "Liberar"}
+                            </Button>
+                          )}
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={m.id === user.id}
+                            onClick={() => void toggleAdmin(m)}
+                          >
+                            {m.role === "admin" ? "Remover admin" : "Tornar admin"}
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {!filtered.length && (
+                    <TableRow>
+                      <TableCell colSpan={8} className="py-10 text-center text-sm text-muted-foreground">
+                        {busy ? "Carregando usuários…" : "Nenhum usuário encontrado com esse filtro."}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-                  <TableCell className="text-xs uppercase text-muted-foreground">
-                    {m.role === "admin" ? "—" : m.requested_plan || "—"}
-                  </TableCell>
-
-                  <TableCell>
-                    <Badge variant={m.role === "admin" ? "default" : "secondary"}>
-                      {m.role === "admin" ? "Admin master" : "Usuário"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">{m.companies}</TableCell>
-                  <TableCell className="text-right">{m.posts}</TableCell>
-                  <TableCell className="text-xs text-muted-foreground">
-                    {new Date(m.created_at).toLocaleDateString("pt-BR")}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      {m.role !== "admin" && (
-                        <Button
-                          size="sm"
-                          variant={m.approved ? "outline" : "default"}
-                          disabled={m.id === user.id}
-                          onClick={() => void toggleApproval(m)}
-                        >
-                          {m.approved ? "Bloquear" : "Liberar"}
-                        </Button>
-                      )}
-
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={m.id === user.id}
-                        onClick={() => void toggleAdmin(m)}
-                      >
-                        {m.role === "admin" ? "Remover admin" : "Tornar admin"}
-                      </Button>
+        <TabsContent value="creditos">
+          <Card className="panel">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Coins className="size-4 text-primary" /> Gestão de créditos
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Gere ou retire créditos das contas de usuário. Administradores master têm acesso total e
+                não usam créditos.
+              </p>
+            </CardHeader>
+            <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {regularMembers.map((member) => (
+                <div
+                  key={member.id}
+                  className="panel-quiet flex min-w-0 items-center justify-between gap-3 p-3"
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    <Avatar member={member} />
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{displayName(member)}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Saldo:{" "}
+                        <span className="font-semibold tabular-nums text-primary">{member.credits}</span>
+                      </p>
                     </div>
-                  </TableCell>
-                </TableRow>
+                  </div>
+                  <CreditsDialog
+                    userId={member.id}
+                    name={displayName(member)}
+                    balance={member.credits}
+                    onDone={() => void load()}
+                  />
+                </div>
               ))}
-              {!members.length && (
-                <TableRow>
-                    <TableCell colSpan={8} className="py-8 text-center text-sm text-muted-foreground">
-                    Nenhum usuário cadastrado ainda.
-                  </TableCell>
-                </TableRow>
+              {!regularMembers.length && !busy && (
+                <p className="text-sm text-muted-foreground">Nenhuma conta de usuário cadastrada.</p>
               )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
