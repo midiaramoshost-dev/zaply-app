@@ -111,9 +111,14 @@ function PlansPage() {
                 ))}
               </ul>
 
-              <Button asChild variant={plan.is_featured ? "default" : "outline"} className="w-full">
-                <Link to="/auth">Começar com {plan.name}</Link>
+              <Button
+                variant={plan.is_featured ? "default" : "outline"}
+                className="w-full"
+                onClick={() => setSelected(plan)}
+              >
+                Contratar {plan.name}
               </Button>
+
             </CardContent>
           </Card>
         ))}
