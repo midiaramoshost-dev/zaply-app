@@ -111,15 +111,22 @@ export function PendingApprovalScreen({ requestedPlan, trialExpired, onRequested
               <Button
                 variant={plan.is_featured ? "default" : "outline"}
                 className="w-full"
-                disabled={busy === plan.code}
-                onClick={() => void choosePlan(plan.code, plan.name)}
+                onClick={() => setSelected(plan)}
               >
-                {plan.code === requestedPlan ? "Solicitar novamente" : `Quero o ${plan.name}`}
+                {plan.code === requestedPlan ? "Retomar contratação" : `Contratar ${plan.name}`}
               </Button>
             </CardContent>
           </Card>
         ))}
       </section>
+
+      <PlanCheckoutDialog
+        plan={selected}
+        open={Boolean(selected)}
+        onOpenChange={(next) => !next && setSelected(null)}
+        onContracted={onRequested}
+      />
     </div>
+
   );
 }
