@@ -44,6 +44,8 @@ const COMPARISON: { label: string; values: Record<string, string> }[] = [
 
 function PlansPage() {
   const { plans, loading } = usePlans();
+  const [selected, setSelected] = useState<Plan | null>(null);
+
 
   return (
     <div className="space-y-8">
