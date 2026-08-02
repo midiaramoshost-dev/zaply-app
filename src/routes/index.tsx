@@ -214,7 +214,7 @@ function LandingPage() {
                 {"<!-- visual_edit_bypass -->"}
                 {"<!-- visual_edit_bypass -->"}
                 <br />
-                <span className="gradient-text">pronto em minutos</span>
+                <span className="gradient-text">pronto em minutos{"<!-- visual_edit_bypass -->"}</span>
               </h1>
               <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
                 O Zaply gera, organiza, aprova, agenda e publica o conteúdo das suas marcas em
