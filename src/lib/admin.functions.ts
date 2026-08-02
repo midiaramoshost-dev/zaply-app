@@ -12,6 +12,7 @@ export type PlatformUser = {
   last_sign_in_at: string | null;
   confirmed: boolean;
   role: "admin" | "user";
+  credits: number;
 };
 
 /**
@@ -57,10 +58,12 @@ export const listPlatformUsers = createServerFn({ method: "GET" })
       if (data.users.length < 200) break;
     }
 
-    const [{ data: profiles }, { data: roles }] = await Promise.all([
+    const [{ data: profiles }, { data: roles }, { data: credits, error: creditsError }] = await Promise.all([
       supabaseAdmin.from("profiles").select("id, full_name, email, approved, requested_plan, created_at"),
       supabaseAdmin.from("user_roles").select("user_id, role"),
+      supabaseAdmin.from("user_credits").select("user_id, balance"),
     ]);
+    if (creditsError) throw new Error(creditsError.message);
 
     const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]));
 
@@ -83,6 +86,7 @@ export const listPlatformUsers = createServerFn({ method: "GET" })
       if (r.role === "admin") roleMap.set(r.user_id, "admin");
       else if (!roleMap.has(r.user_id)) roleMap.set(r.user_id, "user");
     }
+    const creditMap = new Map((credits ?? []).map((row) => [row.user_id, Number(row.balance)]));
 
     return authUsers
       .map((u) => {
@@ -97,6 +101,7 @@ export const listPlatformUsers = createServerFn({ method: "GET" })
           last_sign_in_at: u.last_sign_in_at,
           confirmed: u.confirmed,
           role: roleMap.get(u.id) ?? "user",
+          credits: creditMap.get(u.id) ?? 0,
         };
       })
       .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));

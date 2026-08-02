@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 export function CreditsCard() {
   const { user } = useAuth();
   const [balance, setBalance] = useState<number | null>(null);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -17,7 +18,10 @@ export function CreditsCard() {
       .select("balance")
       .eq("user_id", user.id)
       .maybeSingle()
-      .then(({ data }) => setBalance(Number(data?.balance ?? 0)));
+      .then(({ data, error }) => {
+        setFailed(Boolean(error));
+        setBalance(error ? null : Number(data?.balance ?? 0));
+      });
   }, [user]);
 
   return (
@@ -29,6 +33,9 @@ export function CreditsCard() {
       </CardHeader>
       <CardContent className="space-y-2 text-sm text-muted-foreground">
         <p className="font-display text-3xl font-semibold text-foreground">{balance ?? "—"}</p>
+        {failed && (
+          <p className="text-destructive">Não foi possível carregar o saldo. Atualize a página e tente novamente.</p>
+        )}
         <p>
           Créditos disponíveis para geração de conteúdo e imagens. Solicite mais créditos ao
           administrador master pelo menu flutuante de contato.
