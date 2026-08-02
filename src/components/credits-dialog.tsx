@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Coins, Loader2 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { supabase } from "@/integrations/supabase/client";
+import { grantUserCredits } from "@/lib/admin.functions";
 
 type Props = {
   userId: string;
@@ -31,6 +32,7 @@ export function CreditsDialog({ userId, name, balance, onDone }: Props) {
   const [amount, setAmount] = useState("100");
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
+  const grantCredits = useServerFn(grantUserCredits);
 
   async function submit(value: number) {
     if (!Number.isFinite(value) || value === 0) {
@@ -38,22 +40,21 @@ export function CreditsDialog({ userId, name, balance, onDone }: Props) {
       return;
     }
     setBusy(true);
-    const { data, error } = await supabase.rpc("grant_user_credits", {
-      _user_id: userId,
-      _amount: Math.trunc(value),
-      _reason: reason.trim() || undefined,
-    });
-    setBusy(false);
-    if (error) {
+    try {
+      const data = await grantCredits({
+        data: { userId, amount: Math.trunc(value), reason: reason.trim() || undefined },
+      });
+      toast.success(
+        `${value > 0 ? "Créditos gerados" : "Créditos retirados"}. Novo saldo: ${data}.`,
+      );
+      setReason("");
+      setOpen(false);
+      onDone();
+    } catch {
       toast.error("Não foi possível lançar os créditos.");
-      return;
+    } finally {
+      setBusy(false);
     }
-    toast.success(
-      `${value > 0 ? "Créditos gerados" : "Créditos retirados"}. Novo saldo: ${data ?? 0}.`,
-    );
-    setReason("");
-    setOpen(false);
-    onDone();
   }
 
   return (

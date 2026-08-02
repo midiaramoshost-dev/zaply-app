@@ -9,7 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
-import { listPlatformUsers, type PlatformUser } from "@/lib/admin.functions";
+import {
+  getPlatformStats,
+  listPlatformUsers,
+  type PlatformStats,
+  type PlatformUser,
+} from "@/lib/admin.functions";
 import { useRole } from "@/hooks/use-role";
 import { CreditsDialog } from "@/components/credits-dialog";
 import { PageHeader } from "@/components/page-header";
@@ -32,15 +37,6 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-type Stats = {
-  total_users: number;
-  total_companies: number;
-  total_posts: number;
-  scheduled_posts: number;
-  published_posts: number;
-  total_comments: number;
-};
-
 type Member = {
   id: string;
   full_name: string | null;
@@ -56,15 +52,16 @@ type Member = {
 
 function AdminPage() {
   const { isAdmin, loading, user } = useRole();
-  const [stats, setStats] = useState<Stats | null>(null);
+  const [stats, setStats] = useState<PlatformStats | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
   const [busy, setBusy] = useState(false);
   const fetchUsers = useServerFn(listPlatformUsers);
+  const fetchStats = useServerFn(getPlatformStats);
 
   const load = useCallback(async () => {
     setBusy(true);
     const [statsRes, usersRes, companiesRes, postsRes] = await Promise.all([
-      supabase.rpc("admin_platform_stats"),
+      fetchStats().catch(() => null),
       fetchUsers().catch((e: unknown) => {
         console.error(e);
         toast.error("Não foi possível carregar os usuários cadastrados.");
@@ -74,7 +71,7 @@ function AdminPage() {
       supabase.from("posts").select("user_id"),
     ]);
 
-    const row = (statsRes.data as Stats[] | null)?.[0];
+    const row = statsRes;
     if (row) {
       setStats({
         total_users: Number(row.total_users),
@@ -113,7 +110,7 @@ function AdminPage() {
       })),
     );
     setBusy(false);
-  }, [fetchUsers]);
+  }, [fetchStats, fetchUsers]);
 
   useEffect(() => {
     if (isAdmin) void load();
