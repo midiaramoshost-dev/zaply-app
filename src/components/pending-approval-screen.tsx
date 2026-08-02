@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { Check, Clock, Crown, LogOut, Sparkles, Users } from "lucide-react";
-import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BrandMark } from "@/components/brand-mark";
-import { supabase } from "@/integrations/supabase/client";
+import { PlanCheckoutDialog } from "@/components/plan-checkout-dialog";
 import { useAuth } from "@/hooks/use-auth";
-import { formatLimit, formatPrice, usePlans } from "@/lib/plans-store";
-import { whatsappLink } from "@/lib/contact";
+import { formatLimit, formatPrice, usePlans, type Plan } from "@/lib/plans-store";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -19,29 +17,10 @@ type Props = {
 };
 
 export function PendingApprovalScreen({ requestedPlan, trialExpired, onRequested }: Props) {
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
   const { plans, loading } = usePlans();
-  const [busy, setBusy] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Plan | null>(null);
 
-  async function choosePlan(code: string, name: string) {
-    if (!user) return;
-    setBusy(code);
-    const { error } = await supabase
-      .from("profiles")
-      .update({ requested_plan: code })
-      .eq("id", user.id);
-    setBusy(null);
-    if (error) return toast.error("Não foi possível registrar o plano escolhido.");
-    toast.success(`Plano ${name} registrado. Fale com o administrador para liberar o acesso.`);
-    onRequested();
-    window.open(
-      whatsappLink(
-        `Olá! Sou ${user.email} e escolhi o plano ${name} no Zaply. Quero fazer o pagamento e liberar meu acesso.`,
-      ),
-      "_blank",
-      "noopener",
-    );
-  }
 
   return (
     <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-10 sm:px-6">
