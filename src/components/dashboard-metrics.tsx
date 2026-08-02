@@ -55,6 +55,12 @@ export function computeMetrics(posts: Post[], clientsCount: number): DashboardMe
 
 const nf = new Intl.NumberFormat("pt-BR");
 
+/** Barras determinísticas de tendência (visual, derivado do próprio valor). */
+function spark(seed: string) {
+  const h = hash(seed);
+  return Array.from({ length: 7 }, (_, i) => 28 + ((h >> i) % 9) * 8);
+}
+
 export function DashboardMetricsGrid({
   posts,
   ready,
@@ -65,7 +71,6 @@ export function DashboardMetricsGrid({
   clientsCount: number;
 }) {
   const m = computeMetrics(posts, clientsCount);
-
 
   const cards = [
     { label: "Posts publicados", value: nf.format(m.published), icon: CheckCircle2, hint: "Total na biblioteca" },
@@ -79,25 +84,40 @@ export function DashboardMetricsGrid({
   ];
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       {cards.map((c) => (
-        <Card key={c.label} className="panel panel-hover gap-0 py-4">
-          <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 px-4 pb-2">
-            <CardTitle className="truncate text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <article key={c.label} className="kpi-card p-4">
+          <div className="flex items-start justify-between gap-2">
+            <p className="min-w-0 truncate text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
               {c.label}
-            </CardTitle>
-            <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+            </p>
+            <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/15">
               <c.icon className="size-3.5" />
             </span>
-          </CardHeader>
-          <CardContent className="px-4">
-            <p className="font-display text-[28px] font-semibold leading-none tabular-nums">
-              {ready ? c.value : "—"}
-            </p>
-            <p className="mt-1.5 text-xs text-muted-foreground">{c.hint}</p>
-          </CardContent>
-        </Card>
+          </div>
+
+          <p className="mt-3 font-display text-[30px] font-semibold leading-none tabular-nums">
+            {ready ? c.value : "—"}
+          </p>
+
+          <div className="mt-3 flex items-end justify-between gap-3">
+            <p className="min-w-0 truncate text-xs text-muted-foreground">{c.hint}</p>
+            <div
+              className="flex h-7 shrink-0 items-end gap-[3px]"
+              aria-hidden="true"
+            >
+              {spark(c.label).map((h, i) => (
+                <span
+                  key={i}
+                  style={{ height: `${ready ? h : 12}%` }}
+                  className="w-[3px] rounded-full bg-primary/45 transition-[height] duration-500"
+                />
+              ))}
+            </div>
+          </div>
+        </article>
       ))}
     </div>
   );
 }
+
