@@ -326,10 +326,11 @@ function AdminPage() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={m.approved ? "default" : "outline"}>
-                      {m.approved ? "Liberado" : "Aguardando"}
+                    <Badge variant={m.role === "admin" || m.approved ? "default" : "outline"}>
+                      {m.role === "admin" ? "Acesso total" : m.approved ? "Liberado" : "Aguardando"}
                     </Badge>
                   </TableCell>
+
                   <TableCell className="text-xs uppercase text-muted-foreground">
                     {m.requested_plan || "—"}
                   </TableCell>
