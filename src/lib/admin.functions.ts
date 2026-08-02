@@ -15,6 +15,77 @@ export type PlatformUser = {
   credits: number;
 };
 
+export type PlatformStats = {
+  total_users: number;
+  total_companies: number;
+  total_posts: number;
+  scheduled_posts: number;
+  published_posts: number;
+  total_comments: number;
+};
+
+export const getPlatformStats = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<PlatformStats> => {
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (roleError || !isAdmin) throw new Response("Forbidden", { status: 403 });
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const [profiles, companies, posts, comments] = await Promise.all([
+      supabaseAdmin.from("profiles").select("id", { count: "exact", head: true }),
+      supabaseAdmin.from("companies").select("id", { count: "exact", head: true }),
+      supabaseAdmin.from("posts").select("id, status"),
+      supabaseAdmin.from("comments").select("id", { count: "exact", head: true }),
+    ]);
+    const postRows = posts.data ?? [];
+    return {
+      total_users: profiles.count ?? 0,
+      total_companies: companies.count ?? 0,
+      total_posts: postRows.length,
+      scheduled_posts: postRows.filter((post) => post.status === "agendado").length,
+      published_posts: postRows.filter((post) => post.status === "publicado").length,
+      total_comments: comments.count ?? 0,
+    };
+  });
+
+export const grantUserCredits = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { userId: string; amount: number; reason?: string }) => input)
+  .handler(async ({ data, context }): Promise<number> => {
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (roleError || !isAdmin) throw new Response("Forbidden", { status: 403 });
+    if (!Number.isSafeInteger(data.amount) || data.amount === 0) {
+      throw new Response("Invalid amount", { status: 400 });
+    }
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: current, error: readError } = await supabaseAdmin
+      .from("user_credits")
+      .select("balance")
+      .eq("user_id", data.userId)
+      .maybeSingle();
+    if (readError) throw new Error(readError.message);
+    const balance = Math.max(0, Number(current?.balance ?? 0) + data.amount);
+    const { error: creditError } = await supabaseAdmin
+      .from("user_credits")
+      .upsert({ user_id: data.userId, balance }, { onConflict: "user_id" });
+    if (creditError) throw new Error(creditError.message);
+    const { error: transactionError } = await supabaseAdmin.from("credit_transactions").insert({
+      user_id: data.userId,
+      amount: data.amount,
+      reason: data.reason?.trim() || null,
+      created_by: context.userId,
+    });
+    if (transactionError) throw new Error(transactionError.message);
+    return balance;
+  });
+
 /**
  * Lista todos os usuários cadastrados na plataforma (inclusive os que ainda não
  * têm linha em `profiles`), criando o perfil faltante quando necessário.
