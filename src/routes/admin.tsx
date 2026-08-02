@@ -253,11 +253,12 @@ function AdminPage() {
             <Coins className="size-4 text-primary" /> Gestão de créditos
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Gere ou retire créditos diretamente para cada conta cadastrada.
+            Gere ou retire créditos das contas de usuário. Administradores master têm acesso total e
+            não usam créditos.
           </p>
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {members.map((member) => (
+          {regularMembers.map((member) => (
             <div
               key={member.id}
               className="flex min-w-0 items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 p-3"
@@ -278,9 +279,10 @@ function AdminPage() {
               />
             </div>
           ))}
-          {!members.length && !busy && (
-            <p className="text-sm text-muted-foreground">Nenhuma conta cadastrada.</p>
+          {!regularMembers.length && !busy && (
+            <p className="text-sm text-muted-foreground">Nenhuma conta de usuário cadastrada.</p>
           )}
+
         </CardContent>
       </Card>
 
