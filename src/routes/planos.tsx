@@ -1,11 +1,14 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import { Check, Crown, Sparkles, Users } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatLimit, formatPrice, usePlans } from "@/lib/plans-store";
+import { PlanCheckoutDialog } from "@/components/plan-checkout-dialog";
+import { formatLimit, formatPrice, usePlans, type Plan } from "@/lib/plans-store";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/planos")({
   head: () => ({
