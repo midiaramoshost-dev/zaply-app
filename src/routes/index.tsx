@@ -212,6 +212,7 @@ function LandingPage() {
               <h1 className="mt-5 text-[2.6rem] font-semibold leading-[1.02] tracking-tight sm:text-6xl">
                 Um mês de conteúdo
                 {"<!-- visual_edit_bypass -->"}
+                {"<!-- visual_edit_bypass -->"}
                 <br />
                 <span className="gradient-text">pronto em minutos</span>
               </h1>
