@@ -97,7 +97,7 @@ function AccountPage() {
 
 
       <div className="grid gap-4 md:grid-cols-2">
-        <CreditsCard />
+        {!isAdmin && <CreditsCard />}
         <Card className="panel">
           <CardHeader>
             <CardTitle className="text-base">Seu conteúdo</CardTitle>
@@ -118,13 +118,23 @@ function AccountPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>Compare os planos Starter, Pro e Agency e faça upgrade quando precisar.</p>
-            <Button asChild size="sm" variant="outline" className="mt-2">
-              <Link to="/planos">Ver planos</Link>
-            </Button>
+            {isAdmin ? (
+              <p>
+                Conta de administrador master: acesso total liberado, sem necessidade de plano ou
+                créditos.
+              </p>
+            ) : (
+              <>
+                <p>Compare os planos Starter, Pro e Agency e faça upgrade quando precisar.</p>
+                <Button asChild size="sm" variant="outline" className="mt-2">
+                  <Link to="/planos">Ver planos</Link>
+                </Button>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
+
     </div>
   );
 }
