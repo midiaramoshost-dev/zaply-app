@@ -195,7 +195,10 @@ function AdminPage() {
     );
   }
 
-  const pending = members.filter((m) => !m.approved).length;
+  // Contas de administrador master têm acesso total: não precisam de créditos nem de liberação.
+  const regularMembers = members.filter((m) => m.role !== "admin");
+  const pending = regularMembers.filter((m) => !m.approved).length;
+
 
   const cards = [
     { label: "Usuários", value: stats?.total_users ?? 0, icon: Users },
@@ -250,11 +253,12 @@ function AdminPage() {
             <Coins className="size-4 text-primary" /> Gestão de créditos
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Gere ou retire créditos diretamente para cada conta cadastrada.
+            Gere ou retire créditos das contas de usuário. Administradores master têm acesso total e
+            não usam créditos.
           </p>
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {members.map((member) => (
+          {regularMembers.map((member) => (
             <div
               key={member.id}
               className="flex min-w-0 items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 p-3"
@@ -275,9 +279,10 @@ function AdminPage() {
               />
             </div>
           ))}
-          {!members.length && !busy && (
-            <p className="text-sm text-muted-foreground">Nenhuma conta cadastrada.</p>
+          {!regularMembers.length && !busy && (
+            <p className="text-sm text-muted-foreground">Nenhuma conta de usuário cadastrada.</p>
           )}
+
         </CardContent>
       </Card>
 
@@ -321,10 +326,11 @@ function AdminPage() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={m.approved ? "default" : "outline"}>
-                      {m.approved ? "Liberado" : "Aguardando"}
+                    <Badge variant={m.role === "admin" || m.approved ? "default" : "outline"}>
+                      {m.role === "admin" ? "Acesso total" : m.approved ? "Liberado" : "Aguardando"}
                     </Badge>
                   </TableCell>
+
                   <TableCell className="text-xs uppercase text-muted-foreground">
                     {m.requested_plan || "—"}
                   </TableCell>
@@ -340,14 +346,17 @@ function AdminPage() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <Button
-                        size="sm"
-                        variant={m.approved ? "outline" : "default"}
-                        disabled={m.id === user.id}
-                        onClick={() => void toggleApproval(m)}
-                      >
-                        {m.approved ? "Bloquear" : "Liberar"}
-                      </Button>
+                      {m.role !== "admin" && (
+                        <Button
+                          size="sm"
+                          variant={m.approved ? "outline" : "default"}
+                          disabled={m.id === user.id}
+                          onClick={() => void toggleApproval(m)}
+                        >
+                          {m.approved ? "Bloquear" : "Liberar"}
+                        </Button>
+                      )}
+
                       <Button
                         size="sm"
                         variant="outline"
