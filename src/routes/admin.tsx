@@ -195,7 +195,10 @@ function AdminPage() {
     );
   }
 
-  const pending = members.filter((m) => !m.approved).length;
+  // Contas de administrador master têm acesso total: não precisam de créditos nem de liberação.
+  const regularMembers = members.filter((m) => m.role !== "admin");
+  const pending = regularMembers.filter((m) => !m.approved).length;
+
 
   const cards = [
     { label: "Usuários", value: stats?.total_users ?? 0, icon: Users },
