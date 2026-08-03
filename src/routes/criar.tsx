@@ -50,6 +50,7 @@ function CreatePage() {
   const [tone, setTone] = useState<string>(TONES[0]);
   const [variations, setVariations] = useState("1");
   const [ideas, setIdeas] = useState<GeneratedIdea[]>([]);
+  const [editingIdeas, setEditingIdeas] = useState<GeneratedIdea[]>([]);
   const [scheduleAt, setScheduleAt] = useState("");
 
   const toggleChannel = (c: string) =>
