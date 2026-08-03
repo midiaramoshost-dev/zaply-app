@@ -185,7 +185,7 @@ function AppHeader({ isAdmin }: { isAdmin: boolean }) {
 const ADMIN_ALLOWED = ["/admin", "/conta"];
 
 function AppShell() {
-  const { loading, blocked, profile, reload, isAdmin, trialActive, trialExpired, trialMsLeft } =
+  const { loading, blocked, profile, reload, isAdmin, trialActive, trialExpired, trialMsLeft, user } =
     useProfileAccess();
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const router = useRouter();
@@ -218,7 +218,7 @@ function AppShell() {
         </div>
       );
     }
-  } else if (blocked) {
+  } else if (!isAdmin && blocked) {
     return (
       <div className="min-h-screen bg-background grid-backdrop">
         <PendingApprovalScreen
