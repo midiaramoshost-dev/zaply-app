@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/hooks/use-role";
 
 /** Duração do teste gratuito liberado automaticamente no cadastro. */
-export const TRIAL_HOURS = 4;
+export const TRIAL_HOURS = 3;
 const TRIAL_MS = TRIAL_HOURS * 60 * 60 * 1000;
 
 export type ProfileAccess = {
@@ -72,7 +72,7 @@ export function useProfileAccess() {
     isAdmin,
     profile,
     loading: busy,
-    /** Admin sempre tem acesso; usuário liberado ou dentro do teste de 4h. */
+    /** Admin sempre tem acesso; usuário liberado ou dentro do teste de 3h. */
     approved: approvedByAdmin || trialActive,
     blocked: !busy && Boolean(user) && !approvedByAdmin && !trialActive,
     trialActive,

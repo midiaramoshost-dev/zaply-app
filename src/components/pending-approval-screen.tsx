@@ -29,12 +29,12 @@ export function PendingApprovalScreen({ requestedPlan, trialExpired, onRequested
           <BrandMark className="size-9" />
           <Badge variant="outline" className="gap-1 border-primary/40 text-primary">
             <Clock className="size-3" />{" "}
-            {trialExpired ? "Teste de 4h encerrado" : "Aguardando liberação"}
+            {trialExpired ? "Teste de 3h encerrado" : "Aguardando liberação"}
           </Badge>
         </div>
         <h1 className="font-display text-2xl font-semibold tracking-tight">
           {trialExpired
-            ? "Seu teste gratuito de 4 horas terminou"
+            ? "Seu teste gratuito de 3 horas terminou"
             : "Sua conta foi criada e está em análise"}
         </h1>
         <p className="max-w-2xl text-sm text-muted-foreground">

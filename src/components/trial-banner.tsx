@@ -6,7 +6,7 @@ import { formatTrialLeft, TRIAL_HOURS } from "@/hooks/use-profile-access";
 
 type Props = { msLeft: number };
 
-/** Faixa fixa avisando quanto tempo resta do teste gratuito de 4 horas. */
+/** Faixa fixa avisando quanto tempo resta do teste gratuito de 3 horas. */
 export function TrialBanner({ msLeft }: Props) {
   return (
     <div className="flex flex-wrap items-center justify-center gap-3 border-b border-primary/30 bg-primary/10 px-4 py-2 text-xs text-foreground">
