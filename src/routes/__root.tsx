@@ -200,7 +200,7 @@ function AppShell() {
     }
   }, [adminOutOfScope, router]);
 
-  if (loading || (adminOutOfScope && !blocked)) {
+  if (loading) {
     return (
       <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
         Carregando sua conta…
@@ -208,7 +208,17 @@ function AppShell() {
     );
   }
 
-  if (blocked && !isAdmin) {
+  // Se for admin, ignora qualquer bloqueio de aprovação/teste.
+  if (isAdmin) {
+    // Redireciona para /admin se estiver em uma rota de usuário (e não for /conta).
+    if (adminOutOfScope) {
+      return (
+        <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
+          Carregando painel master…
+        </div>
+      );
+    }
+  } else if (blocked) {
     return (
       <div className="min-h-screen bg-background grid-backdrop">
         <PendingApprovalScreen
