@@ -354,7 +354,7 @@ function LandingPage() {
               Uma operação de conteúdo inteira, em um único lugar
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Cada módulo cobre uma etapa do fluxo — e todos conversam entre si.
+              Cada módulo cobre uma etapa do fluxo — agora com editor integrado para revisar cada detalhe antes da publicação.
             </p>
           </div>
 

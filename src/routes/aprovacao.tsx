@@ -7,8 +7,9 @@ import {
   Send,
   Sparkles,
   XCircle,
+  Pencil,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useAutopilot } from "@/lib/autopilot-store";
 import { usePosts, type Post } from "@/lib/posts-store";
+import { PostEditorDialog } from "@/components/post-editor-dialog.tsx";
 
 export const Route = createFileRoute("/aprovacao")({
   head: () => ({
@@ -53,6 +55,7 @@ function fmt(date: string | null) {
 function ApprovalPage() {
   const { posts, ready, updatePost } = usePosts();
   const { autopilot, setAutopilot } = useAutopilot();
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
 
   const { generated, approved, published } = useMemo(() => {
     const active = posts.filter((p) => p.status !== "cancelado");
@@ -124,12 +127,17 @@ function ApprovalPage() {
         >
           {generated.map((post) => (
             <PostRow key={post.id} post={post}>
-              <Button size="sm" className="flex-1" onClick={() => approve(post)}>
-                <CheckCircle2 className="mr-1.5 size-4" /> Aprovar
-              </Button>
-              <Button size="sm" variant="outline" onClick={() => reject(post)}>
-                <XCircle className="size-4" />
-              </Button>
+              <div className="flex w-full gap-2">
+                <Button size="sm" className="flex-1" onClick={() => approve(post)}>
+                  <CheckCircle2 className="mr-1.5 size-4" /> Aprovar
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setEditingPost(post)}>
+                  <Pencil className="size-4" />
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => reject(post)}>
+                  <XCircle className="size-4" />
+                </Button>
+              </div>
             </PostRow>
           ))}
         </Column>
@@ -172,6 +180,16 @@ function ApprovalPage() {
           ))}
         </Column>
       </div>
+
+      <PostEditorDialog
+        post={editingPost}
+        open={!!editingPost}
+        onOpenChange={(open) => !open && setEditingPost(null)}
+        onSave={(id, updates) => {
+          updatePost(id, updates);
+          toast.success("Conteúdo atualizado");
+        }}
+      />
     </div>
   );
 }
