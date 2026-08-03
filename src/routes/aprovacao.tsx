@@ -7,8 +7,9 @@ import {
   Send,
   Sparkles,
   XCircle,
+  Pencil,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
