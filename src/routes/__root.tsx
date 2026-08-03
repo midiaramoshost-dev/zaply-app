@@ -200,7 +200,7 @@ function AppShell() {
     }
   }, [adminOutOfScope, router]);
 
-  if (loading || adminOutOfScope) {
+  if (loading || (adminOutOfScope && !blocked)) {
     return (
       <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
         Carregando sua conta…
