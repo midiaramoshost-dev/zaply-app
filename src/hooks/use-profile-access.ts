@@ -63,8 +63,8 @@ export function useProfileAccess() {
   const start = profile?.createdAt ? new Date(profile.createdAt).getTime() : null;
   const trialEndsAt = start && Number.isFinite(start) ? start + TRIAL_MS : null;
   const approvedByAdmin = isAdmin || Boolean(profile?.approved);
-  const trialActive = !approvedByAdmin && Boolean(trialEndsAt && now < trialEndsAt);
-  const trialExpired = !approvedByAdmin && Boolean(trialEndsAt && now >= trialEndsAt);
+  const trialActive = !isAdmin && !approvedByAdmin && Boolean(trialEndsAt && now < trialEndsAt);
+  const trialExpired = !isAdmin && !approvedByAdmin && Boolean(trialEndsAt && now >= trialEndsAt);
   const msLeft = trialEndsAt ? Math.max(0, trialEndsAt - now) : 0;
 
   return {
