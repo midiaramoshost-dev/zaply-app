@@ -65,6 +65,7 @@ function CreatePage() {
       }),
     onSuccess: (result) => {
       setIdeas(result.ideas);
+      setEditingIdeas(result.ideas);
       toast.success("Conteúdo gerado com sucesso.");
     },
     onError: (error: Error) => toast.error(error.message),
