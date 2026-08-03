@@ -233,51 +233,75 @@ function CreatePage() {
             </Card>
           )}
 
-          {ideas.map((idea, i) => (
-            <Card key={`${idea.title}-${i}`} className="panel">
+          {editingIdeas.map((idea, i) => (
+            <Card key={`${idea.channel}-${i}`} className="panel">
               <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
-                <CardTitle className="text-base leading-snug">{idea.title}</CardTitle>
+                <div className="flex-1 space-y-2">
+                  <Input
+                    value={idea.title}
+                    onChange={(e) => updateIdea(i, "title", e.target.value)}
+                    className="h-auto border-none bg-transparent p-0 text-base font-semibold focus-visible:ring-0"
+                    placeholder="Título do post..."
+                  />
+                </div>
                 <Badge variant="secondary" className="shrink-0">
                   {idea.channel}
                 </Badge>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="whitespace-pre-line text-sm text-muted-foreground">{idea.body}</p>
-                {idea.cta && (
-                  <div className="rounded-lg border border-primary/40 bg-primary/5 px-3 py-2">
-                    <p className="text-[11px] uppercase tracking-wide text-muted-foreground">CTA</p>
-                    <p className="text-sm font-medium">{idea.cta}</p>
+                <div className="space-y-2">
+                  <Label className="text-[11px] uppercase tracking-wide text-muted-foreground">Legenda</Label>
+                  <Textarea
+                    value={idea.body}
+                    onChange={(e) => updateIdea(i, "body", e.target.value)}
+                    rows={6}
+                    className="resize-none border-border/40 bg-surface/30 focus-visible:ring-primary/20"
+                    placeholder="Escreva a legenda..."
+                  />
+                </div>
+
+                {idea.cta !== undefined && (
+                  <div className="rounded-lg border border-primary/40 bg-primary/5 p-3">
+                    <Label className="text-[11px] uppercase tracking-wide text-muted-foreground">CTA (Chamada para ação)</Label>
+                    <Input
+                      value={idea.cta}
+                      onChange={(e) => updateIdea(i, "cta", e.target.value)}
+                      className="mt-1 h-auto border-none bg-transparent p-0 text-sm font-medium focus-visible:ring-0"
+                      placeholder="Ex: Clique no link da bio..."
+                    />
                   </div>
                 )}
-                {(idea.emojis ?? []).length > 0 && (
-                  <p className="text-lg leading-none">{(idea.emojis ?? []).join(" ")}</p>
-                )}
-                <div className="flex flex-wrap gap-1.5">
-                  {(idea.hashtags ?? []).map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-[11px]">
-                      #{tag}
-                    </Badge>
-                  ))}
+
+                <div className="space-y-2">
+                  <Label className="text-[11px] uppercase tracking-wide text-muted-foreground">Hashtags</Label>
+                  <Input
+                    value={(idea.hashtags ?? []).join(" ")}
+                    onChange={(e) => updateIdea(i, "hashtags", e.target.value.split(" ").filter(t => t.length > 0).map(t => t.replace("#", "")))}
+                    className="h-auto border-none bg-transparent p-0 text-sm text-primary focus-visible:ring-0"
+                    placeholder="hashtags separadas por espaço..."
+                  />
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  <Button size="sm" onClick={() => save(idea, false)}>
+
+                <div className="flex flex-wrap gap-2 pt-2">
+                  <Button size="sm" onClick={() => save(idea, false)} className="gap-2">
                     <Save className="size-4" />
                     Salvar rascunho
                   </Button>
-                  <Button size="sm" variant="outline" onClick={() => save(idea, true)}>
+                  <Button size="sm" variant="outline" onClick={() => save(idea, true)} className="gap-2">
                     <CalendarPlus className="size-4" />
                     Agendar
                   </Button>
                   <Button
                     size="sm"
                     variant="ghost"
+                    className="gap-2"
                     onClick={() => {
                       void navigator.clipboard.writeText(
                         `${idea.title}\n\n${idea.body}${idea.cta ? `\n\n${idea.cta}` : ""}\n\n${(idea.hashtags ?? [])
                           .map((t) => `#${t}`)
                           .join(" ")}`,
                       );
-                      toast.success("Copiado.");
+                      toast.success("Copiado para a área de transferência.");
                     }}
                   >
                     <Copy className="size-4" />
