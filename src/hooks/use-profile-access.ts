@@ -73,8 +73,8 @@ export function useProfileAccess() {
     profile,
     loading: busy,
     /** Admin sempre tem acesso; usuário liberado ou dentro do teste de 3h. */
-    approved: approvedByAdmin || trialActive,
-    blocked: !busy && Boolean(user) && !approvedByAdmin && !trialActive,
+    approved: isAdmin || approvedByAdmin || trialActive,
+    blocked: !busy && Boolean(user) && !isAdmin && !approvedByAdmin && !trialActive,
     trialActive,
     trialExpired,
     trialEndsAt,
