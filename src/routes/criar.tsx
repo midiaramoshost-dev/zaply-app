@@ -71,6 +71,14 @@ function CreatePage() {
     onError: (error: Error) => toast.error(error.message),
   });
 
+  function updateIdea(index: number, field: keyof GeneratedIdea, value: any) {
+    setEditingIdeas((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  }
+
   function save(idea: GeneratedIdea, schedule: boolean) {
     if (schedule && !scheduleAt) {
       toast.error("Escolha data e hora para agendar.");
@@ -87,6 +95,7 @@ function CreatePage() {
     });
     toast.success(schedule ? "Publicação agendada." : "Salvo na biblioteca.");
   }
+
 
 
   return (
