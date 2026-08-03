@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/hooks/use-role";
 
 /** Duração do teste gratuito liberado automaticamente no cadastro. */
-export const TRIAL_HOURS = 4;
+export const TRIAL_HOURS = 3;
 const TRIAL_MS = TRIAL_HOURS * 60 * 60 * 1000;
 
 export type ProfileAccess = {
