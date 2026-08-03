@@ -208,7 +208,7 @@ function AppShell() {
     );
   }
 
-  if (blocked) {
+  if (blocked && !isAdmin) {
     return (
       <div className="min-h-screen bg-background grid-backdrop">
         <PendingApprovalScreen
