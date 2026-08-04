@@ -606,48 +606,87 @@ function AdminPage() {
             </Card>
           </div>
 
-          <Card className="panel border-dashed">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Workflow className="size-4 text-primary" /> Automação & Infra
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-6 md:grid-cols-2">
-              <div className="flex flex-col items-center justify-center rounded-xl border border-border/50 bg-card/30 py-8 text-center">
-                <div className="mb-4 grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
-                  <Workflow className="size-6" />
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card className="panel border-primary/20 bg-primary/[0.02]">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="rounded-lg bg-primary/20 p-1.5 text-primary">
+                    <ZapIcon className="size-4" />
+                  </div>
+                  <CardTitle className="text-sm font-bold">Vincular Canais (Automação Real)</CardTitle>
                 </div>
-                <CardTitle className="mb-2 text-sm">Motor n8n</CardTitle>
-                <CardDescription className="mb-4 max-w-[240px] text-[10px]">
-                  Processamento de posts agendados a cada 15 min.
-                </CardDescription>
-                <Button variant="outline" size="sm" className="h-8 text-[10px]" asChild>
-                  <Link to="/n8n">Fluxo Técnico</Link>
-                </Button>
-              </div>
+                <CardDescription className="text-xs">Configure as APIs para que a Zaply publique automaticamente.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-[11px] text-muted-foreground leading-relaxed italic">
+                  "Crie uma forma onde eu possa vincular as redes sociais para que tudo seja realmente automatizada"
+                </p>
+                <div className="space-y-2">
+                  {[
+                    { name: "Instagram/Facebook API", icon: Instagram },
+                    { name: "LinkedIn OAuth", icon: Linkedin },
+                    { name: "X (Twitter) API v2", icon: ZapIcon },
+                    { name: "TikTok for Business", icon: Music2 },
+                    { name: "YouTube API (Shorts)", icon: Youtube },
+                  ].map((api) => (
+                    <div key={api.name} className="flex items-center justify-between rounded-lg border border-border/40 bg-card/40 p-2.5 text-xs transition-colors hover:bg-card/60">
+                      <div className="flex items-center gap-2.5">
+                        <api.icon className="size-4 text-primary/70" />
+                        <span className="font-semibold text-foreground/90">{api.name}</span>
+                      </div>
+                      <Button size="sm" variant="outline" className="h-7 px-3 text-[10px] font-bold border-primary/20 text-primary hover:bg-primary/10">
+                        CONECTAR
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
-              <div className="space-y-4 rounded-xl border border-border/50 bg-card/30 p-4">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Controles Globais</p>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium">Modo Manutenção</span>
-                    <Badge variant="outline" className="h-5 text-[9px]">OFF</Badge>
+            <Card className="panel border-dashed">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Workflow className="size-4 text-primary" /> Automação & Infra
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-4 sm:grid-cols-2">
+                <div className="flex flex-col items-center justify-center rounded-xl border border-border/50 bg-card/30 py-8 text-center">
+                  <div className="mb-4 grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
+                    <Workflow className="size-6" />
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium">Novos Registros</span>
-                    <Badge className="h-5 bg-success text-[9px]">ON</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium">Pagamentos Ativos</span>
-                    <Badge variant="outline" className="h-5 text-[9px]">OFF</Badge>
-                  </div>
+                  <CardTitle className="mb-2 text-sm text-foreground">Motor n8n</CardTitle>
+                  <CardDescription className="mb-4 max-w-[240px] text-[10px]">
+                    Processamento de posts agendados a cada 15 min.
+                  </CardDescription>
+                  <Button variant="outline" size="sm" className="h-8 text-[10px]" asChild>
+                    <Link to="/n8n">Fluxo Técnico</Link>
+                  </Button>
                 </div>
-                <Button variant="ghost" size="sm" className="h-8 w-full text-[10px] text-primary hover:bg-primary/10">
-                  Salvar Alterações
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+
+                <div className="space-y-4 rounded-xl border border-border/50 bg-card/30 p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Controles Globais</p>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium">Modo Manutenção</span>
+                      <Badge variant="outline" className="h-5 text-[9px]">OFF</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium">Novos Registros</span>
+                      <Badge className="h-5 bg-success text-[9px]">ON</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium">Pagamentos Ativos</span>
+                      <Badge variant="outline" className="h-5 text-[9px]">OFF</Badge>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm" className="h-8 w-full text-[10px] text-primary hover:bg-primary/10">
+                    Salvar Alterações
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
         </TabsContent>
       </Tabs>
     </div>
