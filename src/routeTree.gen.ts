@@ -30,6 +30,7 @@ import { Route as AgendamentoRouteImport } from './routes/agendamento'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiGenerateImageRouteImport } from './routes/api/generate-image'
+import { Route as ApiPublicHealthCheckRouteImport } from './routes/api/public/health-check'
 
 const TutorialRoute = TutorialRouteImport.update({
   id: '/tutorial',
@@ -136,6 +137,11 @@ const ApiGenerateImageRoute = ApiGenerateImageRouteImport.update({
   path: '/api/generate-image',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHealthCheckRoute = ApiPublicHealthCheckRouteImport.update({
+  id: '/api/public/health-check',
+  path: '/api/public/health-check',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tutorial': typeof TutorialRoute
   '/api/generate-image': typeof ApiGenerateImageRoute
+  '/api/public/health-check': typeof ApiPublicHealthCheckRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tutorial': typeof TutorialRoute
   '/api/generate-image': typeof ApiGenerateImageRoute
+  '/api/public/health-check': typeof ApiPublicHealthCheckRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -206,6 +214,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tutorial': typeof TutorialRoute
   '/api/generate-image': typeof ApiGenerateImageRoute
+  '/api/public/health-check': typeof ApiPublicHealthCheckRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -231,6 +240,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/tutorial'
     | '/api/generate-image'
+    | '/api/public/health-check'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/tutorial'
     | '/api/generate-image'
+    | '/api/public/health-check'
   id:
     | '__root__'
     | '/'
@@ -277,6 +288,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/tutorial'
     | '/api/generate-image'
+    | '/api/public/health-check'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -301,6 +313,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TutorialRoute: typeof TutorialRoute
   ApiGenerateImageRoute: typeof ApiGenerateImageRoute
+  ApiPublicHealthCheckRoute: typeof ApiPublicHealthCheckRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -452,6 +465,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGenerateImageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/health-check': {
+      id: '/api/public/health-check'
+      path: '/api/public/health-check'
+      fullPath: '/api/public/health-check'
+      preLoaderRoute: typeof ApiPublicHealthCheckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -477,6 +497,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TutorialRoute: TutorialRoute,
   ApiGenerateImageRoute: ApiGenerateImageRoute,
+  ApiPublicHealthCheckRoute: ApiPublicHealthCheckRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
