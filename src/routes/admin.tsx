@@ -414,25 +414,27 @@ function AdminPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
+                          <CreditsDialog
+                            className="btn-grant-credits"
+                            userId={m.id}
+                            name={displayName(m)}
+                            balance={m.credits}
+                            onDone={() => void load()}
+                          />
                           {m.role !== "admin" && (
-                            <>
-                              <CreditsDialog
-                                className="btn-grant-credits"
-                                userId={m.id}
-                                name={displayName(m)}
-                                balance={m.credits}
-                                onDone={() => void load()}
-                              />
-                              <Button
-                                size="sm"
-                                variant={m.approved ? "outline" : "default"}
-                                disabled={m.id === user.id}
-                                onClick={() => void toggleApproval(m)}
-                              >
-                                {m.approved ? "Bloquear" : "Liberar"}
-                              </Button>
-                            </>
+                            <Button
+                              size="sm"
+                              variant={m.approved ? "outline" : "default"}
+                              disabled={m.id === user.id}
+                              onClick={() => void toggleApproval(m)}
+                            >
+                              {m.approved ? "Bloquear" : "Liberar"}
+                            </Button>
                           )}
+                          {m.role === "admin" && m.id !== user.id && (
+                            <Badge variant="secondary" className="h-8">Admin</Badge>
+                          )}
+                        </div>
                           <Button
                             size="sm"
                             variant="outline"
