@@ -21,6 +21,8 @@ import {
   Linkedin,
   Zap as ZapIcon,
   Workflow,
+  Music2,
+  Youtube,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -504,6 +506,8 @@ function AdminPage() {
                   { name: "Instagram", icon: Instagram, status: "online" },
                   { name: "Facebook", icon: Facebook, status: "online" },
                   { name: "LinkedIn", icon: Linkedin, status: "online" },
+                  { name: "TikTok", icon: Music2, status: "online" },
+                  { name: "YouTube", icon: Youtube, status: "online" },
                   { name: "X (Twitter)", icon: ZapIcon, status: "online" },
                 ].map((social) => (
                   <div key={social.name} className="flex items-center justify-between rounded-lg border border-border/50 bg-card/30 p-2.5">
