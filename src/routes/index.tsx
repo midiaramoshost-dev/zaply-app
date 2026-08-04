@@ -51,14 +51,14 @@ export const Route = createFileRoute("/")({
 const features = [
   {
     icon: Sparkles,
-    title: "IA de Texto e Vídeo Curto",
-    text: "Legendas, hashtags e ganchos para vídeos de 6 segundos. Tom de voz adaptado por rede social.",
+    title: "IA de Tarefas e Cronograma",
+    text: "Listas de limpeza, compras e avisos automáticos. Tom de voz adaptado para cada profissional.",
     span: "lg:col-span-2",
   },
   {
     icon: Wand2,
-    title: "Mês automático",
-    text: "Diga o seu nicho e receba 30 ideias, 30 legendas e 30 imagens já distribuídas no calendário.",
+    title: "Mês organizado",
+    text: "Diga sua rotina e receba 30 dias de cronograma e listas já distribuídas no calendário.",
     span: "lg:col-span-2",
   },
   {
@@ -69,8 +69,8 @@ const features = [
   },
   {
     icon: BadgeCheck,
-    title: "Aprovação do cliente",
-    text: "Fluxo IA → revisão → publicação, com aprovação em um clique.",
+    title: "Controle na mão",
+    text: "Fluxo IA → revisão → execução, com aprovação em um clique.",
     span: "",
   },
   {
@@ -81,8 +81,8 @@ const features = [
   },
   {
     icon: Send,
-    title: "Publicação multicanal",
-    text: "Instagram, Facebook, LinkedIn e X a partir de uma fila única.",
+    title: "Avisos multicanal",
+    text: "WhatsApp, E-mail e notificações a partir de uma fila única.",
     span: "",
   },
   {
@@ -102,31 +102,31 @@ const features = [
 const steps = [
   {
     n: "01",
-    title: "Cadastre a marca",
-    text: "Nicho, objetivos, público, tom de voz, cores, fontes e palavras proibidas.",
+    title: "Defina sua necessidade",
+    text: "Nicho, tarefas, horários, tom de voz para comunicação e regras da casa.",
   },
   {
     n: "02",
-    title: "Deixe a IA criar",
-    text: "Conteúdo e imagens para cada canal, respeitando a identidade do cliente.",
+    title: "IA organiza tudo",
+    text: "Cronograma de limpeza, lista de compras e orientações para profissionais.",
   },
   {
     n: "03",
     title: "Aprove e agende",
-    text: "Revise em segundos e encaixe tudo na grade de horários da semana.",
+    text: "Revise o planejamento semanal e agende as visitas em um clique.",
   },
   {
     n: "04",
-    title: "Publique e meça",
-    text: "Publicação automática via n8n e relatórios mensais entregues prontos.",
+    title: "Lar impecável",
+    text: "Execução automática, avisos via WhatsApp e relatórios de atividades prontos.",
   },
 ];
 
 const stats = [
-  { value: "30", label: "posts gerados por rodada" },
-  { value: "8", label: "canais integrados" },
+  { value: "30", label: "tarefas geradas por rodada" },
+  { value: "8", label: "serviços integrados" },
   { value: "1 clique", label: "para aprovar e agendar" },
-  { value: "24/7", label: "publicação automatizada" },
+  { value: "24/7", label: "gestão automatizada" },
 ];
 
 const channels = [
@@ -143,21 +143,21 @@ const channels = [
 const testimonials = [
   {
     quote:
-      "Fechei o mês inteiro de conteúdo de 6 clientes numa tarde. O que antes era uma semana de trabalho.",
+      "Organizei o mês inteiro da minha casa numa tarde. O que antes era uma confusão de mensagens.",
     name: "Marina Alves",
     role: "Social media · agência própria",
   },
   {
     quote:
-      "A aprovação em um clique acabou com o vai e vem no WhatsApp. O cliente entra, revisa e libera.",
+      "A aprovação em um clique acabou com o vai e vem no WhatsApp com os prestadores. Tudo fica registrado.",
     name: "Rafael Duarte",
-    role: "Dono de agência · 12 marcas",
+    role: "Gestor doméstico · 12 residências",
   },
   {
     quote:
-      "As legendas saem no tom da marca de verdade. Eu só ajusto detalhe e mando publicar.",
+      "As listas de tarefas saem perfeitas. Eu só ajusto um detalhe ou outro e libero o cronograma.",
     name: "Carla Menezes",
-    role: "Consultora de marketing",
+    role: "Dona de casa organizada",
   },
 ];
 
@@ -317,7 +317,7 @@ function LandingPage() {
           <div className="relative border-t border-border/60 bg-background/40">
             <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-center gap-x-10 gap-y-4 px-4 py-6 sm:px-6">
               <span className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                Publica em
+                Disponível em
               </span>
               {channels.map((c) => (
                 <span
@@ -352,13 +352,13 @@ function LandingPage() {
         <section id="recursos" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
           <div className="max-w-2xl">
             <p className="section-title text-xs uppercase tracking-[0.18em] text-primary">
-              Recursos
+              Serviços
             </p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Uma operação de conteúdo inteira, em um único lugar
+              Uma gestão doméstica completa, em um único lugar
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Cada módulo cobre uma etapa do fluxo — agora com editor integrado para revisar cada detalhe antes da publicação.
+              Cada módulo cobre uma etapa da sua rotina — agora com IA integrada para gerenciar cada detalhe da sua casa.
             </p>
           </div>
 
@@ -386,7 +386,7 @@ function LandingPage() {
                 Como funciona
               </p>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-                Quatro passos entre a ideia e o post no ar
+                Quatro passos para transformar seu lar
               </h2>
             </div>
 
