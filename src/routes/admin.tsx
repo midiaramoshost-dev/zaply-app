@@ -394,7 +394,9 @@ function AdminPage() {
         </div>
       </PageHeader>
 
-      <Tabs value={activeTab} className="space-y-4">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <Tabs value={activeTab} className="space-y-4">
         <TabsList className="hidden md:flex">
           <TabsTrigger value="usuarios" asChild>
             <Link from="/admin" search={{ tab: "usuarios" }} className="flex items-center gap-1.5">
@@ -620,7 +622,38 @@ function AdminPage() {
           </Card>
         </TabsContent>
 
-      </Tabs>
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Zap className="size-4 text-primary" />
+          <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Monitoramento de Atividade</h3>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[
+            { label: "Novos Posts (24h)", value: "+24", trend: "up" },
+            { label: "Aprovações (24h)", value: "12", trend: "stable" },
+            { label: "Novos Usuários (24h)", value: "+5", trend: "up" },
+            { label: "Erros de API", value: "0", trend: "down" },
+          ].map((item) => (
+            <div key={item.label} className="panel-quiet flex items-center justify-between p-4">
+              <div>
+                <p className="text-[10px] font-bold text-muted-foreground/60">{item.label}</p>
+                <p className="text-lg font-bold">{item.value}</p>
+              </div>
+              <Badge variant="outline" className={
+                item.trend === "up" ? "border-success/30 text-success" :
+                item.trend === "down" ? "border-primary/30 text-primary" :
+                "border-border text-muted-foreground"
+              }>
+                {item.trend === "up" ? "↑" : item.trend === "down" ? "↓" : "→"}
+              </Badge>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
