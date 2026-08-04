@@ -318,7 +318,7 @@ function AdminPage() {
             </Button>
             <Button size="sm" variant="default" asChild className="h-9 bg-primary/20 text-primary hover:bg-primary/30 shadow-none border border-primary/20 px-4">
               <Link to="/painel">
-                Visualizar como Usuário <Sparkles className="ml-2 size-3.5" />
+                Abrir App <Sparkles className="ml-2 size-3.5" />
               </Link>
             </Button>
           </>
@@ -383,10 +383,10 @@ function AdminPage() {
               </CardHeader>
               <CardContent className="space-y-2 p-4 pt-0">
                 <Button variant="outline" className="h-9 w-full justify-start gap-2 text-xs font-semibold" onClick={() => void load()}>
-                  <Loader2 className={`size-3.5 ${busy ? "animate-spin" : ""}`} /> Sincronizar dados
+                  <Loader2 className={`size-3.5 ${busy ? "animate-spin" : ""}`} /> Atualizar
                 </Button>
                 <Button variant="default" className="h-9 w-full justify-start gap-2 text-xs font-semibold" onClick={() => toast.info("Relatório sendo gerado...")}>
-                  <FileText className="size-3.5" /> Exportar CSV
+                  <FileText className="size-3.5" /> Exportar Base
                 </Button>
               </CardContent>
             </Card>
