@@ -22,12 +22,13 @@ type Props = {
   name: string;
   balance: number;
   onDone: () => void;
+  className?: string;
 };
 
 const PRESETS = [10, 50, 100, 500];
 
 /** Painel master: gera (ou retira) créditos de um usuário. */
-export function CreditsDialog({ userId, name, balance, onDone }: Props) {
+export function CreditsDialog({ userId, name, balance, onDone, className }: Props) {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("10");
   const [reason, setReason] = useState("");
@@ -60,7 +61,7 @@ export function CreditsDialog({ userId, name, balance, onDone }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline">
+        <Button size="sm" variant="outline" className={className}>
           <Coins className="size-3.5" /> Créditos
         </Button>
       </DialogTrigger>
