@@ -164,7 +164,7 @@ function LandingPage() {
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
             <BrandMark className="size-9 shadow-lg shadow-primary/20" />
-            <span className="font-display text-lg font-bold tracking-tight">Zaply</span>
+            <span className="font-display text-lg font-bold tracking-tight text-white">Zaply</span>
           </Link>
 
           <nav className="ml-8 hidden items-center gap-6 text-sm text-muted-foreground md:flex">
@@ -215,12 +215,12 @@ function LandingPage() {
                 <br />
                 <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">em modo viral</span>
               </h1>
-              <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+              <p className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 mt-6 max-w-lg text-base leading-relaxed text-gray-400 sm:text-lg">
                 O Zaply gera, organiza, aprova, agenda e publica o conteúdo das suas marcas em
                 todas as redes — com a consistência de uma agência e a velocidade de um robô.
               </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300 mt-10 flex flex-wrap items-center gap-4">
                 <Button asChild size="lg" className="h-14 px-8 text-base shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)] transition-all hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.6)] hover:scale-[1.02] active:scale-[0.98]">
                   <Link to="/auth" search={{ mode: "criar" }}>
                     <Zap className="mr-2 size-5 fill-current" />
