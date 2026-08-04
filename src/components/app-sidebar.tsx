@@ -97,6 +97,7 @@ export function AppSidebar() {
             { title: "Minha conta", url: "/conta" as const, icon: UserRound },
           ],
         },
+        ...groups,
       ]
     : groups;
 
