@@ -322,9 +322,6 @@ function AdminPage() {
           <TabsTrigger value="usuarios">
             <UserCheck className="mr-1.5 size-3.5" /> Usuários
           </TabsTrigger>
-          <TabsTrigger value="creditos">
-            <Coins className="mr-1.5 size-3.5" /> Créditos
-          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="usuarios" className="space-y-4">
@@ -459,47 +456,6 @@ function AdminPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="creditos">
-          <Card className="panel">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Coins className="size-4 text-primary" /> Gestão de créditos
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Gere ou retire créditos das contas de usuário. Administradores master têm acesso total e
-                não usam créditos.
-              </p>
-            </CardHeader>
-            <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-              {regularMembers.map((member) => (
-                <div
-                  key={member.id}
-                  className="panel-quiet flex min-w-0 items-center justify-between gap-3 p-3"
-                >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <Avatar member={member} />
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-medium">{displayName(member)}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Saldo:{" "}
-                        <span className="font-semibold tabular-nums text-primary">{member.credits}</span>
-                      </p>
-                    </div>
-                  </div>
-                  <CreditsDialog
-                    userId={member.id}
-                    name={displayName(member)}
-                    balance={member.credits}
-                    onDone={() => void load()}
-                  />
-                </div>
-              ))}
-              {!regularMembers.length && !busy && (
-                <p className="text-sm text-muted-foreground">Nenhuma conta de usuário cadastrada.</p>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
     </div>
   );
