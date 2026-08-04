@@ -319,21 +319,49 @@ function AdminPage() {
           </>
         }
       >
-        <div className="kpi-grid grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {cards.map((c) => (
-            <article key={c.label} className="panel-quiet flex flex-col gap-1 p-3">
-              <div className="flex items-center gap-2">
-                <c.icon className="size-3.5 text-primary" />
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">
-                  {c.label}
-                </p>
+        <div className="flex flex-col gap-6">
+          {pending > 0 && (
+            <div className="flex items-center justify-between rounded-xl border border-warning/20 bg-warning/5 p-4 text-warning">
+              <div className="flex items-center gap-3">
+                <div className="grid size-10 place-items-center rounded-full bg-warning/10">
+                  <Clock3 className="size-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold">Solicitações Pendentes</p>
+                  <p className="text-xs opacity-80">Você tem {pending} usuário(s) aguardando liberação de acesso.</p>
+                </div>
               </div>
-              <div className="flex items-baseline gap-2">
-                <p className="font-display text-xl font-bold tabular-nums leading-none">{c.value}</p>
-                <p className="truncate text-[10px] text-muted-foreground/60">{c.hint}</p>
-              </div>
-            </article>
-          ))}
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="border-warning/30 hover:bg-warning/10 hover:text-warning"
+                onClick={() => {
+                  setFilter("aguardando");
+                  const el = document.querySelector(".user-table-card");
+                  el?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                Ver Solicitações
+              </Button>
+            </div>
+          )}
+
+          <div className="kpi-grid grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            {cards.map((c) => (
+              <article key={c.label} className="panel-quiet flex flex-col gap-1 p-3">
+                <div className="flex items-center gap-2">
+                  <c.icon className="size-3.5 text-primary" />
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">
+                    {c.label}
+                  </p>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <p className="font-display text-xl font-bold tabular-nums leading-none">{c.value}</p>
+                  <p className="truncate text-[10px] text-muted-foreground/60">{c.hint}</p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </PageHeader>
 
@@ -353,14 +381,18 @@ function AdminPage() {
 
         <TabsContent value="usuarios" className="mt-0 space-y-4 focus-visible:outline-none">
           <Card className="panel user-table-card">
-            <CardHeader className="gap-3">
+            <CardHeader className="border-b border-border/50 pb-4">
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Usuários cadastrados</CardTitle>
-                  <Button size="sm" className="btn-new-user h-8 rounded-lg px-4 text-xs font-bold" onClick={() => toast.info("Funcionalidade em desenvolvimento.")}>
+                <div className="space-y-1">
+                  <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Gestão de Base</CardTitle>
+                  <CardDescription className="text-xs">Visualize e gerencie todos os perfis cadastrados na Zaply.</CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button size="sm" className="btn-new-user h-9 rounded-lg px-4 text-xs font-bold" onClick={() => toast.info("Funcionalidade em desenvolvimento.")}>
                     ADICIONAR CLIENTE
                   </Button>
                 </div>
+              </div>
                 <div className="relative w-full max-w-xs">
                   <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
                   <Input
