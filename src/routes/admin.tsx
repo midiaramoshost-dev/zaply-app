@@ -622,9 +622,66 @@ function AdminPage() {
           </Card>
         </TabsContent>
 
-          </TabsContent>
-        </Tabs>
-      </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+
+    <div className="space-y-6">
+      <Card className="panel border-primary/20 bg-primary/[0.02]">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary">
+            <ShieldCheck className="size-3" /> Status Global
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className="text-muted-foreground">Saúde do Banco</span>
+              <span className="font-bold text-success">Ótima</span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-border/50">
+              <div className="h-full w-[98%] bg-success shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className="text-muted-foreground">Uso de Armazenamento</span>
+              <span className="font-bold text-primary">12.4 GB</span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-border/50">
+              <div className="h-full w-[45%] bg-primary shadow-[0_0_8px_rgba(59,130,246,0.4)]" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="panel">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Eventos Recentes</CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="divide-y divide-border/50">
+            {[
+              { type: "auth", text: "Novo usuário registrado", time: "2 min atrás" },
+              { type: "post", text: "Post agendado processado", time: "15 min atrás" },
+              { type: "credit", text: "Créditos atribuídos a João", time: "1h atrás" },
+            ].map((event, i) => (
+              <div key={i} className="flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
+                <div className={`mt-0.5 size-1.5 shrink-0 rounded-full ${
+                  event.type === "auth" ? "bg-primary" : 
+                  event.type === "post" ? "bg-success" : "bg-warning"
+                }`} />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-xs font-medium">{event.text}</p>
+                  <p className="text-[9px] text-muted-foreground">{event.time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  </div>
 
       <div className="space-y-4">
         <div className="flex items-center gap-2">
