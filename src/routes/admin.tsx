@@ -298,16 +298,16 @@ function AdminPage() {
       >
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {cards.map((c) => (
-            <article key={c.label} className="kpi-card flex items-center gap-4 p-4">
-              <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-primary/12 text-primary ring-1 ring-primary/20">
-                <c.icon className="size-4" />
-              </span>
-              <div className="min-w-0">
-                <p className="truncate text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+            <article key={c.label} className="panel-quiet flex flex-col gap-1 p-3">
+              <div className="flex items-center gap-2">
+                <c.icon className="size-3.5 text-primary" />
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">
                   {c.label}
                 </p>
-                <p className="font-display text-2xl font-semibold tabular-nums leading-tight">{c.value}</p>
-                <p className="truncate text-[11px] text-muted-foreground/80">{c.hint}</p>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <p className="font-display text-xl font-bold tabular-nums leading-none">{c.value}</p>
+                <p className="truncate text-[10px] text-muted-foreground/60">{c.hint}</p>
               </div>
             </article>
           ))}
@@ -327,11 +327,11 @@ function AdminPage() {
         <TabsContent value="usuarios" className="space-y-4">
           <Card className="panel">
             <CardHeader className="gap-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <CardTitle className="text-base">Usuários da plataforma</CardTitle>
-                  <Button size="sm" onClick={() => toast.info("Funcionalidade de criação de usuário pelo admin em desenvolvimento.")}>
-                    Novo usuário
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Usuários cadastrados</CardTitle>
+                  <Button size="sm" className="h-8 rounded-lg px-4 text-xs font-bold" onClick={() => toast.info("Funcionalidade em desenvolvimento.")}>
+                    ADICIONAR CLIENTE
                   </Button>
                 </div>
                 <div className="relative w-full max-w-xs">
