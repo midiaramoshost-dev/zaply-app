@@ -387,32 +387,32 @@ function AdminPage() {
                   <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Gestão de Base</CardTitle>
                   <CardDescription className="text-xs">Visualize e gerencie todos os perfis cadastrados na Zaply.</CardDescription>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
+                  <div className="relative w-full max-w-xs">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="Buscar por nome ou e-mail"
+                      className="h-9 pl-9"
+                    />
+                  </div>
                   <Button size="sm" className="btn-new-user h-9 rounded-lg px-4 text-xs font-bold" onClick={() => toast.info("Funcionalidade em desenvolvimento.")}>
                     ADICIONAR CLIENTE
                   </Button>
                 </div>
               </div>
-                <div className="relative w-full max-w-xs">
-                  <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Buscar por nome ou e-mail"
-                    className="pl-9"
-                  />
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap gap-2">
                 {filters.map((f) => (
                   <Button
                     key={f.key}
                     size="sm"
                     variant={filter === f.key ? "default" : "outline"}
                     onClick={() => setFilter(f.key)}
+                    className="h-8 text-[11px] font-semibold"
                   >
                     {f.label}
-                    <span className="ml-1.5 tabular-nums opacity-70">{f.count}</span>
+                    <span className="ml-1.5 tabular-nums opacity-60">{f.count}</span>
                   </Button>
                 ))}
               </div>
