@@ -86,20 +86,40 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const currentPath = useRouterState({ select: (r) => r.location.pathname });
   const { isAdmin } = useRole();
+  const isAdminView = currentPath.startsWith("/admin");
 
-  // O admin master tem um painel separado: nada dos módulos de usuário.
-  const visibleGroups = isAdmin
+  // O admin master tem um painel separado e focado em gestão.
+  // Quando ele sai do modo admin para ver as ferramentas, mostramos o menu de usuário.
+  const visibleGroups = (isAdmin && isAdminView)
     ? [
         {
-          label: "Administração",
+          label: "Gestão Master",
           items: [
-            { title: "Painel master", url: "/admin" as const, icon: ShieldCheck },
-            { title: "Minha conta", url: "/conta" as const, icon: UserRound },
+            { title: "Painel de Controle", url: "/admin" as const, icon: ShieldCheck },
+            { title: "Usuários & Créditos", url: "/admin" as const, search: { tab: "usuarios" }, icon: Users },
+            { title: "Configurações", url: "/admin" as const, search: { tab: "sistema" }, icon: Zap },
+            { title: "Minha Conta", url: "/conta" as const, icon: UserRound },
           ],
         },
-        ...groups,
       ]
     : groups;
+
+  const adminHeader = isAdmin && !isAdminView && (
+    <SidebarGroup>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary font-bold">
+              <Link to="/admin">
+                <ShieldCheck className="size-4" />
+                <span>Voltar ao Painel Master</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
 
 
   return (
@@ -118,6 +138,7 @@ export function AppSidebar() {
 
 
       <SidebarContent className="gap-0">
+        {adminHeader}
         {visibleGroups.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/70">
@@ -133,7 +154,11 @@ export function AppSidebar() {
                       isActive={currentPath === item.url}
                       className="data-[active=true]:bg-primary/12 data-[active=true]:text-primary data-[active=true]:font-medium"
                     >
-                      <Link to={item.url} className="flex items-center gap-2.5">
+                      <Link 
+                        to={item.url} 
+                        search={'search' in item ? item.search : undefined}
+                        className="flex items-center gap-2.5"
+                      >
                         <item.icon className="size-4" />
                         {!collapsed && <span className="truncate">{item.title}</span>}
                       </Link>
