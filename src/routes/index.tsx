@@ -124,7 +124,7 @@ const steps = [
 
 const stats = [
   { value: "30", label: "posts gerados por rodada" },
-  { value: "4", label: "redes sociais integradas" },
+  { value: "8", label: "canais integrados" },
   { value: "1 clique", label: "para aprovar e agendar" },
   { value: "24/7", label: "publicação automatizada" },
 ];
@@ -135,8 +135,9 @@ const channels = [
   { icon: Linkedin, name: "LinkedIn" },
   { icon: Facebook, name: "Facebook" },
   { icon: Youtube, name: "YouTube" },
+  { icon: MessageCircle, name: "WhatsApp" },
+  { icon: Sparkles, name: "Pinterest" },
   { icon: Zap, name: "X" },
-  { icon: Workflow, name: "n8n" },
 ];
 
 const testimonials = [
