@@ -8,7 +8,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, ShieldCheck } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
 import { AppSidebar } from "../components/app-sidebar";
@@ -213,13 +213,19 @@ function AppShell() {
 
   // Se for admin, ignora qualquer bloqueio de aprovação/teste.
   if (isAdmin) {
-    // Redireciona para /admin se estiver em uma rota de usuário (e não for /conta).
+    // Redireciona para /admin se estiver em uma rota de usuário (e não for /conta ou /admin).
     if (adminOutOfScope) {
       return (
-        <div className="flex h-screen w-full items-center justify-center bg-background">
-          <div className="flex flex-col items-center gap-2">
-            <Loader2 className="size-8 animate-spin text-primary" />
-            <span className="text-sm text-muted-foreground font-medium italic">Acessando central de controle Zaply...</span>
+        <div className="flex h-screen w-full items-center justify-center bg-[#02040a]">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative size-12">
+              <Loader2 className="absolute inset-0 size-12 animate-spin text-primary opacity-20" />
+              <ShieldCheck className="absolute inset-0 m-auto size-6 text-primary animate-pulse" />
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-sm font-semibold tracking-wide uppercase text-primary/80">Administrador Master</span>
+              <span className="text-xs text-muted-foreground italic">Acessando central de controle Zaply...</span>
+            </div>
           </div>
         </div>
       );

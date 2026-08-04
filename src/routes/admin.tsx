@@ -103,7 +103,7 @@ function AdminPage() {
 
   const load = useCallback(async () => {
     setBusy(true);
-    const [statsRes, usersRes, companiesRes, postsRes] = await Promise.all([
+    const [statsRes, usersRes] = await Promise.all([
       fetchStatsFn().catch((e) => {
         console.error("Erro ao buscar estatísticas:", e);
         return null;
@@ -113,8 +113,6 @@ function AdminPage() {
         toast.error("Não foi possível carregar os usuários cadastrados.");
         return [] as PlatformUser[];
       }),
-      supabase.from("companies").select("owner_id"),
-      supabase.from("posts").select("user_id"),
     ]);
 
     if (statsRes) {
@@ -128,18 +126,6 @@ function AdminPage() {
       });
     }
 
-    const countBy = (rows: { [k: string]: unknown }[] | null, key: string) => {
-      const m = new Map<string, number>();
-      for (const r of rows ?? []) {
-        const id = r[key] as string | null;
-        if (!id) continue;
-        m.set(id, (m.get(id) ?? 0) + 1);
-      }
-      return m;
-    };
-    const companyCount = countBy(companiesRes.data as never, "owner_id");
-    const postCount = countBy(postsRes.data as never, "user_id");
-
     setMembers(
       (usersRes ?? []).map((p) => ({
         id: p.id,
@@ -149,8 +135,8 @@ function AdminPage() {
         requested_plan: p.requested_plan,
         created_at: p.created_at,
         role: p.role,
-        companies: companyCount.get(p.id) ?? 0,
-        posts: postCount.get(p.id) ?? 0,
+        companies: p.companies,
+        posts: p.posts,
         credits: p.credits,
       })),
     );
