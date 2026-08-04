@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Zaply — conteúdo com IA, do briefing à publicação" },
+      { title: "Viral — conteúdo com IA para donas do lar" },
       {
         name: "description",
         content:
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "Zaply — conteúdo com IA, do briefing à publicação" },
+      { property: "og:title", content: "Viral — conteúdo com IA para donas do lar" },
       {
         property: "og:description",
         content:
@@ -51,14 +51,14 @@ export const Route = createFileRoute("/")({
 const features = [
   {
     icon: Sparkles,
-    title: "IA de Texto e Vídeo Curto",
-    text: "Legendas, hashtags e ganchos para vídeos de 6 segundos. Tom de voz adaptado por rede social.",
+    title: "IA de Tarefas e Cronograma",
+    text: "Listas de limpeza, compras e avisos automáticos. Tom de voz adaptado para cada profissional.",
     span: "lg:col-span-2",
   },
   {
     icon: Wand2,
-    title: "Mês automático",
-    text: "Diga o seu nicho e receba 30 ideias, 30 legendas e 30 imagens já distribuídas no calendário.",
+    title: "Mês organizado",
+    text: "Diga sua rotina e receba 30 dias de cronograma e listas já distribuídas no calendário.",
     span: "lg:col-span-2",
   },
   {
@@ -69,8 +69,8 @@ const features = [
   },
   {
     icon: BadgeCheck,
-    title: "Aprovação do cliente",
-    text: "Fluxo IA → revisão → publicação, com aprovação em um clique.",
+    title: "Controle na mão",
+    text: "Fluxo IA → revisão → execução, com aprovação em um clique.",
     span: "",
   },
   {
@@ -81,8 +81,8 @@ const features = [
   },
   {
     icon: Send,
-    title: "Publicação multicanal",
-    text: "Instagram, Facebook, LinkedIn e X a partir de uma fila única.",
+    title: "Avisos multicanal",
+    text: "WhatsApp, E-mail e notificações a partir de uma fila única.",
     span: "",
   },
   {
@@ -102,31 +102,31 @@ const features = [
 const steps = [
   {
     n: "01",
-    title: "Cadastre a marca",
-    text: "Nicho, objetivos, público, tom de voz, cores, fontes e palavras proibidas.",
+    title: "Defina sua necessidade",
+    text: "Nicho, tarefas, horários, tom de voz para comunicação e regras da casa.",
   },
   {
     n: "02",
-    title: "Deixe a IA criar",
-    text: "Conteúdo e imagens para cada canal, respeitando a identidade do cliente.",
+    title: "IA organiza tudo",
+    text: "Cronograma de limpeza, lista de compras e orientações para profissionais.",
   },
   {
     n: "03",
     title: "Aprove e agende",
-    text: "Revise em segundos e encaixe tudo na grade de horários da semana.",
+    text: "Revise o planejamento semanal e agende as visitas em um clique.",
   },
   {
     n: "04",
-    title: "Publique e meça",
-    text: "Publicação automática via n8n e relatórios mensais entregues prontos.",
+    title: "Lar impecável",
+    text: "Execução automática, avisos via WhatsApp e relatórios de atividades prontos.",
   },
 ];
 
 const stats = [
-  { value: "30", label: "posts gerados por rodada" },
-  { value: "8", label: "canais integrados" },
+  { value: "30", label: "tarefas geradas por rodada" },
+  { value: "8", label: "serviços integrados" },
   { value: "1 clique", label: "para aprovar e agendar" },
-  { value: "24/7", label: "publicação automatizada" },
+  { value: "24/7", label: "gestão automatizada" },
 ];
 
 const channels = [
@@ -143,21 +143,21 @@ const channels = [
 const testimonials = [
   {
     quote:
-      "Fechei o mês inteiro de conteúdo de 6 clientes numa tarde. O que antes era uma semana de trabalho.",
+      "Organizei o mês inteiro da minha casa numa tarde. O que antes era uma confusão de mensagens.",
     name: "Marina Alves",
     role: "Social media · agência própria",
   },
   {
     quote:
-      "A aprovação em um clique acabou com o vai e vem no WhatsApp. O cliente entra, revisa e libera.",
+      "A aprovação em um clique acabou com o vai e vem no WhatsApp com os prestadores. Tudo fica registrado.",
     name: "Rafael Duarte",
-    role: "Dono de agência · 12 marcas",
+    role: "Gestor doméstico · 12 residências",
   },
   {
     quote:
-      "As legendas saem no tom da marca de verdade. Eu só ajusto detalhe e mando publicar.",
+      "As listas de tarefas saem perfeitas. Eu só ajusto um detalhe ou outro e libero o cronograma.",
     name: "Carla Menezes",
-    role: "Consultora de marketing",
+    role: "Dona de casa organizada",
   },
 ];
 
@@ -169,7 +169,7 @@ function LandingPage() {
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
             <BrandMark className="size-9 shadow-lg shadow-primary/20" />
-            <span className="font-display text-lg font-bold tracking-tight text-white">Zaply</span>
+            <span className="font-display text-lg font-bold tracking-tight text-white">Viral</span>
           </Link>
 
           <nav className="ml-8 hidden items-center gap-6 text-sm text-muted-foreground md:flex">
@@ -213,15 +213,15 @@ function LandingPage() {
             <div className="flex flex-col items-start">
               <Badge variant="outline" className="animate-in fade-in slide-in-from-bottom-4 duration-700 gap-1.5 border-primary/30 bg-primary/5 py-1.5 text-primary backdrop-blur-md">
                 <Sparkles className="size-3.5" />
-                Plataforma Viral de Conteúdo com IA
+                Viral: IA para Donas do Lar e Serviços Domésticos
               </Badge>
               <h1 className="animate-in fade-in slide-in-from-bottom-6 duration-1000 mt-6 text-balance text-[2.8rem] font-bold leading-[1.05] tracking-tight sm:text-7xl">
-                Crie conteúdo que
+                A plataforma para donas do lar
                 <br />
-                <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">domina as redes sociais</span>
+                <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">solicitarem serviços domésticos</span>
               </h1>
               <p className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 mt-6 max-w-lg text-base leading-relaxed text-gray-400 sm:text-lg">
-                O Zaply transforma suas ideias em posts virais. Gere, agende e publique em todas as suas redes com um clique — a inteligência artificial que escala sua marca.
+                O Viral conecta donas do lar a profissionais qualificados. Solicite serviços, agende e gerencie tudo com um clique — a inteligência artificial que escala seu lar.
               </p>
 
               <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300 mt-10 flex flex-wrap items-center gap-4">
@@ -264,7 +264,7 @@ function LandingPage() {
               <div className="panel glow overflow-hidden p-1.5">
                 <img
                   src={heroDashboard}
-                  alt="Painel do Zaply com calendário editorial e métricas de desempenho"
+                  alt="Painel do Viral com calendário de serviços e métricas"
                   width={1600}
                   height={1008}
                   className="w-full rounded-[calc(var(--radius-xl)-6px)]"
@@ -278,7 +278,7 @@ function LandingPage() {
                     <Instagram className="size-4" />
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate text-xs font-semibold">Post gerado por IA</p>
+                    <p className="truncate text-xs font-semibold">Serviço solicitado</p>
                     <p className="truncate text-[0.68rem] text-muted-foreground">
                       Instagram · Feed
                     </p>
@@ -306,7 +306,7 @@ function LandingPage() {
                   <CalendarDays className="size-4" />
                 </span>
                 <div>
-                  <p className="text-xs font-semibold">30 posts agendados</p>
+                  <p className="text-xs font-semibold">Serviços agendados</p>
                   <p className="text-[0.68rem] text-muted-foreground">Seg 09:00 · Qua 14:00</p>
                 </div>
               </div>
@@ -317,7 +317,7 @@ function LandingPage() {
           <div className="relative border-t border-border/60 bg-background/40">
             <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-center gap-x-10 gap-y-4 px-4 py-6 sm:px-6">
               <span className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                Publica em
+                Disponível em
               </span>
               {channels.map((c) => (
                 <span
@@ -352,13 +352,13 @@ function LandingPage() {
         <section id="recursos" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
           <div className="max-w-2xl">
             <p className="section-title text-xs uppercase tracking-[0.18em] text-primary">
-              Recursos
+              Serviços
             </p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Uma operação de conteúdo inteira, em um único lugar
+              Uma gestão doméstica completa, em um único lugar
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Cada módulo cobre uma etapa do fluxo — agora com editor integrado para revisar cada detalhe antes da publicação.
+              Cada módulo cobre uma etapa da sua rotina — agora com IA integrada para gerenciar cada detalhe da sua casa.
             </p>
           </div>
 
@@ -386,7 +386,7 @@ function LandingPage() {
                 Como funciona
               </p>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-                Quatro passos entre a ideia e o post no ar
+                Quatro passos para transformar seu lar
               </h2>
             </div>
 
