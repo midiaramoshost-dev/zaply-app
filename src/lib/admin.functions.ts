@@ -13,6 +13,8 @@ export type PlatformUser = {
   confirmed: boolean;
   role: "admin" | "user";
   credits: number;
+  companies: number;
+  posts: number;
 };
 
 export type PlatformStats = {
@@ -51,7 +53,6 @@ export const getPlatformStats = createServerFn({ method: "GET" })
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
-    // Usamos queries individuais para contagem exata sem carregar dados desnecessários
     const [profilesRes, companiesRes, postsRes, scheduledRes, publishedRes, commentsRes] = await Promise.all([
       supabaseAdmin.from("profiles").select("id", { count: "exact", head: true }),
       supabaseAdmin.from("companies").select("id", { count: "exact", head: true }),
@@ -120,11 +121,6 @@ export const grantUserCredits = createServerFn({ method: "POST" })
     return balance;
   });
 
-/**
- * Lista todos os usuários cadastrados na plataforma (inclusive os que ainda não
- * têm linha em `profiles`), criando o perfil faltante quando necessário.
- * Só um administrador master pode chamar.
- */
 export const listPlatformUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<PlatformUser[]> => {
@@ -145,10 +141,7 @@ export const listPlatformUsers = createServerFn({ method: "GET" })
       throw new Response("Forbidden", { status: 403 });
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server").catch(e => {
-      console.error("Erro ao importar client.server:", e);
-      throw new Error("Falha interna ao inicializar o cliente administrativo.");
-    });
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // auth.users (fonte da verdade dos cadastros)
     const authUsers: {
@@ -159,6 +152,7 @@ export const listPlatformUsers = createServerFn({ method: "GET" })
       confirmed: boolean;
       full_name: string | null;
     }[] = [];
+    
     for (let page = 1; page <= 20; page++) {
       const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 200 });
       if (error) throw new Error(error.message);
@@ -168,27 +162,28 @@ export const listPlatformUsers = createServerFn({ method: "GET" })
           email: u.email ?? null,
           created_at: u.created_at,
           last_sign_in_at: u.last_sign_in_at ?? null,
-          confirmed: Boolean(u.email_confirmed_at ?? u.confirmed_at),
+          confirmed: Boolean(u.email_confirmed_at || u.confirmed_at),
           full_name: (u.user_metadata?.full_name as string | undefined) ?? null,
         });
       }
       if (data.users.length < 200) break;
     }
 
-    const [profiles, roles, credits, companies, posts] = await Promise.all([
+    const [profilesRes, rolesRes, creditsRes, companiesRes, postsRes] = await Promise.all([
       supabaseAdmin.from("profiles").select("id, full_name, email, approved, requested_plan, created_at"),
       supabaseAdmin.from("user_roles").select("user_id, role"),
       supabaseAdmin.from("user_credits").select("user_id, balance"),
       supabaseAdmin.from("companies").select("owner_id"),
       supabaseAdmin.from("posts").select("user_id"),
     ]);
-    if (credits.error) throw new Error(credits.error.message);
-    if (companies.error) throw new Error(companies.error.message);
-    if (posts.error) throw new Error(posts.error.message);
 
-    const profileMap = new Map((profiles.data ?? []).map((p) => [p.id, p]));
+    if (creditsRes.error) throw new Error(creditsRes.error.message);
+    if (companiesRes.error) throw new Error(companiesRes.error.message);
+    if (postsRes.error) throw new Error(postsRes.error.message);
 
-    // Backfill: cadastros sem perfil (ex.: criados antes do trigger)
+    const profileMap = new Map((profilesRes.data ?? []).map((p) => [p.id, p]));
+
+    // Backfill: cadastros sem perfil
     const missing = authUsers.filter((u) => !profileMap.has(u.id));
     if (missing.length) {
       await supabaseAdmin.from("profiles").upsert(
@@ -203,11 +198,24 @@ export const listPlatformUsers = createServerFn({ method: "GET" })
     }
 
     const roleMap = new Map<string, "admin" | "user">();
-    for (const r of roles ?? []) {
+    for (const r of rolesRes.data ?? []) {
       if (r.role === "admin") roleMap.set(r.user_id, "admin");
       else if (!roleMap.has(r.user_id)) roleMap.set(r.user_id, "user");
     }
-    const creditMap = new Map((credits ?? []).map((row) => [row.user_id, Number(row.balance)]));
+    const creditMap = new Map((creditsRes.data ?? []).map((row) => [row.user_id, Number(row.balance)]));
+
+    const countBy = (rows: { [k: string]: unknown }[] | null, key: string) => {
+      const m = new Map<string, number>();
+      for (const r of rows ?? []) {
+        const id = r[key] as string | null;
+        if (!id) continue;
+        m.set(id, (m.get(id) ?? 0) + 1);
+      }
+      return m;
+    };
+
+    const companyCountMap = countBy(companiesRes.data as any[], "owner_id");
+    const postCountMap = countBy(postsRes.data as any[], "user_id");
 
     return authUsers
       .map((u) => {
@@ -223,7 +231,9 @@ export const listPlatformUsers = createServerFn({ method: "GET" })
           confirmed: u.confirmed,
           role: roleMap.get(u.id) ?? "user",
           credits: creditMap.get(u.id) ?? 0,
-        };
+          companies: companyCountMap.get(u.id) ?? 0,
+          posts: postCountMap.get(u.id) ?? 0,
+        } as PlatformUser;
       })
       .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
   });
