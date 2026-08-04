@@ -285,7 +285,7 @@ function AdminPage() {
   const cards = [
     { label: "Usuários", value: stats?.total_users ?? 0, icon: Users, hint: "contas cadastradas" },
     { label: "Empresas/clientes", value: stats?.total_companies ?? 0, icon: Building2, hint: "marcas ativas" },
-    { label: "Posts criados", value: stats?.total_posts ?? 0, icon: FileText, hint: "total na plataforma" },
+    { label: "Serviços solicitados", value: stats?.total_posts ?? 0, icon: FileText, hint: "total na plataforma" },
     { label: "Agendados", value: stats?.scheduled_posts ?? 0, icon: CalendarClock, hint: "na fila" },
     { label: "Publicados", value: stats?.published_posts ?? 0, icon: Send, hint: "já no ar" },
     { label: "Comentários", value: stats?.total_comments ?? 0, icon: MessageCircle, hint: "recebidos" },
@@ -303,8 +303,8 @@ function AdminPage() {
       <AdminTour />
       <PageHeader
         eyebrow="Administrador master"
-        title="Gestão Master"
-        description="Base de usuários, créditos e infraestrutura."
+        title="Gestão Master — Viral"
+        description="Base de usuários, empresas e serviços domésticos."
         icon={ShieldCheck}
         actions={
           <>
@@ -334,7 +334,7 @@ function AdminPage() {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold tracking-tight text-warning">Aprovações pendentes</h4>
-                  <p className="text-xs text-warning/70">Há {pending} novos usuários aguardando sua validação para começar a usar a Zaply.</p>
+                  <p className="text-xs text-warning/70">Há {pending} novos usuários aguardando sua validação para começar a usar o Viral.</p>
                 </div>
               </div>
               <div className="border-l border-warning/20 p-4">
@@ -416,7 +416,7 @@ function AdminPage() {
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="space-y-1">
                   <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Gestão de Base</CardTitle>
-                  <CardDescription className="text-xs">Visualize e gerencie todos os perfis cadastrados na Zaply.</CardDescription>
+                  <CardDescription className="text-xs">Visualize e gerencie todos os perfis cadastrados no Viral.</CardDescription>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="relative w-full max-w-xs">
