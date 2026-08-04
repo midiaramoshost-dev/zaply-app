@@ -35,11 +35,6 @@ export function AdminTour() {
         "Aqui você acompanha os números reais da plataforma: usuários, clientes, posts e comentários.",
     },
     {
-      target: '[role="tablist"]',
-      title: "Navegação",
-      content: "Alterne entre a gestão de usuários e o controle de créditos.",
-    },
-    {
       target: ".user-table-card",
       title: "Gestão de usuários",
       content:
