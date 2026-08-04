@@ -47,7 +47,14 @@ import { PageHeader } from "@/components/page-header";
 import { AdminTour } from "@/components/admin-tour";
 
 
+import { z } from "zod";
+
+const adminSearchSchema = z.object({
+  tab: z.enum(["usuarios", "sistema"]).optional().default("usuarios"),
+});
+
 export const Route = createFileRoute("/admin")({
+  validateSearch: (search) => adminSearchSchema.parse(search),
   head: () => ({
     meta: [
       { title: "Painel do administrador — Zaply" },
@@ -106,6 +113,7 @@ function Avatar({ member }: { member: Member }) {
 
 function AdminPage() {
   const { isAdmin, loading, user } = useRole();
+  const search = Route.useSearch();
   const [stats, setStats] = useState<PlatformStats | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
   const [busy, setBusy] = useState(false);
@@ -113,6 +121,8 @@ function AdminPage() {
   const [filter, setFilter] = useState<Filter>("todos");
   const fetchUsersFn = useServerFn(listPlatformUsers);
   const fetchStatsFn = useServerFn(getPlatformStats);
+
+  const activeTab = search.tab;
 
   const load = useCallback(async () => {
     setBusy(true);
@@ -327,17 +337,21 @@ function AdminPage() {
         </div>
       </PageHeader>
 
-      <Tabs defaultValue="usuarios" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2 md:w-auto md:flex">
-          <TabsTrigger value="usuarios">
-            <UserCheck className="mr-1.5 size-3.5" /> Gestão de Usuários
+      <Tabs value={activeTab} className="space-y-4">
+        <TabsList className="hidden md:flex">
+          <TabsTrigger value="usuarios" asChild>
+            <Link from="/admin" search={{ tab: "usuarios" }} className="flex items-center gap-1.5">
+              <UserCheck className="size-3.5" /> Usuários & Créditos
+            </Link>
           </TabsTrigger>
-          <TabsTrigger value="sistema">
-            <ShieldCheck className="mr-1.5 size-3.5" /> Configuração do Sistema
+          <TabsTrigger value="sistema" asChild>
+            <Link from="/admin" search={{ tab: "sistema" }} className="flex items-center gap-1.5">
+              <ShieldCheck className="size-3.5" /> Configuração do Sistema
+            </Link>
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="usuarios" className="space-y-4">
+        <TabsContent value="usuarios" className="mt-0 space-y-4 focus-visible:outline-none">
           <Card className="panel user-table-card">
             <CardHeader className="gap-3">
               <div className="flex flex-wrap items-center justify-between gap-4">
