@@ -160,11 +160,11 @@ function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Nav */}
-      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/70 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-white/5 bg-black/60 backdrop-blur-2xl">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
-          <Link to="/" className="flex items-center gap-2.5">
-            <BrandMark className="size-9" />
-            <span className="font-display text-base font-semibold tracking-tight">Zaply</span>
+          <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
+            <BrandMark className="size-9 shadow-lg shadow-primary/20" />
+            <span className="font-display text-lg font-bold tracking-tight">Zaply</span>
           </Link>
 
           <nav className="ml-8 hidden items-center gap-6 text-sm text-muted-foreground md:flex">
@@ -199,20 +199,21 @@ function LandingPage() {
 
       <main>
         {/* Hero — split screen */}
-        <section className="grid-backdrop relative overflow-hidden border-b border-border/60">
-          <div className="pointer-events-none absolute -left-40 top-0 size-[32rem] rounded-full bg-primary/12 blur-3xl" />
-          <div className="pointer-events-none absolute -right-32 top-32 size-[28rem] rounded-full bg-accent/12 blur-3xl" />
+        <section className="relative overflow-hidden border-b border-border/40 bg-[#02040a]">
+          <div className="pointer-events-none absolute -left-40 top-0 size-[32rem] rounded-full bg-primary/10 blur-[120px]" />
+          <div className="pointer-events-none absolute -right-32 top-32 size-[28rem] rounded-full bg-accent/10 blur-[120px]" />
+          <div className="pointer-events-none absolute left-1/2 top-1/2 min-h-screen w-full -translate-x-1/2 -translate-y-1/2 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
 
-          <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-28 lg:pt-24">
-            <div>
-              <Badge variant="outline" className="gap-1.5 border-primary/40 py-1 text-primary">
-                <Sparkles className="size-3" />
-                Plataforma de conteúdo com IA
+          <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 lg:pb-32 lg:pt-28">
+            <div className="flex flex-col items-start">
+              <Badge variant="outline" className="animate-in fade-in slide-in-from-bottom-4 duration-700 gap-1.5 border-primary/30 bg-primary/5 py-1.5 text-primary backdrop-blur-md">
+                <Sparkles className="size-3.5" />
+                Plataforma Viral de Conteúdo com IA
               </Badge>
-              <h1 className="mt-5 text-[2.6rem] font-semibold leading-[1.02] tracking-tight sm:text-6xl">
-                Um mês de conteúdo
+              <h1 className="animate-in fade-in slide-in-from-bottom-6 duration-1000 mt-6 text-balance text-[2.8rem] font-bold leading-[1.05] tracking-tight sm:text-7xl">
+                O seu conteúdo
                 <br />
-                <span className="gradient-text">pronto em minutos</span>
+                <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">em modo viral</span>
               </h1>
               <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
                 O Zaply gera, organiza, aprova, agenda e publica o conteúdo das suas marcas em
@@ -220,16 +221,15 @@ function LandingPage() {
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Button asChild size="lg" className="glow">
+                <Button asChild size="lg" className="h-14 px-8 text-base shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)] transition-all hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.6)] hover:scale-[1.02] active:scale-[0.98]">
                   <Link to="/auth" search={{ mode: "criar" }}>
-                    <Sparkles className="size-4" />
-                    Criar conta grátis
+                    <Zap className="mr-2 size-5 fill-current" />
+                    Começar agora — é grátis
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline">
+                <Button asChild size="lg" variant="outline" className="h-14 border-white/10 bg-white/5 px-8 text-base backdrop-blur-md transition-all hover:bg-white/10 hover:scale-[1.02] active:scale-[0.98]">
                   <Link to="/auth" search={{ mode: "entrar" }}>
-                    Já tenho conta — entrar
-                    <ArrowRight className="size-4" />
+                    Acessar minha conta
                   </Link>
                 </Button>
               </div>
