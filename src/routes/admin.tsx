@@ -280,8 +280,8 @@ function AdminPage() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Administrador master"
-        title="Central de controle"
-        description="Acompanhe a operação da plataforma, crie novos usuários e libere acessos em um só lugar."
+        title="Gestão da plataforma"
+        description="Controle de usuários, liberação de acesso e distribuição de créditos de forma simples e rápida."
         icon={ShieldCheck}
         actions={
           <>
