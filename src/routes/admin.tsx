@@ -258,7 +258,7 @@ function AdminPage() {
       <PageHeader
         eyebrow="Administrador master"
         title="Central de controle"
-        description="Acompanhe a operação da plataforma, libere acessos e distribua créditos em um só lugar."
+        description="Acompanhe a operação da plataforma, crie novos usuários e libere acessos em um só lugar."
         icon={ShieldCheck}
         actions={
           <>
@@ -305,7 +305,12 @@ function AdminPage() {
           <Card className="panel">
             <CardHeader className="gap-3">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <CardTitle className="text-base">Usuários da plataforma</CardTitle>
+                <div className="flex items-center gap-3">
+                  <CardTitle className="text-base">Usuários da plataforma</CardTitle>
+                  <Button size="sm" onClick={() => toast.info("Funcionalidade de criação de usuário pelo admin em desenvolvimento.")}>
+                    Novo usuário
+                  </Button>
+                </div>
                 <div className="relative w-full max-w-xs">
                   <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
                   <Input

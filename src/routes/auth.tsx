@@ -110,16 +110,14 @@ function AuthPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="rounded-xl border border-border/70 bg-surface/60 px-3 py-2 text-[11px] text-muted-foreground">
-            Após criar a conta, o acesso é liberado pelo administrador master mediante a escolha e o
-            pagamento de um plano.
+            A criação de novas contas está restrita. O acesso para usuários deve ser solicitado e configurado pelo administrador master.
           </p>
 
 
 
-          <Tabs defaultValue={mode === "criar" ? "criar" : "entrar"}>
-            <TabsList className="grid w-full grid-cols-2">
+          <Tabs defaultValue="entrar">
+            <TabsList className="grid w-full grid-cols-1">
               <TabsTrigger value="entrar">Entrar</TabsTrigger>
-              <TabsTrigger value="criar">Criar conta</TabsTrigger>
             </TabsList>
 
             <TabsContent value="entrar">
@@ -153,46 +151,6 @@ function AuthPage() {
               </form>
             </TabsContent>
 
-            <TabsContent value="criar">
-              <form className="space-y-3 pt-3" onSubmit={signUp}>
-                <div className="space-y-1.5">
-                  <Label htmlFor="nome">Nome</Label>
-                  <Input
-                    id="nome"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Seu nome"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="email-novo">E-mail</Label>
-                  <Input
-                    id="email-novo"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="voce@empresa.com"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="senha-nova">Senha</Label>
-                  <Input
-                    id="senha-nova"
-                    type="password"
-                    required
-                    minLength={6}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="mínimo 6 caracteres"
-                  />
-                </div>
-                <Button type="submit" className="w-full" disabled={busy}>
-                  {busy && <Loader2 className="mr-2 size-4 animate-spin" />}
-                  Criar conta
-                </Button>
-              </form>
-            </TabsContent>
           </Tabs>
         </CardContent>
       </Card>
