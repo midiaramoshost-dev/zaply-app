@@ -23,10 +23,18 @@ export function useRole() {
       .from("user_roles")
       .select("role")
       .eq("user_id", user.id)
-      .then(({ data }) => {
+      .then(({ data, error }) => {
         if (!active) return;
+        if (error) {
+          console.error("Erro ao carregar papel do usuário:", error);
+          // Em caso de erro de RLS/rede, tentamos assumir 'user' para não quebrar a UI,
+          // mas o useProfileAccess já lida com isAdmin separadamente se necessário.
+          setRole("user");
+          setLoading(false);
+          return;
+        }
         const roles = (data ?? []).map((r) => r.role as AppRole);
-        setRole(roles.includes("admin") ? "admin" : roles.length ? "user" : "user");
+        setRole(roles.includes("admin") ? "admin" : "user");
         setLoading(false);
       });
     return () => {

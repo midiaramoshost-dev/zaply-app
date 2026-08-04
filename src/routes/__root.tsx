@@ -185,14 +185,14 @@ function AppHeader({ isAdmin }: { isAdmin: boolean }) {
 const ADMIN_ALLOWED = ["/admin", "/conta"];
 
 function AppShell() {
-  const { loading, blocked, profile, reload, isAdmin, trialActive, trialExpired, trialMsLeft, user } =
+  const { loading: accessLoading, blocked, profile, reload, isAdmin, trialActive, trialExpired, trialMsLeft, user } =
     useProfileAccess();
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const router = useRouter();
 
   // Admin master usa um painel próprio, separado dos módulos de usuário.
   const adminOutOfScope =
-    !loading && isAdmin && !ADMIN_ALLOWED.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+    !accessLoading && isAdmin && !ADMIN_ALLOWED.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   useEffect(() => {
     if (adminOutOfScope) {
@@ -200,10 +200,13 @@ function AppShell() {
     }
   }, [adminOutOfScope, router]);
 
-  if (loading) {
+  if (accessLoading) {
     return (
       <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
-        Carregando sua conta…
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="size-6 animate-spin text-primary/50" />
+          <span className="animate-pulse">Sincronizando sua conta…</span>
+        </div>
       </div>
     );
   }

@@ -98,17 +98,17 @@ function AdminPage() {
   const [busy, setBusy] = useState(false);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("todos");
-  const fetchUsers = useServerFn(listPlatformUsers);
-  const fetchStats = useServerFn(getPlatformStats);
+  const fetchUsersFn = useServerFn(listPlatformUsers);
+  const fetchStatsFn = useServerFn(getPlatformStats);
 
   const load = useCallback(async () => {
     setBusy(true);
     const [statsRes, usersRes, companiesRes, postsRes] = await Promise.all([
-      fetchStats().catch((e) => {
+      fetchStatsFn().catch((e) => {
         console.error("Erro ao buscar estatísticas:", e);
         return null;
       }),
-      fetchUsers().catch((e) => {
+      fetchUsersFn().catch((e) => {
         console.error("Erro ao buscar usuários:", e);
         toast.error("Não foi possível carregar os usuários cadastrados.");
         return [] as PlatformUser[];
@@ -155,7 +155,7 @@ function AdminPage() {
       })),
     );
     setBusy(false);
-  }, [fetchStats, fetchUsers]);
+  }, [fetchStatsFn, fetchUsersFn]);
 
   useEffect(() => {
     if (isAdmin) void load();
