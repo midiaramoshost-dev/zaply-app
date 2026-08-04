@@ -19,7 +19,7 @@ export const CHANNEL_GUIDELINES: Record<string, string> = {
   Instagram:
     "Legenda visual e envolvente, abertura com gancho forte, frases curtas, 1 a 3 emojis bem colocados e chamada para ação. Até 600 caracteres. Ex.: \"Descubra como pequenas mudanças podem aumentar seus resultados. 🚀\"",
   TikTok:
-    "Texto curto e dinâmico, uso de ganchos rápidos para reter atenção, hashtags de tendência, tom informal e autêntico. Até 300 caracteres.",
+    "Texto curto e dinâmico, ganchos rápidos para reter atenção (os primeiros 3s são vitais), hashtags de tendência, tom informal. Ideal para vídeos rápidos de 6 a 15 segundos. Até 300 caracteres.",
   LinkedIn:
     "Mais profissional: contexto de negócio, aprendizado concreto, dados ou insight, sem emojis excessivos. Parágrafos curtos, até 900 caracteres.",
   Facebook:

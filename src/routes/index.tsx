@@ -51,8 +51,8 @@ export const Route = createFileRoute("/")({
 const features = [
   {
     icon: Sparkles,
-    title: "Geração por IA",
-    text: "Título, legenda, CTA, hashtags e emojis no tom de voz de cada marca — adaptados por rede social.",
+    title: "IA de Texto e Vídeo Curto",
+    text: "Legendas, hashtags e ganchos para vídeos de 6 segundos. Tom de voz adaptado por rede social.",
     span: "lg:col-span-2",
   },
   {
