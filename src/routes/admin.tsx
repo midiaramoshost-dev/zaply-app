@@ -607,17 +607,45 @@ function AdminPage() {
           </div>
 
           <Card className="panel border-dashed">
-            <CardContent className="flex flex-col items-center justify-center py-10 text-center">
-              <div className="mb-4 grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
-                <Workflow className="size-6" />
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Workflow className="size-4 text-primary" /> Automação & Infra
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-6 md:grid-cols-2">
+              <div className="flex flex-col items-center justify-center rounded-xl border border-border/50 bg-card/30 py-8 text-center">
+                <div className="mb-4 grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
+                  <Workflow className="size-6" />
+                </div>
+                <CardTitle className="mb-2 text-sm">Motor n8n</CardTitle>
+                <CardDescription className="mb-4 max-w-[240px] text-[10px]">
+                  Processamento de posts agendados a cada 15 min.
+                </CardDescription>
+                <Button variant="outline" size="sm" className="h-8 text-[10px]" asChild>
+                  <Link to="/n8n">Fluxo Técnico</Link>
+                </Button>
               </div>
-              <CardTitle className="mb-2">Automação n8n</CardTitle>
-              <CardDescription className="max-w-md">
-                O motor de automação está rodando via cron. Os posts agendados são processados a cada 15 minutos seguindo a grade horária dos usuários.
-              </CardDescription>
-              <Button variant="outline" size="sm" className="mt-6" asChild>
-                <Link to="/n8n">Visualizar Fluxo Técnico</Link>
-              </Button>
+
+              <div className="space-y-4 rounded-xl border border-border/50 bg-card/30 p-4">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Controles Globais</p>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium">Modo Manutenção</span>
+                    <Badge variant="outline" className="h-5 text-[9px]">OFF</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium">Novos Registros</span>
+                    <Badge className="h-5 bg-success text-[9px]">ON</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium">Pagamentos Ativos</span>
+                    <Badge variant="outline" className="h-5 text-[9px]">OFF</Badge>
+                  </div>
+                </div>
+                <Button variant="ghost" size="sm" className="h-8 w-full text-[10px] text-primary hover:bg-primary/10">
+                  Salvar Alterações
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
