@@ -86,21 +86,40 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const currentPath = useRouterState({ select: (r) => r.location.pathname });
   const { isAdmin } = useRole();
+  const isAdminView = currentPath.startsWith("/admin");
 
   // O admin master tem um painel separado e focado em gestão.
-  const visibleGroups = isAdmin
+  // Quando ele sai do modo admin para ver as ferramentas, mostramos o menu de usuário.
+  const visibleGroups = (isAdmin && isAdminView)
     ? [
         {
           label: "Gestão Master",
           items: [
             { title: "Painel de Controle", url: "/admin" as const, icon: ShieldCheck },
-            { title: "Usuários & Créditos", url: "/admin?tab=usuarios" as const, icon: Users },
-            { title: "Configurações", url: "/admin?tab=sistema" as const, icon: Zap },
+            { title: "Usuários & Créditos", url: "/admin" as const, search: { tab: "usuarios" }, icon: Users },
+            { title: "Configurações", url: "/admin" as const, search: { tab: "sistema" }, icon: Zap },
             { title: "Minha Conta", url: "/conta" as const, icon: UserRound },
           ],
         },
       ]
     : groups;
+
+  const adminHeader = isAdmin && !isAdminView && (
+    <SidebarGroup>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary font-bold">
+              <Link to="/admin">
+                <ShieldCheck className="size-4" />
+                <span>Voltar ao Painel Master</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
 
 
   return (
@@ -119,6 +138,7 @@ export function AppSidebar() {
 
 
       <SidebarContent className="gap-0">
+        {adminHeader}
         {visibleGroups.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/70">
