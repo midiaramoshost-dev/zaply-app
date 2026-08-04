@@ -27,13 +27,27 @@ export type PlatformStats = {
 export const getPlatformStats = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<PlatformStats> => {
-    const { data: adminRole, error: roleError } = await context.supabase
-      .from("user_roles")
-      .select("id")
-      .eq("user_id", context.userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    if (roleError || !adminRole) throw new Response("Forbidden", { status: 403 });
+    let adminId: string | null = null;
+    try {
+      const { data: adminRole, error: roleError } = await context.supabase
+        .from("user_roles")
+        .select("id")
+        .eq("user_id", context.userId)
+        .eq("role", "admin")
+        .maybeSingle();
+      
+      if (roleError) {
+        console.error("Erro ao verificar papel de admin:", roleError);
+      }
+      adminId = adminRole?.id ?? null;
+    } catch (e) {
+      console.error("Exceção ao verificar papel de admin:", e);
+    }
+
+    if (!adminId) {
+      console.warn(`Acesso negado para o usuário ${context.userId}: não é administrador.`);
+      throw new Response("Forbidden", { status: 403 });
+    }
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const [profiles, companies, posts, comments] = await Promise.all([
@@ -57,13 +71,20 @@ export const grantUserCredits = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { userId: string; amount: number; reason?: string }) => input)
   .handler(async ({ data, context }): Promise<number> => {
-    const { data: adminRole, error: roleError } = await context.supabase
-      .from("user_roles")
-      .select("id")
-      .eq("user_id", context.userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    if (roleError || !adminRole) throw new Response("Forbidden", { status: 403 });
+    let adminId: string | null = null;
+    try {
+      const { data: adminRole, error: roleError } = await context.supabase
+        .from("user_roles")
+        .select("id")
+        .eq("user_id", context.userId)
+        .eq("role", "admin")
+        .maybeSingle();
+      adminId = adminRole?.id ?? null;
+    } catch (e) {
+      console.error("Erro ao verificar admin em grantUserCredits:", e);
+    }
+
+    if (!adminId) throw new Response("Forbidden", { status: 403 });
     if (!Number.isSafeInteger(data.amount) || data.amount === 0) {
       throw new Response("Invalid amount", { status: 400 });
     }
@@ -98,13 +119,20 @@ export const grantUserCredits = createServerFn({ method: "POST" })
 export const listPlatformUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<PlatformUser[]> => {
-    const { data: adminRole, error: roleError } = await context.supabase
-      .from("user_roles")
-      .select("id")
-      .eq("user_id", context.userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    if (roleError || !adminRole) {
+    let adminId: string | null = null;
+    try {
+      const { data: adminRole, error: roleError } = await context.supabase
+        .from("user_roles")
+        .select("id")
+        .eq("user_id", context.userId)
+        .eq("role", "admin")
+        .maybeSingle();
+      adminId = adminRole?.id ?? null;
+    } catch (e) {
+      console.error("Erro ao verificar admin em listPlatformUsers:", e);
+    }
+
+    if (!adminId) {
       throw new Response("Forbidden", { status: 403 });
     }
 
