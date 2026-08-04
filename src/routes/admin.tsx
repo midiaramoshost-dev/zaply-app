@@ -303,8 +303,8 @@ function AdminPage() {
       <AdminTour />
       <PageHeader
         eyebrow="Administrador master"
-        title="Gestão da plataforma"
-        description="Controle de usuários, liberação de acesso e distribuição de créditos de forma simples e rápida."
+        title="Gestão Master"
+        description="Base de usuários, créditos e infraestrutura."
         icon={ShieldCheck}
         actions={
           <>
