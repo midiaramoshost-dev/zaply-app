@@ -17,6 +17,8 @@ import {
   Wand2,
   Workflow,
   Zap,
+  Music2,
+  Youtube,
 } from "lucide-react";
 
 import heroDashboard from "@/assets/hero-dashboard.jpg";
@@ -129,8 +131,10 @@ const stats = [
 
 const channels = [
   { icon: Instagram, name: "Instagram" },
+  { icon: Music2, name: "TikTok" },
   { icon: Linkedin, name: "LinkedIn" },
   { icon: Facebook, name: "Facebook" },
+  { icon: Youtube, name: "YouTube" },
   { icon: Zap, name: "X" },
   { icon: Workflow, name: "n8n" },
 ];
