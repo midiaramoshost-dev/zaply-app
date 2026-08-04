@@ -104,9 +104,12 @@ function AdminPage() {
   const load = useCallback(async () => {
     setBusy(true);
     const [statsRes, usersRes, companiesRes, postsRes] = await Promise.all([
-      fetchStats().catch(() => null),
-      fetchUsers().catch((e: unknown) => {
-        console.error(e);
+      fetchStats().catch((e) => {
+        console.error("Erro ao buscar estatísticas:", e);
+        return null;
+      }),
+      fetchUsers().catch((e) => {
+        console.error("Erro ao buscar usuários:", e);
         toast.error("Não foi possível carregar os usuários cadastrados.");
         return [] as PlatformUser[];
       }),

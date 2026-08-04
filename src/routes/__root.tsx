@@ -8,7 +8,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Loader2 } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
 import { AppSidebar } from "../components/app-sidebar";
@@ -213,8 +213,11 @@ function AppShell() {
     // Redireciona para /admin se estiver em uma rota de usuário (e não for /conta).
     if (adminOutOfScope) {
       return (
-        <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
-          Carregando painel master…
+        <div className="flex h-screen w-full items-center justify-center bg-background">
+          <div className="flex flex-col items-center gap-2">
+            <Loader2 className="size-8 animate-spin text-primary" />
+            <span className="text-sm text-muted-foreground font-medium italic">Acessando central de controle Zaply...</span>
+          </div>
         </div>
       );
     }

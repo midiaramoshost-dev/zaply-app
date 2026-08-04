@@ -108,7 +108,10 @@ export const listPlatformUsers = createServerFn({ method: "GET" })
       throw new Response("Forbidden", { status: 403 });
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server").catch(e => {
+      console.error("Erro ao importar client.server:", e);
+      throw new Error("Falha interna ao inicializar o cliente administrativo.");
+    });
 
     // auth.users (fonte da verdade dos cadastros)
     const authUsers: {

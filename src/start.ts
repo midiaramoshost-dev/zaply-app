@@ -10,7 +10,9 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
     if (error != null && typeof error === "object" && "statusCode" in error) {
       throw error;
     }
-    console.error(error);
+    console.error('Server error caught in middleware:', error);
+    // Let the framework handle the error response in a more detailed way if possible
+    // or return a standard error response
     return new Response(renderErrorPage(), {
       status: 500,
       headers: { "content-type": "text/html; charset=utf-8" },
