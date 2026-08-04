@@ -9,7 +9,6 @@ export function AdminTour() {
   useEffect(() => {
     const completed = localStorage.getItem(TOUR_KEY);
     if (!completed) {
-      // Pequeno delay para garantir que o layout renderizou
       const timer = setTimeout(() => setRun(true), 1500);
       return () => clearTimeout(timer);
     }
@@ -35,7 +34,6 @@ export function AdminTour() {
           </p>
         </div>
       ),
-      disableBeacon: true,
     },
     {
       target: ".kpi-grid",
@@ -83,11 +81,11 @@ export function AdminTour() {
           textColor: "oklch(var(--bc))",
           zIndex: 1000,
         },
-        tooltipContainer: {
+        tooltip: {
           textAlign: "left",
           borderRadius: "var(--radius-lg)",
-          border: "1px solid oklch(var(--b3))",
-          padding: "10px",
+          backgroundColor: "oklch(var(--b1))",
+          color: "oklch(var(--bc))",
         },
         buttonNext: {
           borderRadius: "var(--radius-md)",
