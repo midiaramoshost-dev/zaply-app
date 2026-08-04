@@ -175,14 +175,18 @@ export const listPlatformUsers = createServerFn({ method: "GET" })
       if (data.users.length < 200) break;
     }
 
-    const [{ data: profiles }, { data: roles }, { data: credits, error: creditsError }] = await Promise.all([
+    const [profiles, roles, credits, companies, posts] = await Promise.all([
       supabaseAdmin.from("profiles").select("id, full_name, email, approved, requested_plan, created_at"),
       supabaseAdmin.from("user_roles").select("user_id, role"),
       supabaseAdmin.from("user_credits").select("user_id, balance"),
+      supabaseAdmin.from("companies").select("owner_id"),
+      supabaseAdmin.from("posts").select("user_id"),
     ]);
-    if (creditsError) throw new Error(creditsError.message);
+    if (credits.error) throw new Error(credits.error.message);
+    if (companies.error) throw new Error(companies.error.message);
+    if (posts.error) throw new Error(posts.error.message);
 
-    const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]));
+    const profileMap = new Map((profiles.data ?? []).map((p) => [p.id, p]));
 
     // Backfill: cadastros sem perfil (ex.: criados antes do trigger)
     const missing = authUsers.filter((u) => !profileMap.has(u.id));
