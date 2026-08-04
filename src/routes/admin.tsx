@@ -579,8 +579,10 @@ function AdminPage() {
                   { name: "TikTok", icon: Music2, status: "online" },
                   { name: "YouTube", icon: Youtube, status: "online" },
                   { name: "X (Twitter)", icon: ZapIcon, status: "online" },
+                  { name: "Pinterest", icon: Sparkles, status: "online" },
+                  { name: "WhatsApp API", icon: MessageCircle, status: "online" },
                 ].map((social) => (
-                  <div key={social.name} className="flex items-center justify-between rounded-lg border border-border/50 bg-card/30 p-2.5">
+                  <div key={social.name} className="flex items-center justify-between rounded-lg border border-border/50 bg-card/30 p-2.5 transition-colors hover:bg-card/50">
                     <div className="flex items-center gap-3">
                       <div className="grid size-8 place-items-center rounded-lg bg-primary/10 text-primary">
                         <social.icon className="size-4" />
@@ -588,8 +590,8 @@ function AdminPage() {
                       <span className="text-sm font-medium">{social.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="size-2 rounded-full bg-success animate-pulse" />
-                      <span className="text-[10px] uppercase font-bold text-success">Online</span>
+                      <div className="size-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
+                      <span className="text-[9px] uppercase font-black tracking-widest text-success">Ativo</span>
                     </div>
                   </div>
                 ))}
