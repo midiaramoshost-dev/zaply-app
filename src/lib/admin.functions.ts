@@ -50,20 +50,29 @@ export const getPlatformStats = createServerFn({ method: "GET" })
     }
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const [profiles, companies, posts, comments] = await Promise.all([
+    
+    // Usamos queries individuais para contagem exata sem carregar dados desnecessários
+    const [profilesRes, companiesRes, postsRes, scheduledRes, publishedRes, commentsRes] = await Promise.all([
       supabaseAdmin.from("profiles").select("id", { count: "exact", head: true }),
       supabaseAdmin.from("companies").select("id", { count: "exact", head: true }),
-      supabaseAdmin.from("posts").select("id, status"),
+      supabaseAdmin.from("posts").select("id", { count: "exact", head: true }),
+      supabaseAdmin.from("posts").select("id", { count: "exact", head: true }).eq("status", "agendado"),
+      supabaseAdmin.from("posts").select("id", { count: "exact", head: true }).eq("status", "publicado"),
       supabaseAdmin.from("comments").select("id", { count: "exact", head: true }),
     ]);
-    const postRows = posts.data ?? [];
+
+    if (profilesRes.error) throw new Error(`Erro profiles: ${profilesRes.error.message}`);
+    if (companiesRes.error) throw new Error(`Erro companies: ${companiesRes.error.message}`);
+    if (postsRes.error) throw new Error(`Erro posts: ${postsRes.error.message}`);
+    if (commentsRes.error) throw new Error(`Erro comments: ${commentsRes.error.message}`);
+
     return {
-      total_users: profiles.count ?? 0,
-      total_companies: companies.count ?? 0,
-      total_posts: postRows.length,
-      scheduled_posts: postRows.filter((post) => post.status === "agendado").length,
-      published_posts: postRows.filter((post) => post.status === "publicado").length,
-      total_comments: comments.count ?? 0,
+      total_users: profilesRes.count ?? 0,
+      total_companies: companiesRes.count ?? 0,
+      total_posts: postsRes.count ?? 0,
+      scheduled_posts: scheduledRes.count ?? 0,
+      published_posts: publishedRes.count ?? 0,
+      total_comments: commentsRes.count ?? 0,
     };
   });
 
