@@ -221,7 +221,7 @@ function LandingPage() {
                 <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">domina as redes sociais</span>
               </h1>
               <p className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 mt-6 max-w-lg text-base leading-relaxed text-gray-400 sm:text-lg">
-                O Zaply transforma suas ideias em posts virais. Gere, agende e publique em todas as suas redes com um clique — a inteligência que escala sua marca.
+                O Zaply transforma suas ideias em posts virais. Gere, agende e publique em todas as suas redes com um clique — a inteligência artificial que escala sua marca.
               </p>
 
               <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300 mt-10 flex flex-wrap items-center gap-4">
