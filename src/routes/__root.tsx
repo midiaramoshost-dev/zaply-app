@@ -249,7 +249,7 @@ function AppShell() {
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex min-w-0 flex-1 flex-col">
-          {trialActive && <TrialBanner msLeft={trialMsLeft} />}
+          {/* {trialActive && <TrialBanner msLeft={trialMsLeft} />} */}
           <AppHeader isAdmin={isAdmin} />
           <main className="flex-1 grid-backdrop">
             {/* Required: nested routes render here. */}
