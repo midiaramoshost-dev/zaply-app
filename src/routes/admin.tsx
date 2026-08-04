@@ -34,6 +34,8 @@ import {
 import { useRole } from "@/hooks/use-role";
 import { CreditsDialog } from "@/components/credits-dialog";
 import { PageHeader } from "@/components/page-header";
+import { AdminTour } from "@/components/admin-tour";
+
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -278,6 +280,7 @@ function AdminPage() {
 
   return (
     <div className="space-y-6">
+      <AdminTour />
       <PageHeader
         eyebrow="Administrador master"
         title="Gestão da plataforma"
@@ -296,7 +299,7 @@ function AdminPage() {
           </>
         }
       >
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="kpi-grid grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {cards.map((c) => (
             <article key={c.label} className="panel-quiet flex flex-col gap-1 p-3">
               <div className="flex items-center gap-2">
@@ -325,12 +328,12 @@ function AdminPage() {
         </TabsList>
 
         <TabsContent value="usuarios" className="space-y-4">
-          <Card className="panel">
+          <Card className="panel user-table-card">
             <CardHeader className="gap-3">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Usuários cadastrados</CardTitle>
-                  <Button size="sm" className="h-8 rounded-lg px-4 text-xs font-bold" onClick={() => toast.info("Funcionalidade em desenvolvimento.")}>
+                  <Button size="sm" className="btn-new-user h-8 rounded-lg px-4 text-xs font-bold" onClick={() => toast.info("Funcionalidade em desenvolvimento.")}>
                     ADICIONAR CLIENTE
                   </Button>
                 </div>
@@ -414,6 +417,7 @@ function AdminPage() {
                           {m.role !== "admin" && (
                             <>
                               <CreditsDialog
+                                className="btn-grant-credits"
                                 userId={m.id}
                                 name={displayName(m)}
                                 balance={m.credits}
