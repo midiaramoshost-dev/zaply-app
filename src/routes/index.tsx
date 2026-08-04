@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Zaply — conteúdo com IA, do briefing à publicação" },
+      { title: "Viral — conteúdo com IA para donas do lar" },
       {
         name: "description",
         content:
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "Zaply — conteúdo com IA, do briefing à publicação" },
+      { property: "og:title", content: "Viral — conteúdo com IA para donas do lar" },
       {
         property: "og:description",
         content:
@@ -169,7 +169,7 @@ function LandingPage() {
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
             <BrandMark className="size-9 shadow-lg shadow-primary/20" />
-            <span className="font-display text-lg font-bold tracking-tight text-white">Zaply</span>
+            <span className="font-display text-lg font-bold tracking-tight text-white">Viral</span>
           </Link>
 
           <nav className="ml-8 hidden items-center gap-6 text-sm text-muted-foreground md:flex">
@@ -213,15 +213,15 @@ function LandingPage() {
             <div className="flex flex-col items-start">
               <Badge variant="outline" className="animate-in fade-in slide-in-from-bottom-4 duration-700 gap-1.5 border-primary/30 bg-primary/5 py-1.5 text-primary backdrop-blur-md">
                 <Sparkles className="size-3.5" />
-                Plataforma Viral de Conteúdo com IA
+                Viral: IA para Donas do Lar e Serviços Domésticos
               </Badge>
               <h1 className="animate-in fade-in slide-in-from-bottom-6 duration-1000 mt-6 text-balance text-[2.8rem] font-bold leading-[1.05] tracking-tight sm:text-7xl">
-                Crie conteúdo que
+                A plataforma para donas do lar
                 <br />
-                <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">domina as redes sociais</span>
+                <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">solicitarem serviços domésticos</span>
               </h1>
               <p className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 mt-6 max-w-lg text-base leading-relaxed text-gray-400 sm:text-lg">
-                O Zaply transforma suas ideias em posts virais. Gere, agende e publique em todas as suas redes com um clique — a inteligência artificial que escala sua marca.
+                O Viral conecta donas do lar a profissionais qualificados. Solicite serviços, agende e gerencie tudo com um clique — a inteligência artificial que escala seu lar.
               </p>
 
               <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300 mt-10 flex flex-wrap items-center gap-4">
@@ -264,7 +264,7 @@ function LandingPage() {
               <div className="panel glow overflow-hidden p-1.5">
                 <img
                   src={heroDashboard}
-                  alt="Painel do Zaply com calendário editorial e métricas de desempenho"
+                  alt="Painel do Viral com calendário de serviços e métricas"
                   width={1600}
                   height={1008}
                   className="w-full rounded-[calc(var(--radius-xl)-6px)]"
@@ -278,7 +278,7 @@ function LandingPage() {
                     <Instagram className="size-4" />
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate text-xs font-semibold">Post gerado por IA</p>
+                    <p className="truncate text-xs font-semibold">Serviço solicitado</p>
                     <p className="truncate text-[0.68rem] text-muted-foreground">
                       Instagram · Feed
                     </p>
@@ -306,7 +306,7 @@ function LandingPage() {
                   <CalendarDays className="size-4" />
                 </span>
                 <div>
-                  <p className="text-xs font-semibold">30 posts agendados</p>
+                  <p className="text-xs font-semibold">Serviços agendados</p>
                   <p className="text-[0.68rem] text-muted-foreground">Seg 09:00 · Qua 14:00</p>
                 </div>
               </div>

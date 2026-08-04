@@ -89,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Painel — Zaply, conteúdo com IA" },
+      { title: "Painel — Viral, serviços domésticos com IA" },
       {
         name: "description",
         content:
@@ -97,8 +97,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "Painel — Zaply, conteúdo com IA" },
-      { name: "twitter:title", content: "Painel — Zaply, conteúdo com IA" },
+      { property: "og:title", content: "Painel — Viral, serviços domésticos com IA" },
+      { name: "twitter:title", content: "Painel — Viral, serviços domésticos com IA" },
       { property: "og:description", content: "Acompanhe rascunhos, agendamentos e publicações da sua operação de conteúdo em um único painel." },
       { name: "twitter:description", content: "Acompanhe rascunhos, agendamentos e publicações da sua operação de conteúdo em um único painel." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d614c1e2-dfee-46e4-b091-42e1d55966a5/id-preview-7ab63993--2bc7c7cd-fdab-409c-a67d-231d61a13c6f.lovable.app-1785109986344.png" },
@@ -158,13 +158,13 @@ const PAGE_TITLES: Record<string, string> = {
 
 function AppHeader({ isAdmin }: { isAdmin: boolean }) {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
-  const title = PAGE_TITLES[pathname] ?? (isAdmin ? "Painel master" : "Zaply");
+  const title = PAGE_TITLES[pathname] ?? (isAdmin ? "Painel master" : "Viral");
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border/70 bg-background/70 px-4 backdrop-blur-xl">
       <SidebarTrigger />
       <div className="flex min-w-0 items-center gap-2 text-sm">
-        <span className="hidden text-muted-foreground sm:inline">Zaply</span>
+        <span className="hidden text-muted-foreground sm:inline">Viral</span>
         <span className="hidden text-muted-foreground/50 sm:inline">/</span>
         <span className="truncate font-display font-semibold tracking-tight">{title}</span>
       </div>
@@ -226,7 +226,7 @@ function AppShell() {
             </div>
             <div className="flex flex-col items-center gap-1">
               <span className="text-sm font-semibold tracking-wide uppercase text-primary/80">Administrador Master</span>
-              <span className="text-xs text-muted-foreground italic">Acessando central de controle Zaply...</span>
+              <span className="text-xs text-muted-foreground italic">Acessando central de controle Viral...</span>
             </div>
           </div>
         </div>

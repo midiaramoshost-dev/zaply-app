@@ -57,15 +57,15 @@ export const Route = createFileRoute("/admin")({
   validateSearch: (search) => adminSearchSchema.parse(search),
   head: () => ({
     meta: [
-      { title: "Painel do administrador — Zaply" },
+      { title: "Painel do administrador — Viral" },
       {
         name: "description",
-        content: "Painel master: usuários, empresas, posts e comentários de toda a plataforma Zaply.",
+        content: "Painel master: usuários, empresas e serviços de toda a plataforma Viral.",
       },
-      { property: "og:title", content: "Painel do administrador — Zaply" },
+      { property: "og:title", content: "Painel do administrador — Viral" },
       {
         property: "og:description",
-        content: "Painel master: usuários, empresas, posts e comentários de toda a plataforma Zaply.",
+        content: "Painel master: usuários, empresas e serviços de toda a plataforma Viral.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
