@@ -129,6 +129,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
+        <TextFinder />
         <Scripts />
       </body>
     </html>
