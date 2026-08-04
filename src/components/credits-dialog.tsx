@@ -24,12 +24,12 @@ type Props = {
   onDone: () => void;
 };
 
-const PRESETS = [50, 100, 500, 1000];
+const PRESETS = [10, 50, 100, 500];
 
 /** Painel master: gera (ou retira) créditos de um usuário. */
 export function CreditsDialog({ userId, name, balance, onDone }: Props) {
   const [open, setOpen] = useState(false);
-  const [amount, setAmount] = useState("100");
+  const [amount, setAmount] = useState("10");
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
   const grantCredits = useServerFn(grantUserCredits);
