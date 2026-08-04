@@ -27,6 +27,7 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   getPlatformStats,
   listPlatformUsers,
+  grantUserCredits,
   type PlatformStats,
   type PlatformUser,
 } from "@/lib/admin.functions";
@@ -147,6 +148,8 @@ function AdminPage() {
     if (isAdmin) void load();
   }, [isAdmin, load]);
 
+  const grantCreditsFn = useServerFn(grantUserCredits);
+
   async function toggleApproval(member: Member) {
     const next = !member.approved;
     const { error } = await supabase
@@ -157,8 +160,28 @@ function AdminPage() {
         approved_by: next ? (user?.id ?? null) : null,
       })
       .eq("id", member.id);
+    
     if (error) return toast.error("Não foi possível atualizar a liberação.");
-    toast.success(next ? "Acesso liberado." : "Acesso bloqueado.");
+    
+    // Se estiver liberando pela primeira vez e o usuário não tiver créditos, dá 10 de bônus inicial
+    if (next && member.credits === 0) {
+      try {
+        await grantCreditsFn({
+          data: { 
+            userId: member.id, 
+            amount: 10, 
+            reason: "Bônus de ativação de conta" 
+          }
+        });
+        toast.success("Acesso liberado com 10 créditos de bônus!");
+      } catch (e) {
+        console.error("Erro ao conceder bônus inicial:", e);
+        toast.success("Acesso liberado (falha ao atribuir bônus inicial).");
+      }
+    } else {
+      toast.success(next ? "Acesso liberado." : "Acesso bloqueado.");
+    }
+    
     void load();
   }
 
@@ -389,14 +412,22 @@ function AdminPage() {
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           {m.role !== "admin" && (
-                            <Button
-                              size="sm"
-                              variant={m.approved ? "outline" : "default"}
-                              disabled={m.id === user.id}
-                              onClick={() => void toggleApproval(m)}
-                            >
-                              {m.approved ? "Bloquear" : "Liberar"}
-                            </Button>
+                            <>
+                              <CreditsDialog
+                                userId={m.id}
+                                name={displayName(m)}
+                                balance={m.credits}
+                                onDone={() => void load()}
+                              />
+                              <Button
+                                size="sm"
+                                variant={m.approved ? "outline" : "default"}
+                                disabled={m.id === user.id}
+                                onClick={() => void toggleApproval(m)}
+                              >
+                                {m.approved ? "Bloquear" : "Liberar"}
+                              </Button>
+                            </>
                           )}
                           <Button
                             size="sm"
