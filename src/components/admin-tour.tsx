@@ -105,5 +105,3 @@ export function AdminTour() {
     />
   );
 }
-
-export default AdminTour;
