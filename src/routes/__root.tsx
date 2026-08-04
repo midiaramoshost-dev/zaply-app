@@ -14,6 +14,7 @@ import { useEffect, type ReactNode } from "react";
 import { AppSidebar } from "../components/app-sidebar";
 import { AccountButton } from "../components/account-button";
 import { FloatingContact } from "../components/floating-contact";
+import { TextFinder } from "../components/text-finder";
 import { PendingApprovalScreen } from "../components/pending-approval-screen";
 import { useProfileAccess } from "../hooks/use-profile-access";
 import { TrialBanner } from "../components/trial-banner";
@@ -128,6 +129,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
+        <TextFinder />
         <Scripts />
       </body>
     </html>
