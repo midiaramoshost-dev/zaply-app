@@ -313,8 +313,13 @@ function AdminPage() {
                 <Clock3 className="mr-1 size-3" /> {pending} aguardando
               </Badge>
             )}
-            <Button size="sm" variant="outline" onClick={() => void load()} disabled={busy}>
-              {busy ? <Loader2 className="mr-1.5 size-3.5 animate-spin" /> : null} Atualizar
+            <Button size="sm" variant="outline" onClick={() => void load()} disabled={busy} className="h-9 px-4">
+              {busy ? <Loader2 className="mr-2 size-3.5 animate-spin" /> : null} Atualizar
+            </Button>
+            <Button size="sm" variant="default" asChild className="h-9 bg-primary/20 text-primary hover:bg-primary/30 shadow-none border border-primary/20 px-4">
+              <Link to="/painel">
+                Visualizar como Usuário <Sparkles className="ml-2 size-3.5" />
+              </Link>
             </Button>
           </>
         }
