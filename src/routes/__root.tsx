@@ -8,7 +8,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, ShieldCheck } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
 import { AppSidebar } from "../components/app-sidebar";
