@@ -27,6 +27,7 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   getPlatformStats,
   listPlatformUsers,
+  grantUserCredits,
   type PlatformStats,
   type PlatformUser,
 } from "@/lib/admin.functions";
