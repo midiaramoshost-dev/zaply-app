@@ -434,7 +434,6 @@ function AdminPage() {
                           {m.role === "admin" && m.id !== user.id && (
                             <Badge variant="secondary" className="h-8">Admin</Badge>
                           )}
-                        </div>
                           <Button
                             size="sm"
                             variant="outline"
