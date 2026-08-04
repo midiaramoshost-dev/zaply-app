@@ -174,7 +174,8 @@ export function AppSidebar() {
       <SidebarFooter>
         {!collapsed && (
           <p className="rounded-lg border border-sidebar-border/70 bg-sidebar-accent/40 px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
-            Publicação em modo simulado. Conecte suas redes para publicar de verdade.
+            Vincule suas redes sociais no Painel Master para ativar a publicação automática.
+
           </p>
         )}
       </SidebarFooter>
