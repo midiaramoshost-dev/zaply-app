@@ -6,8 +6,10 @@ import { createLovableAiGatewayProvider } from "./ai-gateway.server";
 
 export const CHANNELS = [
   "Instagram",
+  "TikTok",
   "LinkedIn",
   "Facebook",
+  "YouTube",
   "X (Twitter)",
   "Blog",
   "Newsletter",
@@ -16,10 +18,14 @@ export const CHANNELS = [
 export const CHANNEL_GUIDELINES: Record<string, string> = {
   Instagram:
     "Legenda visual e envolvente, abertura com gancho forte, frases curtas, 1 a 3 emojis bem colocados e chamada para ação. Até 600 caracteres. Ex.: \"Descubra como pequenas mudanças podem aumentar seus resultados. 🚀\"",
+  TikTok:
+    "Texto curto e dinâmico, uso de ganchos rápidos para reter atenção, hashtags de tendência, tom informal e autêntico. Até 300 caracteres.",
   LinkedIn:
     "Mais profissional: contexto de negócio, aprendizado concreto, dados ou insight, sem emojis excessivos. Parágrafos curtos, até 900 caracteres.",
   Facebook:
     "Mais conversacional: fale como se estivesse conversando com a comunidade, faça uma pergunta ao final, tom próximo e simples. Até 500 caracteres.",
+  YouTube:
+    "Título chamativo (clickbait saudável), descrição com resumo do vídeo, capítulos implícitos e CTAs para inscrição e comentários. Até 800 caracteres.",
   "X (Twitter)":
     "Texto curto e direto, no máximo 260 caracteres, uma ideia só, sem enrolação, no máximo 2 hashtags.",
   Blog: "Introdução de artigo com subtítulo implícito, tom informativo e escaneável, até 900 caracteres.",
