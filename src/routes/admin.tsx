@@ -14,6 +14,13 @@ import {
   Search,
   UserCheck,
   Clock3,
+  Sparkles,
+  Zap,
+  Instagram,
+  Facebook,
+  Linkedin,
+  Zap as ZapIcon,
+  Workflow,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -318,9 +325,12 @@ function AdminPage() {
       </PageHeader>
 
       <Tabs defaultValue="usuarios" className="space-y-4">
-        <TabsList>
+        <TabsList className="grid w-full grid-cols-2 md:w-auto md:flex">
           <TabsTrigger value="usuarios">
-            <UserCheck className="mr-1.5 size-3.5" /> Usuários
+            <UserCheck className="mr-1.5 size-3.5" /> Gestão de Usuários
+          </TabsTrigger>
+          <TabsTrigger value="sistema">
+            <ShieldCheck className="mr-1.5 size-3.5" /> Configuração do Sistema
           </TabsTrigger>
         </TabsList>
 
@@ -452,6 +462,78 @@ function AdminPage() {
                   )}
                 </TableBody>
               </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="sistema" className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="panel">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Sparkles className="size-4 text-primary" /> Integração de IA
+                </CardTitle>
+                <CardDescription>Configure os limites e modelos globais.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between rounded-lg border border-border/50 bg-card/30 p-3">
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium">Modelo Principal</p>
+                    <p className="text-xs text-muted-foreground">Gemini 1.5 Flash (via Gateway)</p>
+                  </div>
+                  <Badge>Ativo</Badge>
+                </div>
+                <div className="space-y-2">
+                  <Label>Limite de Créditos Iniciais</Label>
+                  <Input type="number" defaultValue={10} className="bg-background/50" />
+                  <p className="text-[10px] text-muted-foreground">Créditos concedidos automaticamente em novos cadastros aprovados.</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="panel">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Zap className="size-4 text-primary" /> Canais Sociais Ativos
+                </CardTitle>
+                <CardDescription>Habilite ou desabilite as redes integradas.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {[
+                  { name: "Instagram", icon: Instagram, status: "online" },
+                  { name: "Facebook", icon: Facebook, status: "online" },
+                  { name: "LinkedIn", icon: Linkedin, status: "online" },
+                  { name: "X (Twitter)", icon: ZapIcon, status: "online" },
+                ].map((social) => (
+                  <div key={social.name} className="flex items-center justify-between rounded-lg border border-border/50 bg-card/30 p-2.5">
+                    <div className="flex items-center gap-3">
+                      <div className="grid size-8 place-items-center rounded-lg bg-primary/10 text-primary">
+                        <social.icon className="size-4" />
+                      </div>
+                      <span className="text-sm font-medium">{social.name}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="size-2 rounded-full bg-success animate-pulse" />
+                      <span className="text-[10px] uppercase font-bold text-success">Online</span>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="panel border-dashed">
+            <CardContent className="flex flex-col items-center justify-center py-10 text-center">
+              <div className="mb-4 grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
+                <Workflow className="size-6" />
+              </div>
+              <CardTitle className="mb-2">Automação n8n</CardTitle>
+              <CardDescription className="max-w-md">
+                O motor de automação está rodando via cron. Os posts agendados são processados a cada 15 minutos seguindo a grade horária dos usuários.
+              </CardDescription>
+              <Button variant="outline" size="sm" className="mt-6" asChild>
+                <Link to="/n8n">Visualizar Fluxo Técnico</Link>
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>
