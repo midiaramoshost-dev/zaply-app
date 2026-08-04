@@ -154,7 +154,11 @@ export function AppSidebar() {
                       isActive={currentPath === item.url}
                       className="data-[active=true]:bg-primary/12 data-[active=true]:text-primary data-[active=true]:font-medium"
                     >
-                      <Link to={item.url} className="flex items-center gap-2.5">
+                      <Link 
+                        to={item.url} 
+                        search={'search' in item ? item.search : undefined}
+                        className="flex items-center gap-2.5"
+                      >
                         <item.icon className="size-4" />
                         {!collapsed && <span className="truncate">{item.title}</span>}
                       </Link>
