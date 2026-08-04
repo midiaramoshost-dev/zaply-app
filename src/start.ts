@@ -7,7 +7,10 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
   try {
     return await next();
   } catch (error) {
-    if (error != null && typeof error === "object" && "statusCode" in error) {
+    if (error != null && typeof error === "object" && "status" in (error as any)) {
+      return error as Response;
+    }
+    if (error != null && typeof error === "object" && "statusCode" in (error as any)) {
       throw error;
     }
     console.error('Server error caught in middleware:', error);
