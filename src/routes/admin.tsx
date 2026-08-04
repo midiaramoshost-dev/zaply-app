@@ -155,7 +155,7 @@ function AdminPage() {
       })),
     );
     setBusy(false);
-  }, [fetchStats, fetchUsers]);
+  }, [fetchStatsFn, fetchUsersFn]);
 
   useEffect(() => {
     if (isAdmin) void load();
