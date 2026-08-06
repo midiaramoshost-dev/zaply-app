@@ -129,8 +129,8 @@ export function AppSidebar() {
           <BrandMark className="size-9" />
           {!collapsed && (
             <div className="leading-tight">
-              <p className="font-display text-sm font-semibold tracking-tight">Viral</p>
-              <p className="text-[11px] text-muted-foreground">Serviços com IA</p>
+              <p className="font-display text-sm font-semibold tracking-tight">Zaply</p>
+              <p className="text-[11px] text-muted-foreground">Conteúdo com IA</p>
             </div>
           )}
         </div>
