@@ -23,6 +23,12 @@ import {
   Workflow,
   Music2,
   Youtube,
+  Cpu,
+  Globe,
+  Settings,
+  ShieldAlert,
+  Server,
+  Network,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -41,6 +47,7 @@ import {
   type PlatformStats,
   type PlatformUser,
 } from "@/lib/admin.functions";
+import { getAiRouterConfig, updateAiRouterConfig } from "@/lib/admin-ai.functions";
 import { useRole } from "@/hooks/use-role";
 import { CreditsDialog } from "@/components/credits-dialog";
 import { PageHeader } from "@/components/page-header";
@@ -50,7 +57,7 @@ import { AdminTour } from "@/components/admin-tour";
 import { z } from "zod";
 
 const adminSearchSchema = z.object({
-  tab: z.enum(["usuarios", "sistema"]).optional().default("usuarios"),
+  tab: z.enum(["usuarios", "sistema", "ia"]).optional().default("usuarios"),
 });
 
 export const Route = createFileRoute("/admin")({
@@ -405,7 +412,12 @@ function AdminPage() {
           </TabsTrigger>
           <TabsTrigger value="sistema" asChild>
             <Link from="/admin" search={{ tab: "sistema" }} className="flex items-center gap-1.5">
-              <ShieldCheck className="size-3.5" /> Configuração do Sistema
+              <ZapIcon className="size-3.5" /> Automação & Canais
+            </Link>
+          </TabsTrigger>
+          <TabsTrigger value="ia" asChild>
+            <Link from="/admin" search={{ tab: "ia" }} className="flex items-center gap-1.5">
+              <Cpu className="size-3.5" /> Central de IA
             </Link>
           </TabsTrigger>
         </TabsList>
