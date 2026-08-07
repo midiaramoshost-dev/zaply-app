@@ -123,10 +123,10 @@ const steps = [
 ];
 
 const stats = [
-  { value: "30", label: "posts gerados por rodada" },
-  { value: "8", label: "canais integrados" },
-  { value: "1 clique", label: "para aprovar e agendar" },
-  { value: "24/7", label: "publicação automatizada" },
+  { value: "30", label: "Posts gerados por rodada" },
+  { value: "100%", label: "White Label para sua agência" },
+  { value: "8", label: "Canais integrados Zaply" },
+  { value: "24/7", label: "Automação total via n8n" },
 ];
 
 const channels = [
