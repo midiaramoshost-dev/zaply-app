@@ -157,11 +157,23 @@ export function usePosts() {
   }, []);
 
   const updatePost = useCallback((id: string, patch: Partial<Post>) => {
-    write(read().map((p) => (p.id === id ? { ...p, ...patch } : p)));
+    const current = read();
+    const exists = current.find((p) => p.id === id);
+    if (!exists) {
+      console.warn("Tentativa de atualizar post inexistente:", id);
+      return;
+    }
+    write(current.map((p) => (p.id === id ? { ...p, ...patch } : p)));
   }, []);
 
   const removePost = useCallback((id: string) => {
-    write(read().filter((p) => p.id !== id));
+    const current = read();
+    const next = current.filter((p) => p.id !== id);
+    if (next.length === current.length) {
+      console.warn("Tentativa de remover post inexistente:", id);
+      return;
+    }
+    write(next);
   }, []);
 
   return { posts, ready, addPost, updatePost, removePost };
