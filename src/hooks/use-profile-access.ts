@@ -74,13 +74,3 @@ export function formatTrialLeft(ms: number) {
   return `${hours}h ${String(minutes).padStart(2, "0")}min`;
 }
 
-
-
-/** Formata o tempo restante do teste (ex.: "3h 12min"). */
-export function formatTrialLeft(ms: number) {
-  const total = Math.max(0, Math.floor(ms / 60000));
-  const hours = Math.floor(total / 60);
-  const minutes = total % 60;
-  if (hours <= 0) return `${minutes}min`;
-  return `${hours}h ${String(minutes).padStart(2, "0")}min`;
-}
