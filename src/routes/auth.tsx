@@ -83,12 +83,13 @@ function AuthPage() {
       password,
       options: {
         data: { full_name: name },
-        emailRedirectTo: `${window.location.origin}${safeNext(next)}`,
+        emailRedirectTo: `${window.location.origin}/onboarding`,
       },
     });
     setBusy(false);
     if (error) return toast.error(error.message);
-    toast.success("Conta criada! Confirme o e-mail para entrar.");
+    toast.success("Conta criada! Confirme o e-mail para configurar sua agência.");
+    navigate({ to: "/onboarding" });
   }
 
 
