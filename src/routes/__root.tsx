@@ -189,6 +189,7 @@ const ADMIN_ALLOWED = ["/admin", "/conta", "/painel", "/tutorial", "/criar", "/a
 function AppShell() {
   const { loading: accessLoading, blocked, profile, reload, isAdmin, trialActive, trialExpired, trialMsLeft, user } =
     useProfileAccess();
+
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const router = useRouter();
 

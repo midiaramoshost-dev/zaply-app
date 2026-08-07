@@ -20,11 +20,12 @@ export async function runZaplyAiTask<T = any>(
   // 1. Identificar o modelo primário para a tarefa
   const taskConfig = DEFAULT_ROUTER_CONFIG.tasks[task];
   const modelId = taskConfig.primaryModelId;
-  const modelConfig = DEFAULT_ROUTER_CONFIG.models[modelId];
+  const modelConfig = DEFAULT_ROUTER_CONFIG.models.find(m => m.id === modelId);
 
   if (!modelConfig) {
     throw new Error(`Configuração não encontrada para a tarefa: ${task}`);
   }
+
 
   const apiKey = process.env.LOVABLE_API_KEY;
   if (!apiKey) throw new Error("API Key não configurada no servidor.");

@@ -5,49 +5,50 @@ export type AIProvider =
   | "mistral" 
   | "deepseek" 
   | "stability" 
-  | "elevenlabs";
+  | "openrouter";
 
-export type AITaskType = "text" | "image" | "video" | "audio" | "ocr" | "seo";
+export type AITaskType = "text" | "image" | "video" | "audio" | "seo";
 
 export interface AIModelConfig {
+  id: string;
   provider: AIProvider;
   model: string;
-  apiKey: string;
+  apiKey?: string;
   priority: number;
-  fallbackTo?: string; // modelId do fallback
-  timeout?: number;
+  is_active: boolean;
 }
 
 export interface AIRouterConfig {
   tasks: Record<AITaskType, {
     primaryModelId: string;
-    balancing: "quality" | "speed" | "cost" | "balanced";
+    balancing: "quality" | "speed" | "cost";
   }>;
-  models: Record<string, AIModelConfig>;
+  models: AIModelConfig[];
 }
 
-// Configuração padrão (inicialmente configurada via ENV para segurança)
 export const DEFAULT_ROUTER_CONFIG: AIRouterConfig = {
   tasks: {
-    text: { primaryModelId: "gemini-flash", balancing: "quality" },
-    image: { primaryModelId: "imagen-3", balancing: "quality" },
+    text: { primaryModelId: "gpt-4o", balancing: "quality" },
+    image: { primaryModelId: "dall-e-3", balancing: "quality" },
     video: { primaryModelId: "veo-1", balancing: "quality" },
     audio: { primaryModelId: "eleven-v2", balancing: "quality" },
-    ocr: { primaryModelId: "gemini-vision", balancing: "speed" },
-    seo: { primaryModelId: "gemini-flash", balancing: "balanced" },
+    seo: { primaryModelId: "gpt-4o", balancing: "quality" },
   },
-  models: {
-    "gemini-flash": {
-      provider: "google",
-      model: "google/gemini-2.0-flash-001",
-      apiKey: process.env.LOVABLE_API_KEY || "",
+  models: [
+    {
+      id: "gpt-4o",
+      provider: "openai",
+      model: "gpt-4o",
       priority: 1,
+      is_active: true
     },
-    "imagen-3": {
+    {
+      id: "gemini-pro",
       provider: "google",
-      model: "google/imagen-3",
-      apiKey: process.env.LOVABLE_API_KEY || "",
-      priority: 1,
+      model: "gemini-1.5-pro",
+      priority: 2,
+      is_active: true
     }
-  }
+  ]
 };
+

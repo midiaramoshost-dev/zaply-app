@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 
-export type AppRole = "admin" | "user";
+export type AppRole = "master_admin" | "org_admin" | "member";
 
 export function useRole() {
   const { user, loading: authLoading } = useAuth();
@@ -20,21 +19,20 @@ export function useRole() {
     }
     setLoading(true);
     supabase
-      .from("user_roles")
+      .from("profiles")
       .select("role")
-      .eq("user_id", user.id)
+      .eq("id", user.id)
+      .maybeSingle()
       .then(({ data, error }) => {
         if (!active) return;
         if (error) {
           console.error("Erro ao carregar papel do usuário:", error);
-          setRole("user");
+          setRole("member");
           setLoading(false);
           return;
         }
         
-        const roles = (data ?? []).map((r) => r.role as AppRole);
-        const finalRole = roles.includes("admin") ? "admin" : "user";
-        console.log(`[useRole] Papel detectado para ${user.email}: ${finalRole}`, roles);
+        const finalRole = (data?.role as AppRole) || "member";
         setRole(finalRole);
         setLoading(false);
       });
@@ -43,5 +41,12 @@ export function useRole() {
     };
   }, [user, authLoading]);
 
-  return { role, isAdmin: role === "admin", loading: loading || authLoading, user };
+  return { 
+    role, 
+    isAdmin: role === "master_admin", 
+    isOrgAdmin: role === "org_admin" || role === "master_admin",
+    loading: loading || authLoading, 
+    user 
+  };
 }
+
