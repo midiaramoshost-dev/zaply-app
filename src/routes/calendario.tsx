@@ -53,7 +53,7 @@ function buildMonthGrid(month: Date) {
 }
 
 function CalendarPage() {
-  const { posts, updatePost } = usePosts();
+  const { posts, updatePost, removePost } = usePosts();
   const [date, setDate] = useState<Date>(new Date());
   const [month, setMonth] = useState<Date>(() => {
     const now = new Date();
@@ -211,7 +211,7 @@ function CalendarPage() {
               </p>
             )}
             {dayPosts.map((post) => (
-              <PostDayCard key={post.id} post={post} onUpdate={updatePost} />
+              <PostDayCard key={post.id} post={post} onUpdate={updatePost} onRemove={removePost} />
             ))}
 
             {autopilot && dayPosts.length > 0 && (
