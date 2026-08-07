@@ -62,8 +62,8 @@
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.155 0.018 258);
-  --foreground: oklch(0.97 0.005 250);
+  --background: oklch(0.12 0.015 258);
+  --foreground: oklch(0.98 0.005 250);
 
   --surface: oklch(0.195 0.019 258);
   --surface-2: oklch(0.232 0.021 258);
@@ -266,6 +266,14 @@
   color: color-mix(in oklab, var(--color-muted-foreground) 90%, transparent);
 }
 
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(-25%) translateX(-50%); }
+  50% { transform: translateY(-20%) translateX(-50%); }
+}
+.animate-bounce-slow {
+  animation: bounce-slow 4s infinite ease-in-out;
+}
 
 @utility grid-backdrop {
   background-image:

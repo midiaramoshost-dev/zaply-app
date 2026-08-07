@@ -169,32 +169,32 @@ function LandingPage() {
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
             <BrandMark className="size-9 shadow-lg shadow-primary/20" />
-            <span className="font-display text-lg font-bold tracking-tight text-white">Zaply</span>
+            <span className="font-display text-xl font-bold tracking-tighter text-white">zaply.</span>
           </Link>
 
-          <nav className="ml-8 hidden items-center gap-6 text-sm text-muted-foreground md:flex">
-            <a href="#recursos" className="transition-colors hover:text-foreground">
-              Recursos
+          <nav className="ml-12 hidden items-center gap-8 text-sm font-medium text-muted-foreground/80 md:flex">
+            <a href="#produto" className="transition-colors hover:text-foreground">
+              Produto
             </a>
             <a href="#como-funciona" className="transition-colors hover:text-foreground">
               Como funciona
             </a>
-            <Link to="/planos" className="transition-colors hover:text-foreground">
-              Planos
-            </Link>
-            <Link to="/tutorial" className="transition-colors hover:text-foreground">
-              Tutorial
-            </Link>
+            <a href="#recursos" className="transition-colors hover:text-foreground">
+              Recursos
+            </a>
+            <a href="#clientes" className="transition-colors hover:text-foreground">
+              Clientes
+            </a>
           </nav>
-          <div className="ml-auto flex items-center gap-2">
-            <Button asChild variant="ghost" size="sm">
+          <div className="ml-auto flex items-center gap-4">
+            <Button asChild variant="ghost" size="sm" className="text-sm font-medium text-white/90">
               <Link to="/painel">
                 Entrar
               </Link>
             </Button>
-            <Button asChild size="sm">
-              <Link to="/painel">
-                Acessar plataforma
+            <Button asChild size="sm" className="h-10 rounded-full bg-[#d9f99d] px-5 text-sm font-bold text-black hover:bg-[#bef264]">
+              <Link to="/painel" className="flex items-center gap-1.5">
+                Começar grátis
                 <ArrowRight className="size-4" />
               </Link>
             </Button>
@@ -211,104 +211,107 @@ function LandingPage() {
 
           <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 lg:pb-32 lg:pt-28">
             <div className="flex flex-col items-start">
-              <Badge variant="outline" className="animate-in fade-in slide-in-from-bottom-4 duration-700 gap-1.5 border-primary/30 bg-primary/5 py-1.5 text-primary backdrop-blur-md">
-                <Sparkles className="size-3.5" />
-                Plataforma Viral de Conteúdo com IA
+              <Badge variant="outline" className="animate-in fade-in slide-in-from-bottom-4 duration-700 flex items-center gap-2 rounded-full border-white/10 bg-white/5 px-3 py-1 text-[11px] font-medium text-gray-400 backdrop-blur-md">
+                <span className="size-1.5 rounded-full bg-[#d9f99d]" />
+                O cockpit de conteúdo para times que fazem acontecer
               </Badge>
-              <h1 className="animate-in fade-in slide-in-from-bottom-6 duration-1000 mt-6 text-balance text-[2.8rem] font-bold leading-[1.05] tracking-tight sm:text-7xl">
-                Crie conteúdo que
+              <h1 className="animate-in fade-in slide-in-from-bottom-6 duration-1000 mt-8 text-balance text-6xl font-bold leading-[1.05] tracking-tighter sm:text-8xl">
+                Sua próxima
                 <br />
-                <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">domina as redes sociais</span>
+                <span className="text-white">ideia em</span>
+                <br />
+                <span className="text-[#d9f99d]">escala.</span>
               </h1>
-              <p className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 mt-6 max-w-lg text-base leading-relaxed text-gray-400 sm:text-lg">
-                O Zaply transforma suas ideias em posts virais. Gere, agende e publique em todas as suas redes com um clique — a IA Zaply que escala sua marca.
+              <p className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 mt-8 max-w-lg text-lg leading-relaxed text-gray-400">
+                Do briefing ao post publicado: o Zaply transforma estratégia em um mês inteiro de conteúdo consistente, no ritmo da sua equipe.
               </p>
 
               <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300 mt-10 flex flex-wrap items-center gap-4">
-                <Button asChild size="lg" className="h-14 px-8 text-base shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)] transition-all hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.6)] hover:scale-[1.02] active:scale-[0.98]">
-                  <Link to="/painel">
-                    <Zap className="mr-2 size-5 fill-current" />
-                    Entrar agora — acesso livre
+                <Button asChild size="lg" className="h-14 rounded-full bg-[#d9f99d] px-8 text-base font-bold text-black shadow-[0_0_30px_-5px_rgba(217,249,157,0.3)] transition-all hover:bg-[#bef264] hover:scale-[1.02] active:scale-[0.98]">
+                  <Link to="/painel" className="flex items-center gap-2">
+                    Criar meu primeiro mês
+                    <ArrowRight className="size-5" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="h-14 border-white/10 bg-white/5 px-8 text-base backdrop-blur-md transition-all hover:bg-white/10 hover:scale-[1.02] active:scale-[0.98]">
-                  <Link to="/painel">
-                    Fazer login / Criar conta
+                <Button asChild size="lg" variant="ghost" className="h-14 rounded-full px-8 text-base font-bold text-white transition-all hover:bg-white/5 hover:scale-[1.02] active:scale-[0.98]">
+                  <Link to="/painel" className="flex items-center gap-3">
+                    <span className="flex size-10 items-center justify-center rounded-full bg-white/10">
+                      <Zap className="size-4 fill-white text-white" />
+                    </span>
+                    Ver em 90 segundos
                   </Link>
                 </Button>
               </div>
 
-              <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
-                {["Sem cartão para testar", "Português nativo", "Integração com n8n"].map((i) => (
-                  <li key={i} className="flex items-center gap-1.5">
-                    <CheckCircle2 className="size-4 text-success" />
-                    {i}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-border/60 pt-6">
-                <div className="flex items-center gap-1 text-warning">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="size-3.5 fill-current" />
+              <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500 mt-10 flex items-center gap-3">
+                <div className="flex -space-x-2">
+                  {['LM', 'CA', 'BR', 'JS'].map((initial, i) => (
+                    <div key={i} className={`flex size-8 items-center justify-center rounded-full border-2 border-[#02040a] text-[10px] font-bold text-black ${
+                      i === 0 ? 'bg-[#d9f99d]' : i === 1 ? 'bg-[#a5f3fc]' : i === 2 ? 'bg-[#fecaca]' : 'bg-[#e9d5ff]'
+                    }`}>
+                      {initial}
+                    </div>
                   ))}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Usado por social medias e agências que publicam todos os dias
+                <p className="text-xs font-medium text-gray-500">
+                  + 2.400 equipes já criam com mais clareza
                 </p>
               </div>
             </div>
 
             {/* Visual */}
-            <div className="relative">
-              <div className="panel glow overflow-hidden p-1.5">
-                <img
-                  src={heroDashboard}
-                  alt="Painel do Zaply com calendário editorial e métricas de desempenho"
-                  width={1600}
-                  height={1008}
-                  className="w-full rounded-[calc(var(--radius-xl)-6px)]"
-                />
+            <div className="relative lg:pl-10">
+              <div className="panel overflow-hidden border-white/5 bg-[#0a0c14] p-2 shadow-2xl">
+                <div className="relative overflow-hidden rounded-[calc(var(--radius-xl)-8px)] border border-white/5">
+                  <img
+                    src={heroDashboard}
+                    alt="Painel do Zaply"
+                    width={1600}
+                    height={1008}
+                    className="w-full opacity-90"
+                  />
+                  {/* Overlay for "Calendário editorial" look */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#02040a] via-transparent to-transparent opacity-40" />
+                </div>
               </div>
 
-              {/* Floating card — post gerado */}
-              <div className="panel absolute -bottom-8 -left-4 hidden w-64 gap-3 p-4 backdrop-blur-xl sm:flex sm:flex-col lg:-left-10">
-                <div className="flex items-center gap-2">
-                  <span className="grid size-8 place-items-center rounded-lg bg-primary/15 text-primary">
-                    <Instagram className="size-4" />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="truncate text-xs font-semibold">Post gerado por IA</p>
-                    <p className="truncate text-[0.68rem] text-muted-foreground">
-                      Instagram · Feed
-                    </p>
+              {/* Floating card — 12 oportunidades */}
+              <div className="panel absolute left-0 top-1/4 -translate-x-1/2 w-48 gap-3 p-4 backdrop-blur-2xl border-white/10 bg-white/5 animate-bounce-slow">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Esta semana</p>
+                <div className="mt-1 flex items-center gap-2">
+                  <p className="text-base font-bold text-white">12 oportunidades</p>
+                  <ArrowRight className="size-4 -rotate-45 text-[#d9f99d]" />
+                </div>
+              </div>
+
+              {/* Floating card — Editorial Calendar snippet */}
+              <div className="panel absolute bottom-12 right-0 translate-x-1/4 w-72 p-5 backdrop-blur-2xl border-white/10 bg-[#0a0c14]/80 shadow-2xl hidden md:block">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="text-xs font-bold text-white">Calendário editorial</p>
+                    <p className="text-[10px] text-gray-500">04 — 10 de maio</p>
                   </div>
+                  <p className="text-[10px] font-bold text-gray-600">68 peças</p>
                 </div>
-                <p className="text-[0.72rem] leading-relaxed text-muted-foreground">
-                  ✨ Seu sorriso merece cuidado o ano inteiro. Agende a sua avaliação!
-                </p>
-                <div className="flex items-center gap-3 text-[0.68rem] text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <Heart className="size-3 text-destructive" /> 1,2 mil
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MessageCircle className="size-3" /> 86
-                  </span>
-                  <span className="ml-auto flex items-center gap-1 text-success">
-                    <CheckCircle2 className="size-3" /> Aprovado
-                  </span>
+                <div className="space-y-3">
+                  {[
+                    { date: '04', text: 'O bastidor que ninguém vê', status: 'Pronto', color: 'bg-rose-500' },
+                    { date: '05', text: '3 sinais de que sua marca evoluiu', status: 'Pronto', color: 'bg-emerald-500' },
+                    { date: '06', text: 'Ideias que viram movimento', status: 'Pronto', color: 'bg-indigo-500' },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                      <p className="text-[10px] font-bold text-gray-600">{item.date}</p>
+                      <div className={`w-0.5 h-3 ${item.color}`} />
+                      <p className="flex-1 truncate text-[10px] font-medium text-gray-300">{item.text}</p>
+                      <span className="text-[9px] font-bold text-[#d9f99d]">Pronto</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              {/* Floating card — agendamento */}
-              <div className="panel absolute -right-4 -top-6 hidden items-center gap-2.5 p-3 backdrop-blur-xl md:flex lg:-right-8">
-                <span className="grid size-8 place-items-center rounded-lg bg-accent/15 text-accent">
-                  <CalendarDays className="size-4" />
-                </span>
-                <div>
-                  <p className="text-xs font-semibold">30 posts agendados</p>
-                  <p className="text-[0.68rem] text-muted-foreground">Seg 09:00 · Qua 14:00</p>
-                </div>
+              {/* Logo badge */}
+              <div className="absolute top-6 right-6 z-10 size-10 rounded-xl bg-[#d9f99d] grid place-items-center shadow-lg shadow-[#d9f99d]/20">
+                <Zap className="size-5 fill-black text-black" />
               </div>
             </div>
           </div>
@@ -332,15 +335,50 @@ function LandingPage() {
           </div>
         </section>
 
+        {/* Workspace Vision Section */}
+        <section id="produto" className="relative border-y border-white/5 bg-[#02040a] py-24 overflow-hidden">
+          <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#d9f99d]">Uma visão do workspace</p>
+                <h2 className="mt-4 text-4xl font-bold tracking-tighter text-white sm:text-5xl">
+                  Tudo em foco. Nada perdido.
+                </h2>
+              </div>
+              <p className="text-sm font-medium text-gray-500 max-w-xs md:text-right">
+                Produto real, rotina mais leve
+              </p>
+            </div>
+            
+            <div className="panel overflow-hidden border-white/5 bg-[#0a0c14] shadow-2xl">
+              <div className="flex items-center justify-between border-b border-white/5 bg-white/5 px-6 py-3">
+                <div className="flex gap-1.5">
+                  <div className="size-2 rounded-full bg-rose-500/50" />
+                  <div className="size-2 rounded-full bg-amber-500/50" />
+                  <div className="size-2 rounded-full bg-emerald-500/50" />
+                </div>
+                <div className="flex items-center gap-2 rounded-md bg-black/40 px-3 py-1 text-[10px] font-medium text-gray-500 border border-white/5">
+                  <Zap className="size-3" /> zaply / workspace / maio
+                </div>
+                <p className="text-[10px] font-medium text-gray-600">Atualizado agora</p>
+              </div>
+              <div className="h-[400px] bg-gradient-to-b from-[#0a0c14] to-[#02040a] p-8 flex flex-col items-center justify-center text-center opacity-40">
+                <Zap className="size-12 text-[#d9f99d] mb-4" />
+                <p className="text-sm font-medium text-gray-400">Visualização do workspace em construção</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Stats */}
-        <section className="border-b border-border/60 bg-surface/20">
-          <div className="mx-auto grid w-full max-w-6xl grid-cols-2 divide-border/60 px-4 py-10 sm:px-6 lg:grid-cols-4 lg:divide-x">
+        <section className="bg-black py-16">
+          <div className="mx-auto grid w-full max-w-6xl grid-cols-2 gap-8 px-4 sm:px-6 lg:grid-cols-4">
             {stats.map((s) => (
-              <div key={s.label} className="px-4 py-4 text-center lg:text-left">
-                <p className="font-display text-3xl font-semibold tabular-nums sm:text-4xl">
+              <div key={s.label} className="text-center lg:text-left">
+                <p className="font-display text-4xl font-bold tracking-tighter text-white sm:text-5xl">
                   {s.value}
                 </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-gray-500">
                   {s.label}
                 </p>
               </div>
