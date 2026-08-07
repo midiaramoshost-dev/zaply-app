@@ -72,13 +72,12 @@ export function useProfileAccess() {
     isAdmin,
     profile,
     loading: busy,
-    /** Temporariamente, todos os usuários têm acesso liberado (cobrança retirada). */
     approved: true,
     blocked: false,
-    trialActive,
-    trialExpired,
+    trialActive: false,
+    trialExpired: false,
     trialEndsAt,
-    trialMsLeft: msLeft,
+    trialMsLeft: 0,
     reload: load,
   };
 }
