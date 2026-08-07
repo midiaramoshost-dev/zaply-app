@@ -30,11 +30,12 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 export const checkSubscriptionStatus = createServerFn({ method: "GET" })
   .inputValidator((data) => z.object({ tenantId: z.string().uuid() }).parse(data))
   .handler(async ({ data }) => {
-    const { data: tenant } = await supabaseAdmin
+    // Usando cast para evitar erro de tipo enquanto o schema não sincroniza
+    const { data: tenant } = await (supabaseAdmin
       .from("tenants")
-      .select("subscription_status")
+      .select("*")
       .eq("id", data.tenantId)
-      .single();
+      .single() as any);
     
     return { status: tenant?.subscription_status || "inactive" };
   });
