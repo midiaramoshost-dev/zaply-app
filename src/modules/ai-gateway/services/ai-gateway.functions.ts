@@ -23,7 +23,7 @@ export const zaplyAIRouter = createServerFn({ method: "POST" })
     const { prompt, taskType, tenantId, agentId, config } = data;
 
     // 1. Log da Auditoria (Enterprise Rule)
-    await supabaseAdmin.from("audit_logs").insert({
+    await (supabaseAdmin.from("audit_logs" as any) as any).insert({
       tenant_id: tenantId,
       action: "ai_generation_request",
       resource_type: "ai_gateway",
