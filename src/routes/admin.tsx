@@ -310,8 +310,8 @@ function AdminPage() {
       <AdminTour />
       <PageHeader
         eyebrow="Administrador master"
-        title="Gestão Master"
-        description="Base de usuários, créditos e infraestrutura."
+        title="Gestão Master (White Label)"
+        description="Controle total da infraestrutura, provedores e modelos de IA da Zaply."
         icon={ShieldCheck}
         actions={
           <>
