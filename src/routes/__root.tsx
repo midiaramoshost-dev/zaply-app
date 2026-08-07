@@ -199,11 +199,11 @@ function AppShell() {
     !accessLoading && isAdmin && !ADMIN_ALLOWED.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   useEffect(() => {
-    if (!accessLoading && user && !profile?.tenant_id && pathname !== "/onboarding") {
+    if (!accessLoading && user && !profile?.tenant_id && pathname !== "/onboarding" && !pathname.startsWith("/admin")) {
       void router.navigate({ to: "/onboarding", replace: true });
       return;
     }
-    if (adminOutOfScope) {
+    if (adminOutOfScope && !pathname.startsWith("/admin")) {
       void router.navigate({ to: "/admin", search: { tab: "usuarios" }, replace: true });
     }
   }, [adminOutOfScope, router, accessLoading, user, profile?.tenant_id, pathname]);
