@@ -3,6 +3,17 @@ import { useRole } from "@/hooks/use-role";
 import { profileRepository } from "@/repository/profile.repository";
 import { Profile } from "@/types/enterprise";
 
+export const TRIAL_HOURS = 3;
+
+export function formatTrialLeft(ms: number) {
+  const total = Math.max(0, Math.floor(ms / 60000));
+  const hours = Math.floor(total / 60);
+  const minutes = total % 60;
+  if (hours <= 0) return `${minutes}min`;
+  return `${hours}h ${String(minutes).padStart(2, "0")}min`;
+}
+
+
 export type ProfileAccess = {
   approved: boolean;
   role: string | null;
