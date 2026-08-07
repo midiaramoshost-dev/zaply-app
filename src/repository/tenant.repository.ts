@@ -3,8 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 export interface Tenant {
   id: string;
   name: string;
-  slug: string;
-  is_white_label: boolean;
+  slug: string | null;
+  is_white_label: boolean | null;
 }
 
 export class TenantRepository {
@@ -12,11 +12,11 @@ export class TenantRepository {
     const { data, error } = await supabase
       .from("tenants")
       .select("*")
-      .eq("slug", slug)
+      .eq("slug" as any, slug)
       .maybeSingle();
 
     if (error) throw error;
-    return data;
+    return data as any;
   }
 
   async getById(id: string): Promise<Tenant | null> {
@@ -27,8 +27,9 @@ export class TenantRepository {
       .maybeSingle();
 
     if (error) throw error;
-    return data;
+    return data as any;
   }
 }
 
 export const tenantRepository = new TenantRepository();
+
