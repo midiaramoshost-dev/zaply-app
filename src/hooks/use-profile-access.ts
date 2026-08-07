@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/hooks/use-role";
-
-export const TRIAL_HOURS = 3;
+import { profileRepository } from "@/repository/profile.repository";
+import { Profile } from "@/types/enterprise";
 
 export type ProfileAccess = {
   approved: boolean;
@@ -15,8 +14,8 @@ export type ProfileAccess = {
 };
 
 export function useProfileAccess() {
-  const { user, isAdmin, loading: roleLoading, role } = useRole();
-  const [profile, setProfile] = useState<ProfileAccess | null>(null);
+  const { user, isAdmin, loading: roleLoading, role: rbacRole } = useRole();
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
@@ -26,26 +25,14 @@ export function useProfileAccess() {
       return;
     }
     setLoading(true);
-    const { data } = await supabase
-      .from("profiles")
-      .select("role, tenant_id, full_name, email, is_active, requested_plan, tenants(subscription_status)")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    setProfile(
-      data
-        ? {
-            approved: Boolean(data.is_active),
-            role: data.role,
-            tenantId: data.tenant_id,
-            fullName: data.full_name,
-            email: data.email,
-            requestedPlan: data.requested_plan,
-            subscriptionStatus: (data as any).tenants?.subscription_status || null,
-          }
-        : null,
-    );
-    setLoading(false);
+    try {
+      const data = await profileRepository.getById(user.id);
+      setProfile(data);
+    } catch (error) {
+      console.error("Error loading profile access:", error);
+    } finally {
+      setLoading(false);
+    }
   }, [user]);
 
   useEffect(() => {
@@ -53,20 +40,24 @@ export function useProfileAccess() {
     void load();
   }, [roleLoading, load]);
 
+  const subscriptionStatus = (profile as any)?.tenants?.subscription_status || null;
+  const approved = isAdmin || (profile?.is_active && (subscriptionStatus === 'active' || subscriptionStatus === 'trialing'));
+
   return {
     user,
     isAdmin,
-    role,
+    role: rbacRole,
     profile,
     loading: roleLoading || loading,
-    approved: isAdmin || (Boolean(profile?.approved) && (profile?.subscriptionStatus === 'active' || profile?.subscriptionStatus === 'trialing')),
+    approved,
     reload: load,
-    blocked: false,
-    trialActive: false,
-    trialExpired: false,
+    blocked: profile?.is_active === false,
+    trialActive: subscriptionStatus === 'trialing',
+    trialExpired: subscriptionStatus === 'past_due',
     trialMsLeft: 0,
   };
 }
+
 
 export function formatTrialLeft(ms: number) {
   const total = Math.max(0, Math.floor(ms / 60000));
