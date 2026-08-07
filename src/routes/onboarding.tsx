@@ -1,13 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Building2, Layout, CreditCard, CheckCircle2, Zap } from "lucide-react";
+import { Loader2, Building2, Layout, CreditCard, CheckCircle2, Zap, ArrowRight } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { setupInitialTenant } from "@/lib/onboarding.functions";
+import { createCheckoutSession } from "@/lib/checkout.functions";
 
 export const Route = createFileRoute("/onboarding")({
   component: OnboardingPage,
@@ -39,15 +40,29 @@ function OnboardingPage() {
   const handleFinish = async () => {
     setBusy(true);
     try {
-      await setupInitialTenant({ data: {
+      const result = await setupInitialTenant({ data: {
         tenantName,
         orgName,
         planId,
         userId: user.id,
         userEmail: user.email! }
       });
-      toast.success("Configuração concluída com sucesso!");
-      navigate({ to: "/painel" });
+      
+      toast.success("Conta criada! Redirecionando para o pagamento...");
+      
+      // Criar sessão de checkout do Stripe
+      const checkout = await createCheckoutSession({ data: {
+        planId,
+        tenantId: result.tenantId,
+        userEmail: user.email!
+      }});
+
+      if (checkout.url) {
+        // Em produção, aqui seria o redirecionamento real para o Stripe
+        window.location.href = checkout.url;
+      } else {
+        navigate({ to: "/painel" });
+      }
     } catch (error: any) {
       toast.error(error.message || "Erro ao configurar conta");
     } finally {

@@ -188,7 +188,7 @@ function AppHeader({ isAdmin }: { isAdmin: boolean }) {
 const ADMIN_ALLOWED = ["/admin", "/conta", "/painel", "/tutorial", "/criar", "/automatico", "/imagens", "/biblioteca", "/aprovacao", "/calendario", "/agendamento", "/publicacao", "/comentarios", "/relatorios", "/n8n", "/clientes", "/planos"];
 
 function AppShell() {
-  const { loading: accessLoading, blocked, profile, reload, isAdmin, trialActive, trialExpired, trialMsLeft, user } =
+  const { loading: accessLoading, blocked, profile, reload, isAdmin, trialActive, trialExpired, trialMsLeft, user, approved } =
     useProfileAccess();
 
   const pathname = useRouterState({ select: (r) => r.location.pathname });
@@ -238,12 +238,13 @@ function AppShell() {
         </div>
       );
     }
-  } else if (!isAdmin && blocked && user) {
+  } else if (!isAdmin && (!approved || blocked) && user) {
+    const isInactiveSubscription = profile?.subscriptionStatus && !['active', 'trialing'].includes(profile.subscriptionStatus);
     return (
       <div className="min-h-screen bg-background grid-backdrop">
         <PendingApprovalScreen
           requestedPlan={profile?.requestedPlan ?? null}
-          trialExpired={trialExpired}
+          trialExpired={!!(trialExpired || isInactiveSubscription)}
           onRequested={() => void reload()}
         />
         <FloatingContact />
