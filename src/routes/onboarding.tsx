@@ -40,15 +40,29 @@ function OnboardingPage() {
   const handleFinish = async () => {
     setBusy(true);
     try {
-      await setupInitialTenant({ data: {
+      const result = await setupInitialTenant({ data: {
         tenantName,
         orgName,
         planId,
         userId: user.id,
         userEmail: user.email! }
       });
-      toast.success("Configuração concluída com sucesso!");
-      navigate({ to: "/painel" });
+      
+      toast.success("Conta criada! Redirecionando para o pagamento...");
+      
+      // Criar sessão de checkout do Stripe
+      const checkout = await createCheckoutSession({ data: {
+        planId,
+        tenantId: result.tenantId,
+        userEmail: user.email!
+      }});
+
+      if (checkout.url) {
+        // Em produção, aqui seria o redirecionamento real para o Stripe
+        window.location.href = checkout.url;
+      } else {
+        navigate({ to: "/painel" });
+      }
     } catch (error: any) {
       toast.error(error.message || "Erro ao configurar conta");
     } finally {
