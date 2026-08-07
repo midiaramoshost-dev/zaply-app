@@ -35,6 +35,7 @@ export interface Profile {
   role: UserRole;
   is_active: boolean;
   approved: boolean;
+  requested_plan?: string;
   created_at: string;
 }
 
