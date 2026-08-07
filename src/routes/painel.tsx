@@ -11,13 +11,18 @@ import {
   Plus,
   Zap,
   LayoutDashboard,
-  Timer
+  Timer,
+  LayoutGrid,
+  BarChart3,
+  Search
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useProfileAccess } from "@/hooks/use-profile-access";
+import { KPIGrid } from "@/modules/dashboard/components/kpi-grid";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/painel")({
   head: () => ({
@@ -41,31 +46,39 @@ function DashboardPage() {
   };
 
   return (
-    <div className="space-y-8 pb-12">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-8 pb-12 animate-in fade-in duration-700">
+      <header className="page-header p-8 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Olá! O que vamos criar hoje?</h1>
-          <p className="text-sm text-muted-foreground">Escolha um formato ou use o modo profissional para mais controle.</p>
+          <Badge variant="outline" className="mb-2 border-primary/20 bg-primary/10 text-primary font-bold">ZAPLY ENTERPRISE</Badge>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard Estratégico</h1>
+          <p className="text-sm text-muted-foreground mt-1">Bem-vindo ao centro de comando da sua operação de marketing.</p>
         </div>
-        <div className="flex items-center gap-2 rounded-xl border border-border bg-card/30 p-1 shadow-sm">
-          <Button 
-            variant={mode === "simple" ? "default" : "ghost"} 
-            size="sm" 
-            className="h-8 rounded-lg text-xs font-bold"
-            onClick={() => setMode("simple")}
-          >
-            MODO SIMPLES
-          </Button>
-          <Button 
-            variant={mode === "pro" ? "default" : "ghost"} 
-            size="sm" 
-            className="h-8 rounded-lg text-xs font-bold"
-            onClick={() => setMode("pro")}
-          >
-            MODO PROFISSIONAL
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 rounded-xl border border-white/5 bg-black/40 p-1 backdrop-blur-sm">
+            <Button 
+              variant={mode === "simple" ? "default" : "ghost"} 
+              size="sm" 
+              className={`h-8 rounded-lg text-[10px] font-bold tracking-widest ${mode === 'simple' ? 'bg-[#d9f99d] text-black hover:bg-[#bef264]' : 'text-muted-foreground'}`}
+              onClick={() => setMode("simple")}
+            >
+              SIMPLES
+            </Button>
+            <Button 
+              variant={mode === "pro" ? "default" : "ghost"} 
+              size="sm" 
+              className={`h-8 rounded-lg text-[10px] font-bold tracking-widest ${mode === 'pro' ? 'bg-[#d9f99d] text-black hover:bg-[#bef264]' : 'text-muted-foreground'}`}
+              onClick={() => setMode("pro")}
+            >
+              PROFISSIONAL
+            </Button>
+          </div>
+          <Button size="sm" className="h-10 rounded-xl bg-primary shadow-lg shadow-primary/20">
+            <Plus className="size-4 mr-2" /> NOVA MARCA
           </Button>
         </div>
       </header>
+
+      <KPIGrid />
 
       {mode === "simple" ? (
         <div className="mx-auto max-w-4xl space-y-12 py-8">
