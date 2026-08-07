@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { aiRouter } from "./ai-router/router.server";
-import { AITaskType } from "./ai-router/config.ts";
+import { runZaplyAiTask } from "./ai-router/router.server";
+import { AITaskType } from "./ai-router/config";
 
 export const generateWhiteLabelContent = createServerFn({ method: "POST" })
   .inputValidator((data) =>
@@ -17,11 +17,9 @@ export const generateWhiteLabelContent = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     // Aqui chamamos o roteador que abstrai os provedores
     // O usuário verá apenas "IA Zaply"
-    const result = await aiRouter.execute({
-      taskType: data.taskType as AITaskType,
+    const result = await runZaplyAiTask(data.taskType as AITaskType, {
       prompt: data.prompt,
-      context: data.context,
-      tenantId: data.tenantId,
+      system: data.context?.system,
     });
 
     return {
@@ -30,3 +28,4 @@ export const generateWhiteLabelContent = createServerFn({ method: "POST" })
       provider: "IA Zaply", // Sempre White Label
     };
   });
+
