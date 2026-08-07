@@ -110,7 +110,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild className="bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary font-bold">
-              <Link to="/admin">
+              <Link to="/admin" search={{ tab: "usuarios" }}>
                 <ShieldCheck className="size-4" />
                 <span>Voltar ao Painel Master</span>
               </Link>
