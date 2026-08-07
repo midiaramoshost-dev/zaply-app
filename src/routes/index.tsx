@@ -188,7 +188,7 @@ function LandingPage() {
           </nav>
           <div className="ml-auto flex items-center gap-2">
             <Button asChild variant="ghost" size="sm">
-              <Link to="/auth" search={{ mode: "entrar" }}>
+              <Link to="/painel">
                 Entrar
               </Link>
             </Button>
@@ -232,7 +232,7 @@ function LandingPage() {
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="h-14 border-white/10 bg-white/5 px-8 text-base backdrop-blur-md transition-all hover:bg-white/10 hover:scale-[1.02] active:scale-[0.98]">
-                  <Link to="/auth">
+                  <Link to="/painel">
                     Fazer login / Criar conta
                   </Link>
                 </Button>
@@ -462,7 +462,7 @@ function LandingPage() {
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <Button asChild size="lg">
-                  <Link to="/auth" search={{ mode: "criar" }}>
+                  <Link to="/painel">
                     Criar conta grátis
                     <ArrowRight className="size-4" />
                   </Link>
@@ -492,7 +492,7 @@ function LandingPage() {
             <Link to="/tutorial" className="transition-colors hover:text-foreground">
               Tutorial
             </Link>
-            <Link to="/auth" className="transition-colors hover:text-foreground">
+            <Link to="/painel" className="transition-colors hover:text-foreground">
               Entrar
             </Link>
           </nav>
