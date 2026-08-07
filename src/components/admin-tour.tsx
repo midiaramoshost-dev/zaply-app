@@ -49,7 +49,17 @@ export function AdminTour() {
       target: ".btn-grant-credits",
       title: "Créditos e bônus",
       content:
-        "Aqui você adiciona créditos para que os usuários possam gerar conteúdos com IA.",
+        "Aqui você adiciona créditos Zaply para que os usuários possam gerar conteúdos com IA.",
+    },
+    {
+      target: '[value="ia"]',
+      title: "Central de IA",
+      content: "Gerencie os provedores (Google, OpenAI, Anthropic) de forma invisível. O cliente final sempre verá apenas a marca Zaply.",
+    },
+    {
+      target: '[value="sistema"]',
+      title: "Automação Real",
+      content: "Vincule as APIs oficiais das redes sociais e configure o n8n para automação total.",
     },
   ];
 
