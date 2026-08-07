@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { 
   Sparkles, 
   Video, 
@@ -31,7 +31,14 @@ export const Route = createFileRoute("/painel")({
 
 function DashboardPage() {
   const [mode, setMode] = useState<"simple" | "pro">("simple");
+  const [idea, setIdea] = useState("");
+  const navigate = useNavigate();
   const { isAdmin } = useProfileAccess();
+
+  const handleGenerate = () => {
+    if (!idea.trim()) return;
+    navigate({ to: "/criar", search: (prev: any) => ({ ...prev, prompt: idea }) });
+  };
 
   return (
     <div className="space-y-8 pb-12">
@@ -64,21 +71,23 @@ function DashboardPage() {
         <div className="mx-auto max-w-4xl space-y-12 py-8">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { title: "Criar Vídeo", icon: Video, color: "text-blue-400", bg: "bg-blue-400/10" },
-              { title: "Criar Imagem", icon: ImageIcon, color: "text-purple-400", bg: "bg-purple-400/10" },
-              { title: "Criar Post", icon: Sparkles, color: "text-amber-400", bg: "bg-amber-400/10" },
-              { title: "Criar Anúncio", icon: Megaphone, color: "text-rose-400", bg: "bg-rose-400/10" },
-              { title: "Criar Documento", icon: FileText, color: "text-emerald-400", bg: "bg-emerald-400/10" },
-              { title: "Criar Site", icon: Globe, color: "text-indigo-400", bg: "bg-indigo-400/10" },
+              { title: "Criar Vídeo", icon: Video, color: "text-blue-400", bg: "bg-blue-400/10", url: "/criar" },
+              { title: "Criar Imagem", icon: ImageIcon, color: "text-purple-400", bg: "bg-purple-400/10", url: "/imagens" },
+              { title: "Criar Post", icon: Sparkles, color: "text-amber-400", bg: "bg-amber-400/10", url: "/criar" },
+              { title: "Criar Anúncio", icon: Megaphone, color: "text-rose-400", bg: "bg-rose-400/10", url: "/criar" },
+              { title: "Criar Documento", icon: FileText, color: "text-emerald-400", bg: "bg-emerald-400/10", url: "/biblioteca" },
+              { title: "Criar Site", icon: Globe, color: "text-indigo-400", bg: "bg-indigo-400/10", url: "/n8n" },
             ].map((item) => (
-              <Card key={item.title} className="panel panel-hover group cursor-pointer border-none bg-surface/40 p-1">
-                <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
-                  <div className={`grid size-16 place-items-center rounded-2xl ${item.bg} ${item.color} shadow-inner transition-transform group-hover:scale-110`}>
-                    <item.icon className="size-8" />
-                  </div>
-                  <h3 className="font-display text-lg font-bold tracking-tight">{item.title}</h3>
-                </CardContent>
-              </Card>
+              <Link key={item.title} to={item.url as any} className="block group">
+                <Card className="panel panel-hover cursor-pointer border-none bg-surface/40 p-1">
+                  <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+                    <div className={`grid size-16 place-items-center rounded-2xl ${item.bg} ${item.color} shadow-inner transition-transform group-hover:scale-110`}>
+                      <item.icon className="size-8" />
+                    </div>
+                    <h3 className="font-display text-lg font-bold tracking-tight">{item.title}</h3>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
 
@@ -99,9 +108,15 @@ function DashboardPage() {
                   <textarea 
                     placeholder="Ex: Faça um vídeo anunciando minha pizzaria com foco em promoção de terça-feira."
                     className="min-h-[140px] w-full resize-none rounded-2xl border border-border/60 bg-surface/50 p-6 text-lg transition-all focus:border-primary/50 focus:bg-surface/80 focus:outline-none focus:ring-4 focus:ring-primary/5 shadow-inner"
+                    value={idea}
+                    onChange={(e) => setIdea(e.target.value)}
                   />
                   <div className="absolute bottom-4 right-4">
-                    <Button size="lg" className="h-12 gap-2 rounded-xl px-8 font-bold shadow-lg shadow-primary/20">
+                    <Button 
+                      size="lg" 
+                      className="h-12 gap-2 rounded-xl px-8 font-bold shadow-lg shadow-primary/20"
+                      onClick={handleGenerate}
+                    >
                       GERAR <ArrowRight className="size-4" />
                     </Button>
                   </div>
