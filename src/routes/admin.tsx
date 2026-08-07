@@ -1,937 +1,114 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
-import {
-  ShieldCheck,
-  Users,
-  Building2,
-  FileText,
-  CalendarClock,
-  Send,
-  MessageCircle,
-  Loader2,
-  Coins,
-  Search,
-  UserCheck,
-  Clock3,
-  Sparkles,
-  Zap,
-  Instagram,
-  Facebook,
-  Linkedin,
-  Zap as ZapIcon,
-  Workflow,
-  Music2,
-  Youtube,
-  Cpu,
-  Globe,
-  Settings,
-  ShieldAlert,
-  Server,
-  Network,
-} from "lucide-react";
-import { toast } from "sonner";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { createFileRoute } from "@tanstack/react-router";
+import { LayoutDashboard, Users, MessageSquare, CreditCard, Settings, Globe, Database, Bot } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { supabase } from "@/integrations/supabase/client";
-import {
-  getPlatformStats,
-  listPlatformUsers,
-  grantUserCredits,
-  type PlatformStats,
-  type PlatformUser,
-} from "@/lib/admin.functions";
-import { getAiRouterConfig, updateAiRouterConfig } from "@/lib/admin-ai.functions";
-import { useRole } from "@/hooks/use-role";
-import { CreditsDialog } from "@/components/credits-dialog";
-import { PageHeader } from "@/components/page-header";
-import { AdminTour } from "@/components/admin-tour";
-
-
-import { z } from "zod";
-
-const adminSearchSchema = z.object({
-  tab: z.enum(["usuarios", "sistema", "ia"]).optional().default("usuarios"),
-});
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export const Route = createFileRoute("/admin")({
-  validateSearch: (search) => adminSearchSchema.parse(search),
-  head: () => ({
-    meta: [
-      { title: "Painel do administrador — Zaply" },
-      {
-        name: "description",
-        content: "Painel master: usuários, empresas, posts e comentários de toda a plataforma Zaply.",
-      },
-      { property: "og:title", content: "Painel do administrador — Zaply" },
-      {
-        property: "og:description",
-        content: "Painel master: usuários, empresas, posts e comentários de toda a plataforma Zaply.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: AdminPage,
+  component: AdminMasterPage,
 });
 
-type Member = {
-  id: string;
-  full_name: string | null;
-  email: string | null;
-  approved: boolean;
-  requested_plan: string | null;
-  created_at: string;
-  role: "admin" | "user";
-  companies: number;
-  posts: number;
-  credits: number;
-};
-
-type Filter = "todos" | "aguardando" | "liberados" | "admins";
-
-function displayName(member: Member) {
-  return member.full_name || member.email || member.id.slice(0, 8);
-}
-
-function initials(member: Member) {
-  const source = member.full_name || member.email || "U";
-  return source
-    .split(/[\s@.]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
-}
-
-function Avatar({ member }: { member: Member }) {
+function AdminMasterPage() {
   return (
-    <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/12 text-xs font-semibold text-primary ring-1 ring-primary/20">
-      {initials(member)}
-    </span>
-  );
-}
-
-function AdminPage() {
-  const { isAdmin, loading, user } = useRole();
-  const search = Route.useSearch();
-  const [stats, setStats] = useState<PlatformStats | null>(null);
-  const [members, setMembers] = useState<Member[]>([]);
-  const [busy, setBusy] = useState(false);
-  const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<Filter>("todos");
-  const fetchUsersFn = useServerFn(listPlatformUsers);
-  const fetchStatsFn = useServerFn(getPlatformStats);
-
-  const activeTab = search.tab;
-
-  const load = useCallback(async () => {
-    setBusy(true);
-    const [statsRes, usersRes] = await Promise.all([
-      fetchStatsFn().catch((e) => {
-        console.error("Erro ao buscar estatísticas:", e);
-        return null;
-      }),
-      fetchUsersFn().catch((e) => {
-        console.error("Erro ao buscar usuários:", e);
-        toast.error("Não foi possível carregar os usuários cadastrados.");
-        return [] as PlatformUser[];
-      }),
-    ]);
-
-    if (statsRes) {
-      setStats({
-        total_users: Number(statsRes.total_users),
-        total_companies: Number(statsRes.total_companies),
-        total_posts: Number(statsRes.total_posts),
-        scheduled_posts: Number(statsRes.scheduled_posts),
-        published_posts: Number(statsRes.published_posts),
-        total_comments: Number(statsRes.total_comments),
-      });
-    }
-
-    setMembers(
-      (usersRes ?? []).map((p) => ({
-        id: p.id,
-        full_name: p.full_name,
-        email: p.email,
-        approved: p.approved,
-        requested_plan: p.requested_plan,
-        created_at: p.created_at,
-        role: p.role,
-        companies: p.companies,
-        posts: p.posts,
-        credits: p.credits,
-      })),
-    );
-    setBusy(false);
-  }, [fetchStatsFn, fetchUsersFn]);
-
-  useEffect(() => {
-    if (isAdmin) void load();
-  }, [isAdmin, load]);
-
-  const grantCreditsFn = useServerFn(grantUserCredits);
-
-  async function toggleApproval(member: Member) {
-    const next = !member.approved;
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        approved: next,
-        approved_at: next ? new Date().toISOString() : null,
-        approved_by: next ? (user?.id ?? null) : null,
-      })
-      .eq("id", member.id);
-    
-    if (error) return toast.error("Não foi possível atualizar a liberação.");
-    
-    // Se estiver liberando pela primeira vez e o usuário não tiver créditos, dá 10 de bônus inicial
-    if (next && member.credits === 0) {
-      try {
-        await grantCreditsFn({
-          data: { 
-            userId: member.id, 
-            amount: 10, 
-            reason: "Bônus de ativação de conta" 
-          }
-        });
-        toast.success("Acesso liberado com 10 créditos de bônus!");
-      } catch (e) {
-        console.error("Erro ao conceder bônus inicial:", e);
-        toast.success("Acesso liberado (falha ao atribuir bônus inicial).");
-      }
-    } else {
-      toast.success(next ? "Acesso liberado." : "Acesso bloqueado.");
-    }
-    
-    void load();
-  }
-
-  async function toggleAdmin(member: Member) {
-    if (member.id === user?.id) {
-      toast.error("Você não pode alterar o seu próprio papel.");
-      return;
-    }
-    if (member.role === "admin") {
-      const { error } = await supabase
-        .from("user_roles")
-        .delete()
-        .eq("user_id", member.id)
-        .eq("role", "admin");
-      if (error) return toast.error("Não foi possível remover o acesso.");
-      toast.success("Acesso de administrador removido.");
-    } else {
-      const { error } = await supabase.from("user_roles").insert({ user_id: member.id, role: "admin" });
-      if (error) return toast.error("Não foi possível conceder o acesso.");
-      toast.success("Usuário promovido a administrador.");
-    }
-    void load();
-  }
-
-  const regularMembers = useMemo(() => members.filter((m) => m.role !== "admin"), [members]);
-  const pending = regularMembers.filter((m) => !m.approved).length;
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return members.filter((m) => {
-      if (filter === "aguardando" && (m.role === "admin" || m.approved)) return false;
-      if (filter === "liberados" && (m.role === "admin" || !m.approved)) return false;
-      if (filter === "admins" && m.role !== "admin") return false;
-      if (!q) return true;
-      return `${m.full_name ?? ""} ${m.email ?? ""}`.toLowerCase().includes(q);
-    });
-  }, [members, filter, query]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center gap-2 p-8 text-sm text-muted-foreground">
-        <Loader2 className="size-4 animate-spin" /> Verificando permissões…
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
-        <ShieldAlert className="size-12 text-muted-foreground/30" />
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-bold">Painel Restrito</h3>
-          <p className="text-sm text-muted-foreground">Faça login para gerenciar a plataforma.</p>
+          <h1 className="text-3xl font-display font-bold tracking-tight">Central de Controle Master</h1>
+          <p className="text-muted-foreground mt-1">Gestão global do ecossistema Zaply Enterprise.</p>
         </div>
-        <Button asChild size="sm">
-          <Link to="/auth">Entrar</Link>
-        </Button>
       </div>
-    );
-  }
 
-  if (!isAdmin) {
-    return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
-        <ShieldAlert className="size-12 text-warning/30" />
-        <div>
-          <h3 className="text-lg font-bold">Acesso Negado</h3>
-          <p className="text-sm text-muted-foreground">Você não tem permissões de administrador.</p>
-        </div>
-        <Button asChild size="sm" variant="outline">
-          <Link to="/painel">Ir para o meu painel</Link>
-        </Button>
-      </div>
-    );
-  }
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList className="bg-surface/50 p-1 border border-border/50">
+          <TabsTrigger value="overview" className="gap-2"><LayoutDashboard className="size-4" /> Geral</TabsTrigger>
+          <TabsTrigger value="tenants" className="gap-2"><Globe className="size-4" /> Empresas (Tenants)</TabsTrigger>
+          <TabsTrigger value="ai" className="gap-2"><Bot className="size-4" /> IA Gateway</TabsTrigger>
+          <TabsTrigger value="billing" className="gap-2"><CreditCard className="size-4" /> Financeiro</TabsTrigger>
+          <TabsTrigger value="settings" className="gap-2"><Settings className="size-4" /> Sistema</TabsTrigger>
+        </TabsList>
 
-  const cards = [
-    { label: "Usuários", value: stats?.total_users ?? 0, icon: Users, hint: "contas cadastradas" },
-    { label: "Empresas/clientes", value: stats?.total_companies ?? 0, icon: Building2, hint: "marcas ativas" },
-    { label: "Posts criados", value: stats?.total_posts ?? 0, icon: FileText, hint: "total na plataforma" },
-    { label: "Agendados", value: stats?.scheduled_posts ?? 0, icon: CalendarClock, hint: "na fila" },
-    { label: "Publicados", value: stats?.published_posts ?? 0, icon: Send, hint: "já no ar" },
-    { label: "Comentários", value: stats?.total_comments ?? 0, icon: MessageCircle, hint: "recebidos" },
-  ];
+        <TabsContent value="overview" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <StatsCard title="Total de Tenants" value="124" description="+12 este mês" />
+            <StatsCard title="Usuários Ativos" value="1,240" description="85% de retenção" />
+            <StatsCard title="Tokens Consumidos" value="1.2M" description="Custo: $124.00" />
+            <StatsCard title="Receita Mensal" value="R$ 45.2k" description="+15% vs mês anterior" />
+          </div>
 
-  const filters: { key: Filter; label: string; count: number }[] = [
-    { key: "todos", label: "Todos", count: members.length },
-    { key: "aguardando", label: "Aguardando", count: pending },
-    { key: "liberados", label: "Liberados", count: regularMembers.filter((m) => m.approved).length },
-    { key: "admins", label: "Admins", count: members.length - regularMembers.length },
-  ];
-
-  return (
-    <div className="space-y-6">
-      <AdminTour />
-      <PageHeader
-        eyebrow="Administrador master"
-        title="Gestão Master (White Label)"
-        description="Controle total da infraestrutura, provedores e modelos de IA da Zaply."
-        icon={ShieldCheck}
-        actions={
-          <>
-            {pending > 0 && (
-              <Badge variant="outline" className="border-warning/50 text-warning">
-                <Clock3 className="mr-1 size-3" /> {pending} aguardando
-              </Badge>
-            )}
-            <Button size="sm" variant="outline" onClick={() => void load()} disabled={busy} className="h-9 px-4">
-              {busy ? <Loader2 className="mr-2 size-3.5 animate-spin" /> : null} Atualizar
-            </Button>
-            <Button size="sm" variant="default" asChild className="h-9 bg-primary/20 text-primary hover:bg-primary/30 shadow-none border border-primary/20 px-4">
-              <Link to="/painel">
-                Abrir App <Sparkles className="ml-2 size-3.5" />
-              </Link>
-            </Button>
-          </>
-        }
-      >
-        <div className="flex flex-col gap-6">
-          {pending > 0 && (
-            <div className="flex items-center justify-between overflow-hidden rounded-xl border border-warning/30 bg-warning/5 backdrop-blur-sm">
-              <div className="flex items-center gap-4 p-4">
-                <div className="relative flex size-12 shrink-0 items-center justify-center rounded-xl bg-warning/10 text-warning">
-                  <div className="absolute inset-0 size-full animate-ping rounded-xl bg-warning/20 opacity-20" />
-                  <Clock3 className="size-6" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold tracking-tight text-warning">Aprovações pendentes</h4>
-                  <p className="text-xs text-warning/70">Há {pending} novos usuários aguardando sua validação para começar a usar a Zaply.</p>
-                </div>
-              </div>
-              <div className="border-l border-warning/20 p-4">
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
-                  className="h-9 gap-2 text-warning hover:bg-warning/10 hover:text-warning"
-                  onClick={() => {
-                    setFilter("aguardando");
-                    const el = document.querySelector(".user-table-card");
-                    el?.scrollIntoView({ behavior: "smooth", block: "center" });
-                  }}
-                >
-                  Ver todos <Zap className="size-3.5" />
-                </Button>
-              </div>
-            </div>
-          )}
-
-          <div className="grid gap-4 lg:grid-cols-4">
-            <div className="kpi-grid grid gap-3 sm:grid-cols-2 lg:col-span-3 lg:grid-cols-3">
-              {cards.map((c) => (
-                <article key={c.label} className="panel-quiet group relative flex flex-col gap-1 overflow-hidden p-4 transition-all hover:bg-primary/[0.03]">
-                  <div className="absolute -right-2 -top-2 size-12 opacity-[0.03] transition-transform group-hover:scale-110 group-hover:opacity-[0.05]">
-                    <c.icon className="size-full" />
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <div className="rounded-lg bg-primary/10 p-1.5 text-primary">
-                      <c.icon className="size-3.5" />
-                    </div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground/80">
-                      {c.label}
-                    </p>
-                  </div>
-                  <div className="mt-2 flex items-baseline gap-2">
-                    <p className="font-display text-2xl font-bold tabular-nums leading-none tracking-tight">{c.value}</p>
-                    <p className="text-[10px] font-medium text-muted-foreground/50">{c.hint}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            <Card className="panel border-primary/20 bg-primary/[0.02]">
-              <CardHeader className="p-4 pb-2">
-                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-primary">Ação Rápida</CardTitle>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Card className="panel border-border/50 bg-surface/30">
+              <CardHeader>
+                <CardTitle>Health Check Provedores IA</CardTitle>
+                <CardDescription>Status em tempo real dos backends.</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2 p-4 pt-0">
-                <Button variant="outline" className="h-9 w-full justify-start gap-2 text-xs font-semibold" onClick={() => void load()}>
-                  <Loader2 className={`size-3.5 ${busy ? "animate-spin" : ""}`} /> Atualizar
-                </Button>
-                <Button variant="default" className="h-9 w-full justify-start gap-2 text-xs font-semibold" onClick={() => toast.info("Relatório sendo gerado...")}>
-                  <FileText className="size-3.5" /> Exportar Base
-                </Button>
+              <CardContent className="space-y-4">
+                <ProviderStatus name="OpenAI (GPT-4o)" status="online" latency="120ms" />
+                <ProviderStatus name="Anthropic (Claude 3.5)" status="online" latency="145ms" />
+                <ProviderStatus name="Google Gemini" status="degraded" latency="850ms" />
+                <ProviderStatus name="Groq (Llama 3)" status="online" latency="45ms" />
+              </CardContent>
+            </Card>
+
+            <Card className="panel border-border/50 bg-surface/30">
+              <CardHeader>
+                <CardTitle>Últimos Tenants Criados</CardTitle>
+                <CardDescription>Empresas recém-embarcadas no sistema.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* Tabela de tenants simplificada */}
+                <div className="text-sm text-muted-foreground italic">Carregando lista de empresas...</div>
               </CardContent>
             </Card>
           </div>
-        </div>
-      </PageHeader>
-
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <Tabs value={activeTab} className="space-y-4">
-        <TabsList className="hidden md:flex">
-          <TabsTrigger value="usuarios" asChild>
-            <Link from="/admin" search={{ tab: "usuarios" }} className="flex items-center gap-1.5">
-              <UserCheck className="size-3.5" /> Usuários & Créditos
-            </Link>
-          </TabsTrigger>
-          <TabsTrigger value="sistema" asChild>
-            <Link from="/admin" search={{ tab: "sistema" }} className="flex items-center gap-1.5">
-              <ZapIcon className="size-3.5" /> Automação & Canais
-            </Link>
-          </TabsTrigger>
-          <TabsTrigger value="ia" asChild>
-            <Link from="/admin" search={{ tab: "ia" }} className="flex items-center gap-1.5">
-              <Cpu className="size-3.5" /> Central de IA
-            </Link>
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="usuarios" className="mt-0 space-y-4 focus-visible:outline-none">
-          <Card className="panel user-table-card">
-            <CardHeader className="border-b border-border/50 pb-4">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Gestão de Base</CardTitle>
-                  <CardDescription className="text-xs">Visualize e gerencie todos os perfis cadastrados na Zaply.</CardDescription>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="relative w-full max-w-xs">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Buscar por nome ou e-mail"
-                      className="h-9 pl-9"
-                    />
-                  </div>
-                  <Button size="sm" className="btn-new-user h-9 rounded-lg px-4 text-xs font-bold" onClick={() => toast.info("Funcionalidade em desenvolvimento.")}>
-                    ADICIONAR CLIENTE
-                  </Button>
-                </div>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {filters.map((f) => (
-                  <Button
-                    key={f.key}
-                    size="sm"
-                    variant={filter === f.key ? "default" : "outline"}
-                    onClick={() => setFilter(f.key)}
-                    className="h-8 text-[11px] font-semibold"
-                  >
-                    {f.label}
-                    <span className="ml-1.5 tabular-nums opacity-60">{f.count}</span>
-                  </Button>
-                ))}
-              </div>
+        </TabsContent>
+        
+        <TabsContent value="ai">
+          <Card className="panel border-border/50 bg-surface/30">
+            <CardHeader>
+              <CardTitle>Configuração Global do AI Router</CardTitle>
+              <CardDescription>Gerencie o balanceamento e fallback entre LLMs.</CardDescription>
             </CardHeader>
-            <CardContent className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Usuário</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Plano pedido</TableHead>
-                    <TableHead>Papel</TableHead>
-                    <TableHead className="text-right">Clientes</TableHead>
-                    <TableHead className="text-right">Posts</TableHead>
-                    <TableHead>Desde</TableHead>
-                    <TableHead className="text-right">Ação</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filtered.map((m) => (
-                    <TableRow key={m.id}>
-                      <TableCell className="max-w-[260px]">
-                        <div className="flex items-center gap-3">
-                          <Avatar member={m} />
-                          <div className="min-w-0">
-                            <span className="block truncate text-sm font-medium">
-                              {displayName(m)}
-                              {m.id === user.id && (
-                                <span className="ml-2 text-xs text-muted-foreground">(você)</span>
-                              )}
-                            </span>
-                            {m.email && (
-                              <span className="block truncate text-xs text-muted-foreground">{m.email}</span>
-                            )}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={m.role === "admin" || m.approved ? "default" : "outline"}>
-                          {m.role === "admin" ? "Acesso total" : m.approved ? "Liberado" : "Aguardando"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-xs uppercase text-muted-foreground">
-                        {m.role === "admin" ? "—" : m.requested_plan || "—"}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={m.role === "admin" ? "default" : "secondary"}>
-                          {m.role === "admin" ? "Admin master" : "Usuário"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right tabular-nums">{m.companies}</TableCell>
-                      <TableCell className="text-right tabular-nums">{m.posts}</TableCell>
-                      <TableCell className="text-xs text-muted-foreground">
-                        {new Date(m.created_at).toLocaleDateString("pt-BR")}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <CreditsDialog
-                            className="btn-grant-credits"
-                            userId={m.id}
-                            name={displayName(m)}
-                            balance={m.credits}
-                            onDone={() => void load()}
-                          />
-                          {m.role !== "admin" && (
-                            <Button
-                              size="sm"
-                              variant={m.approved ? "outline" : "default"}
-                              disabled={m.id === user.id}
-                              onClick={() => void toggleApproval(m)}
-                            >
-                              {m.approved ? "Bloquear" : "Liberar"}
-                            </Button>
-                          )}
-                          {m.role === "admin" && m.id !== user.id && (
-                            <Badge variant="secondary" className="h-8">Admin</Badge>
-                          )}
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            disabled={m.id === user.id}
-                            onClick={() => void toggleAdmin(m)}
-                          >
-                            {m.role === "admin" ? "Remover admin" : "Tornar admin"}
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {!filtered.length && (
-                    <TableRow>
-                      <TableCell colSpan={8} className="py-10 text-center text-sm text-muted-foreground">
-                        {busy ? "Carregando usuários…" : "Nenhum usuário encontrado com esse filtro."}
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+            <CardContent>
+               <div className="p-12 text-center border-2 border-dashed border-border/30 rounded-xl">
+                 <Bot className="size-12 mx-auto mb-4 text-muted-foreground/30" />
+                 <p className="text-muted-foreground">Módulo de IA Gateway Centralizado</p>
+                 <p className="text-xs text-muted-foreground/50 mt-2">Funcionalidade Enterprise: Multi-API Key & Smart Balancing</p>
+               </div>
             </CardContent>
           </Card>
         </TabsContent>
-
-        <TabsContent value="sistema" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card className="panel">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <Sparkles className="size-4 text-primary" /> Integração de IA
-                </CardTitle>
-                <CardDescription>Configure os limites e modelos globais.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between rounded-lg border border-border/50 bg-card/30 p-3">
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-medium">Modelo Principal</p>
-                    <p className="text-xs text-muted-foreground">Gemini 1.5 Flash (via Gateway)</p>
-                  </div>
-                  <Badge>Ativo</Badge>
-                </div>
-                <div className="space-y-2">
-                  <Label>Limite de Créditos Iniciais</Label>
-                  <Input type="number" defaultValue={10} className="bg-background/50" />
-                  <p className="text-[10px] text-muted-foreground">Créditos concedidos automaticamente em novos cadastros aprovados.</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="panel">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <Zap className="size-4 text-primary" /> Canais Sociais Ativos
-                </CardTitle>
-                <CardDescription>Habilite ou desabilite as redes integradas.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {[
-                  { name: "Instagram", icon: Instagram, status: "online" },
-                  { name: "Facebook", icon: Facebook, status: "online" },
-                  { name: "LinkedIn", icon: Linkedin, status: "online" },
-                  { name: "TikTok", icon: Music2, status: "online" },
-                  { name: "YouTube", icon: Youtube, status: "online" },
-                  { name: "X (Twitter)", icon: ZapIcon, status: "online" },
-                  { name: "Pinterest", icon: Sparkles, status: "online" },
-                  { name: "WhatsApp API", icon: MessageCircle, status: "online" },
-                ].map((social) => (
-                  <div key={social.name} className="flex items-center justify-between rounded-lg border border-border/50 bg-card/30 p-2.5 transition-colors hover:bg-card/50">
-                    <div className="flex items-center gap-3">
-                      <div className="grid size-8 place-items-center rounded-lg bg-primary/10 text-primary">
-                        <social.icon className="size-4" />
-                      </div>
-                      <span className="text-sm font-medium">{social.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="size-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
-                      <span className="text-[9px] uppercase font-black tracking-widest text-success">Ativo</span>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Card className="panel border-primary/20 bg-primary/[0.02]">
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                  <div className="rounded-lg bg-primary/20 p-1.5 text-primary">
-                    <ZapIcon className="size-4" />
-                  </div>
-                  <CardTitle className="text-sm font-bold">Vincular Canais (Automação Real)</CardTitle>
-                </div>
-                <CardDescription className="text-xs">Configure as APIs para que a Zaply publique automaticamente.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-[11px] text-muted-foreground leading-relaxed italic">
-                  "Crie uma forma onde eu possa vincular as redes sociais para que tudo seja realmente automatizada"
-                </p>
-                <div className="space-y-2">
-                  {[
-                    { name: "Instagram/Facebook API", icon: Instagram },
-                    { name: "LinkedIn OAuth", icon: Linkedin },
-                    { name: "X (Twitter) API v2", icon: ZapIcon },
-                    { name: "TikTok for Business", icon: Music2 },
-                    { name: "YouTube API (Shorts)", icon: Youtube },
-                  ].map((api) => (
-                    <div key={api.name} className="flex items-center justify-between rounded-lg border border-border/40 bg-card/40 p-2.5 text-xs transition-colors hover:bg-card/60">
-                      <div className="flex items-center gap-2.5">
-                        <api.icon className="size-4 text-primary/70" />
-                        <span className="font-semibold text-foreground/90">{api.name}</span>
-                      </div>
-                      <Button size="sm" variant="outline" className="h-7 px-3 text-[10px] font-bold border-primary/20 text-primary hover:bg-primary/10">
-                        CONECTAR
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="panel border-dashed">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <Workflow className="size-4 text-primary" /> Automação & Infra
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-4 sm:grid-cols-2">
-                <div className="flex flex-col items-center justify-center rounded-xl border border-border/50 bg-card/30 py-8 text-center">
-                  <div className="mb-4 grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
-                    <Workflow className="size-6" />
-                  </div>
-                  <CardTitle className="mb-2 text-sm text-foreground">Motor n8n</CardTitle>
-                  <CardDescription className="mb-4 max-w-[240px] text-[10px]">
-                    Processamento de posts agendados a cada 15 min.
-                  </CardDescription>
-                  <Button variant="outline" size="sm" className="h-8 text-[10px]" asChild>
-                    <Link to="/n8n">Fluxo Técnico</Link>
-                  </Button>
-                </div>
-
-                <div className="space-y-4 rounded-xl border border-border/50 bg-card/30 p-4">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Controles Globais</p>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium">Modo Manutenção</span>
-                      <Badge variant="outline" className="h-5 text-[9px]">OFF</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium">Novos Registros</span>
-                      <Badge className="h-5 bg-success text-[9px]">ON</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium">Pagamentos Ativos</span>
-                      <Badge variant="outline" className="h-5 text-[9px]">OFF</Badge>
-                    </div>
-                  </div>
-                  <Button variant="ghost" size="sm" className="h-8 w-full text-[10px] text-primary hover:bg-primary/10">
-                    Salvar Alterações
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-        </TabsContent>
-
-        <TabsContent value="ia" className="mt-0 space-y-6">
-          <div className="grid gap-6 lg:grid-cols-[1fr_350px]">
-            <div className="space-y-6">
-              <Card className="panel border-primary/20 bg-primary/[0.02]">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="rounded-lg bg-primary/20 p-2 text-primary">
-                        <Network className="size-5" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg">AI Router (Zaply Engine)</CardTitle>
-                        <CardDescription className="text-xs">Roteamento inteligente e invisível para o cliente.</CardDescription>
-                      </div>
-                    </div>
-                    <Badge className="bg-success/20 text-success border-success/30">ATIVO</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {[
-                      { task: "Texto", model: "Gemini 2.0 Flash", provider: "Google AI" },
-                      { task: "Imagem", model: "Imagen 3", provider: "Google AI" },
-                      { task: "Vídeo", model: "Veo 1 (Alpha)", provider: "Google AI" },
-                      { task: "Audio/Locução", model: "Eleven v2", provider: "ElevenLabs" },
-                    ].map((item) => (
-                      <div key={item.task} className="panel-quiet p-4 space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{item.task}</span>
-                          <Badge variant="outline" className="text-[9px] px-1.5 h-4">PRIORIDADE 1</Badge>
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-sm font-bold">{item.model}</p>
-                          <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-                            <Server className="size-2.5" /> {item.provider}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2 pt-1">
-                          <div className="h-1 flex-1 rounded-full bg-success/20">
-                            <div className="h-full w-full rounded-full bg-success shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
-                          </div>
-                          <span className="text-[9px] font-bold text-success">100% UP</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="space-y-3">
-                    <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Fallback Automático</h4>
-                    <div className="rounded-xl border border-warning/30 bg-warning/5 p-4 flex items-center gap-4">
-                      <ShieldAlert className="size-6 text-warning" />
-                      <div className="text-xs leading-relaxed">
-                        <p className="font-bold text-warning mb-1">Proteção contra Falhas (Auto-Healing)</p>
-                        <p className="text-warning/70">Se o provedor primário falhar, a Zaply tenta automaticamente o segundo e terceiro provedor sem que o cliente perceba.</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="panel">
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <Server className="size-4 text-primary" />
-                    <CardTitle className="text-sm">Configuração de Provedores</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="hover:bg-transparent">
-                        <TableHead className="text-[10px] uppercase font-bold">Provedor</TableHead>
-                        <TableHead className="text-[10px] uppercase font-bold">Modelos Ativos</TableHead>
-                        <TableHead className="text-[10px] uppercase font-bold text-right">Ação</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {[
-                        { name: "Google AI (Gemini/Imagen)", models: "Flash, Pro, Vision, Imagen 3" },
-                        { name: "OpenAI Compatible Gateway", models: "gpt-4o, gpt-3.5-turbo" },
-                        { name: "Anthropic", models: "Claude 3.5 Sonnet" },
-                        { name: "DeepSeek", models: "DeepSeek-V3" },
-                      ].map((p) => (
-                        <TableRow key={p.name} className="border-border/40">
-                          <TableCell className="text-xs font-bold">{p.name}</TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{p.models}</TableCell>
-                          <TableCell className="text-right">
-                            <Button variant="ghost" size="sm" className="h-7 text-[10px] font-bold">CONFIGURAR</Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="space-y-6">
-              <Card className="panel border-primary/20 bg-primary/[0.02]">
-                <CardHeader>
-                  <CardTitle className="text-xs font-bold uppercase tracking-widest text-primary">Balanceamento Global</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label className="text-[11px] text-muted-foreground">Prioridade de Entrega</Label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button variant="outline" className="h-8 text-[10px] font-bold border-primary/40 bg-primary/5 text-primary">QUALIDADE</Button>
-                      <Button variant="outline" className="h-8 text-[10px] font-bold">VELOCIDADE</Button>
-                      <Button variant="outline" className="h-8 text-[10px] font-bold">CUSTO</Button>
-                      <Button variant="outline" className="h-8 text-[10px] font-bold">EQUILIBRADO</Button>
-                    </div>
-                  </div>
-                  <div className="pt-4 space-y-3">
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-muted-foreground">Economia de Tokens</span>
-                      <span className="font-bold text-success">32%</span>
-                    </div>
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-border/50">
-                      <div className="h-full w-[32%] bg-success" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="panel">
-                <CardHeader>
-                  <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">White Label Status</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px]">Ocultar Provedores</span>
-                    <Badge className="bg-success text-[9px]">ATIVO</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px]">Marca Própria (Zaply AI)</span>
-                    <Badge className="bg-success text-[9px]">ATIVO</Badge>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground leading-relaxed">
-                    Toda a infraestrutura de IA é abstraída. O cliente final vê apenas o nome "IA Zaply" em todos os logs e rascunhos.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </TabsContent>
       </Tabs>
     </div>
+  );
+}
 
-    <div className="space-y-6">
-      <Card className="panel border-primary/20 bg-primary/[0.02]">
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary">
-            <ShieldCheck className="size-3" /> Status Global
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-[11px]">
-              <span className="text-muted-foreground">Saúde do Banco</span>
-              <span className="font-bold text-success">Ótima</span>
-            </div>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-border/50">
-              <div className="h-full w-[98%] bg-success shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-[11px]">
-              <span className="text-muted-foreground">Uso de Armazenamento</span>
-              <span className="font-bold text-primary">12.4 GB</span>
-            </div>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-border/50">
-              <div className="h-full w-[45%] bg-primary shadow-[0_0_8px_rgba(59,130,246,0.4)]" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+function StatsCard({ title, value, description }: { title: string; value: string; description: string }) {
+  return (
+    <Card className="panel border-border/50 bg-surface/50">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+        <p className="text-xs text-muted-foreground mt-1">{description}</p>
+      </CardContent>
+    </Card>
+  );
+}
 
-      <Card className="panel">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Eventos Recentes</CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <div className="divide-y divide-border/50">
-            {[
-              { type: "auth", text: "Novo usuário registrado", time: "2 min atrás" },
-              { type: "post", text: "Post agendado processado", time: "15 min atrás" },
-              { type: "credit", text: "Créditos atribuídos a João", time: "1h atrás" },
-            ].map((event, i) => (
-              <div key={i} className="flex items-start gap-3 p-3 transition-colors hover:bg-muted/50">
-                <div className={`mt-0.5 size-1.5 shrink-0 rounded-full ${
-                  event.type === "auth" ? "bg-primary" : 
-                  event.type === "post" ? "bg-success" : "bg-warning"
-                }`} />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-medium">{event.text}</p>
-                  <p className="text-[9px] text-muted-foreground">{event.time}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  </div>
+function ProviderStatus({ name, status, latency }: { name: string; status: 'online' | 'degraded' | 'offline'; latency: string }) {
+  const colors = {
+    online: 'bg-green-500',
+    degraded: 'bg-amber-500',
+    offline: 'bg-red-500'
+  };
 
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <Zap className="size-4 text-primary" />
-          <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Monitoramento de Atividade</h3>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {[
-            { label: "Novos Posts (24h)", value: "+24", trend: "up" },
-            { label: "Aprovações (24h)", value: "12", trend: "stable" },
-            { label: "Novos Usuários (24h)", value: "+5", trend: "up" },
-            { label: "Erros de API", value: "0", trend: "down" },
-          ].map((item) => (
-            <div key={item.label} className="panel-quiet flex items-center justify-between p-4">
-              <div>
-                <p className="text-[10px] font-bold text-muted-foreground/60">{item.label}</p>
-                <p className="text-lg font-bold">{item.value}</p>
-              </div>
-              <Badge variant="outline" className={
-                item.trend === "up" ? "border-success/30 text-success" :
-                item.trend === "down" ? "border-primary/30 text-primary" :
-                "border-border text-muted-foreground"
-              }>
-                {item.trend === "up" ? "↑" : item.trend === "down" ? "↓" : "→"}
-              </Badge>
-            </div>
-          ))}
-        </div>
+  return (
+    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/20">
+      <div className="flex items-center gap-3">
+        <div className={`size-2 rounded-full ${colors[status]} shadow-lg shadow-${status}/50`} />
+        <span className="text-sm font-medium">{name}</span>
       </div>
+      <span className="text-xs text-muted-foreground font-mono">{latency}</span>
     </div>
   );
 }

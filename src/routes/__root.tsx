@@ -199,14 +199,15 @@ function AppShell() {
     !accessLoading && isAdmin && !ADMIN_ALLOWED.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   useEffect(() => {
-    if (!accessLoading && user && !profile?.tenantId && pathname !== "/onboarding") {
+    if (!accessLoading && user && !profile?.tenant_id && pathname !== "/onboarding") {
       void router.navigate({ to: "/onboarding", replace: true });
       return;
     }
     if (adminOutOfScope) {
       void router.navigate({ to: "/admin", search: { tab: "usuarios" }, replace: true });
     }
-  }, [adminOutOfScope, router, accessLoading, user, profile?.tenantId, pathname]);
+  }, [adminOutOfScope, router, accessLoading, user, profile?.tenant_id, pathname]);
+
 
   if (accessLoading && user) {
     return (
@@ -239,11 +240,12 @@ function AppShell() {
       );
     }
   } else if (!isAdmin && (!approved || blocked) && user) {
-    const isInactiveSubscription = profile?.subscriptionStatus && !['active', 'trialing'].includes(profile.subscriptionStatus);
+    const isInactiveSubscription = (profile as any)?.tenants?.subscription_status && !['active', 'trialing'].includes((profile as any).tenants.subscription_status);
     return (
       <div className="min-h-screen bg-background grid-backdrop">
         <PendingApprovalScreen
-          requestedPlan={profile?.requestedPlan ?? null}
+          requestedPlan={profile?.requested_plan ?? null}
+
           trialExpired={!!(trialExpired || isInactiveSubscription)}
           onRequested={() => void reload()}
         />
