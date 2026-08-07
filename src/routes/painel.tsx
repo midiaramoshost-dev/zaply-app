@@ -11,13 +11,19 @@ import {
   Plus,
   Zap,
   LayoutDashboard,
-  Timer
+  Timer,
+  LayoutGrid,
+  BarChart3,
+  Search,
+  Bot
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useProfileAccess } from "@/hooks/use-profile-access";
+import { KPIGrid } from "@/modules/dashboard/components/kpi-grid";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/painel")({
   head: () => ({
@@ -41,50 +47,72 @@ function DashboardPage() {
   };
 
   return (
-    <div className="space-y-8 pb-12">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-8 pb-12 animate-in fade-in duration-700">
+      <header className="page-header p-8 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Olá! O que vamos criar hoje?</h1>
-          <p className="text-sm text-muted-foreground">Escolha um formato ou use o modo profissional para mais controle.</p>
+          <Badge variant="outline" className="mb-2 border-primary/20 bg-primary/10 text-primary font-bold">ZAPLY ENTERPRISE</Badge>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard Estratégico</h1>
+          <p className="text-sm text-muted-foreground mt-1">Bem-vindo ao centro de comando da sua operação de marketing.</p>
         </div>
-        <div className="flex items-center gap-2 rounded-xl border border-border bg-card/30 p-1 shadow-sm">
-          <Button 
-            variant={mode === "simple" ? "default" : "ghost"} 
-            size="sm" 
-            className="h-8 rounded-lg text-xs font-bold"
-            onClick={() => setMode("simple")}
-          >
-            MODO SIMPLES
-          </Button>
-          <Button 
-            variant={mode === "pro" ? "default" : "ghost"} 
-            size="sm" 
-            className="h-8 rounded-lg text-xs font-bold"
-            onClick={() => setMode("pro")}
-          >
-            MODO PROFISSIONAL
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 rounded-xl border border-white/5 bg-black/40 p-1 backdrop-blur-sm">
+            <Button 
+              variant={mode === "simple" ? "default" : "ghost"} 
+              size="sm" 
+              className={`h-8 rounded-lg text-[10px] font-bold tracking-widest ${mode === 'simple' ? 'bg-[#d9f99d] text-black hover:bg-[#bef264]' : 'text-muted-foreground'}`}
+              onClick={() => setMode("simple")}
+            >
+              SIMPLES
+            </Button>
+            <Button 
+              variant={mode === "pro" ? "default" : "ghost"} 
+              size="sm" 
+              className={`h-8 rounded-lg text-[10px] font-bold tracking-widest ${mode === 'pro' ? 'bg-[#d9f99d] text-black hover:bg-[#bef264]' : 'text-muted-foreground'}`}
+              onClick={() => setMode("pro")}
+            >
+              PROFISSIONAL
+            </Button>
+          </div>
+          <Button size="sm" className="h-10 rounded-xl bg-primary shadow-lg shadow-primary/20">
+            <Plus className="size-4 mr-2" /> NOVA MARCA
           </Button>
         </div>
       </header>
 
+      <KPIGrid />
+
       {mode === "simple" ? (
         <div className="mx-auto max-w-4xl space-y-12 py-8">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="relative max-w-2xl mx-auto mb-12">
+            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground">
+              <Search className="size-5" />
+            </div>
+            <Input 
+              placeholder="Pesquisar ativos, campanhas ou perguntar à IA..." 
+              className="h-14 pl-14 pr-6 rounded-2xl bg-surface/50 border-white/5 focus:ring-primary/20 text-lg shadow-2xl"
+            />
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { title: "Criar Vídeo", icon: Video, color: "text-blue-400", bg: "bg-blue-400/10", url: "/criar" },
-              { title: "Criar Imagem", icon: ImageIcon, color: "text-purple-400", bg: "bg-purple-400/10", url: "/imagens" },
-              { title: "Criar Post", icon: Sparkles, color: "text-amber-400", bg: "bg-amber-400/10", url: "/criar" },
-              { title: "Criar Anúncio", icon: Megaphone, color: "text-rose-400", bg: "bg-rose-400/10", url: "/criar" },
-              { title: "Criar Documento", icon: FileText, color: "text-emerald-400", bg: "bg-emerald-400/10", url: "/biblioteca" },
-              { title: "Criar Site", icon: Globe, color: "text-indigo-400", bg: "bg-indigo-400/10", url: "/n8n" },
+              { title: "Vídeos Virais", icon: Video, color: "text-[#d9f99d]", bg: "bg-[#d9f99d]/5", url: "/criar", desc: "Shorts, Reels e TikToks" },
+              { title: "Design com IA", icon: ImageIcon, color: "text-[#a5f3fc]", bg: "bg-[#a5f3fc]/5", url: "/imagens", desc: "Imagens e artes profissionais" },
+              { title: "Posts Sociais", icon: Sparkles, color: "text-[#fecaca]", bg: "bg-[#fecaca]/5", url: "/criar", desc: "Legendas e hashtags otimizadas" },
+              { title: "Tráfego Pago", icon: Megaphone, color: "text-[#e9d5ff]", bg: "bg-[#e9d5ff]/5", url: "/criar", desc: "Criativos de alta conversão" },
+              { title: "Agentes Zaply", icon: Bot, color: "text-[#fde047]", bg: "bg-[#fde047]/5", url: "/tutorial", desc: "Sua equipe de especialistas IA" },
+              { title: "Automações", icon: Zap, color: "text-[#94a3b8]", bg: "bg-[#94a3b8]/5", url: "/n8n", desc: "Fluxos de trabalho inteligentes" },
             ].map((item) => (
               <Link key={item.title} to={item.url as any} className="block group">
-                <Card className="panel panel-hover cursor-pointer border-none bg-surface/40 p-1">
-                  <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
-                    <div className={`grid size-16 place-items-center rounded-2xl ${item.bg} ${item.color} shadow-inner transition-transform group-hover:scale-110`}>
+                <Card className="panel panel-hover cursor-pointer border-none bg-surface/40 p-1 relative overflow-hidden">
+                  <div className={`absolute top-0 right-0 size-24 -mr-8 -mt-8 rounded-full blur-3xl opacity-10 ${item.bg}`} />
+                  <CardContent className="flex flex-col items-center gap-4 p-8 text-center relative z-10">
+                    <div className={`grid size-16 place-items-center rounded-2xl ${item.bg} ${item.color} shadow-inner transition-transform group-hover:scale-110 group-hover:rotate-3`}>
                       <item.icon className="size-8" />
                     </div>
-                    <h3 className="font-display text-lg font-bold tracking-tight">{item.title}</h3>
+                    <div>
+                      <h3 className="font-display text-lg font-bold tracking-tight text-white">{item.title}</h3>
+                      <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                    </div>
                   </CardContent>
                 </Card>
               </Link>
