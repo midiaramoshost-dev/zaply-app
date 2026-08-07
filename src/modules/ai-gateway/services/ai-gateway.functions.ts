@@ -26,7 +26,7 @@ export const zaplyAIRouter = createServerFn({ method: "POST" })
     await (supabaseAdmin.from("audit_logs" as any) as any).insert({
       tenant_id: tenantId,
       action: "ai_generation_request",
-      resource_type: "ai_gateway",
+      entity_type: "ai_gateway",
       payload: { taskType, agentId } as any,
     });
 
