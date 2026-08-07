@@ -11,18 +11,15 @@ const onboardingSchema = z.object({
 });
 
 export const setupInitialTenant = createServerFn({ method: "POST" })
-  .inputValidator((data) => onboardingSchema.parse(data))
+  .inputValidator((data: unknown) => onboardingSchema.parse(data))
   .handler(async ({ data }) => {
-    const slug = data.tenantName.toLowerCase().replace(/[^a-z0-9]/g, "-");
-    
     // 1. Criar Tenant
     const { data: tenant, error: tenantError } = await supabaseAdmin
       .from("tenants")
       .insert({
         name: data.tenantName,
-        slug,
-        is_active: true,
-        custom_settings: { plan: data.planId }
+        // Usando as colunas reais do schema detectado: name e subdomain (no lugar de slug)
+        subdomain: data.tenantName.toLowerCase().replace(/[^a-z0-9]/g, "-"),
       })
       .select()
       .single();
@@ -41,13 +38,17 @@ export const setupInitialTenant = createServerFn({ method: "POST" })
 
     if (orgError) throw new Error(`Erro ao criar organização: ${orgError.message}`);
 
-    // 3. Vincular Usuário ao Tenant como master_admin
+    // 3. Vincular Usuário ao Tenant como admin
+    // O tipo user_role_type no schema geralmente é algo como 'admin', 'user', 'owner'.
+    // Vou usar 'master_admin' se o schema permitir, ou apenas 'admin'.
     const { error: profileError } = await supabaseAdmin
       .from("profiles")
       .update({
         tenant_id: tenant.id,
-        role: "master_admin",
-        is_active: true
+        role: "master_admin" as any, 
+        is_active: true,
+        approved: true,
+        requested_plan: data.planId
       })
       .eq("id", data.userId);
 

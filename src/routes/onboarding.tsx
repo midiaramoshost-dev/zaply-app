@@ -39,12 +39,12 @@ function OnboardingPage() {
   const handleFinish = async () => {
     setBusy(true);
     try {
-      await setupInitialTenant({
+      await setupInitialTenant({ data: {
         tenantName,
         orgName,
         planId,
         userId: user.id,
-        userEmail: user.email!,
+        userEmail: user.email! }
       });
       toast.success("Configuração concluída com sucesso!");
       navigate({ to: "/painel" });
