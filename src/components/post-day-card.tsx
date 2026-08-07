@@ -1,4 +1,4 @@
-import { CalendarClock, Check, ImageIcon, Pencil, X } from "lucide-react";
+import { CalendarClock, Check, ImageIcon, Pencil, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -29,9 +29,11 @@ function toLocalInput(iso: string | null) {
 export function PostDayCard({
   post,
   onUpdate,
+  onRemove,
 }: {
   post: Post;
   onUpdate: (id: string, patch: Partial<Post>) => void;
+  onRemove?: (id: string) => void;
 }) {
   const [mode, setMode] = useState<Mode>(null);
   const [title, setTitle] = useState(post.title);
@@ -128,6 +130,21 @@ export function PostDayCard({
             }}
           >
             Reativar
+          </Button>
+        )}
+        {onRemove && (
+          <Button
+            size="sm"
+            variant="ghost"
+            className="text-destructive hover:text-destructive ml-auto"
+            onClick={() => {
+              if (confirm("Tem certeza que deseja excluir permanentemente este post?")) {
+                onRemove(post.id);
+                toast.success("Post excluído.");
+              }
+            }}
+          >
+            <Trash2 className="size-3.5" /> Excluir
           </Button>
         )}
       </div>
