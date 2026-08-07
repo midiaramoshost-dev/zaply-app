@@ -51,8 +51,8 @@ export const Route = createFileRoute("/")({
 const features = [
   {
     icon: Sparkles,
-    title: "IA de Texto e Vídeo Curto",
-    text: "Legendas, hashtags e ganchos para vídeos de 6 segundos. Tom de voz adaptado por rede social.",
+    title: "IA Zaply (Texto, Imagem e Vídeo)",
+    text: "Motor proprietário que gera legendas, hashtags, roteiros de 6s e imagens realistas de forma integrada.",
     span: "lg:col-span-2",
   },
   {
@@ -123,10 +123,10 @@ const steps = [
 ];
 
 const stats = [
-  { value: "30", label: "posts gerados por rodada" },
-  { value: "8", label: "canais integrados" },
-  { value: "1 clique", label: "para aprovar e agendar" },
-  { value: "24/7", label: "publicação automatizada" },
+  { value: "30", label: "Posts gerados por rodada" },
+  { value: "100%", label: "White Label para sua agência" },
+  { value: "8", label: "Canais integrados Zaply" },
+  { value: "24/7", label: "Automação total via n8n" },
 ];
 
 const channels = [
@@ -221,7 +221,7 @@ function LandingPage() {
                 <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">domina as redes sociais</span>
               </h1>
               <p className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 mt-6 max-w-lg text-base leading-relaxed text-gray-400 sm:text-lg">
-                O Zaply transforma suas ideias em posts virais. Gere, agende e publique em todas as suas redes com um clique — a inteligência artificial que escala sua marca.
+                O Zaply transforma suas ideias em posts virais. Gere, agende e publique em todas as suas redes com um clique — a IA Zaply que escala sua marca.
               </p>
 
               <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300 mt-10 flex flex-wrap items-center gap-4">

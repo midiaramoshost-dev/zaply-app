@@ -23,6 +23,12 @@ import {
   Workflow,
   Music2,
   Youtube,
+  Cpu,
+  Globe,
+  Settings,
+  ShieldAlert,
+  Server,
+  Network,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -41,6 +47,7 @@ import {
   type PlatformStats,
   type PlatformUser,
 } from "@/lib/admin.functions";
+import { getAiRouterConfig, updateAiRouterConfig } from "@/lib/admin-ai.functions";
 import { useRole } from "@/hooks/use-role";
 import { CreditsDialog } from "@/components/credits-dialog";
 import { PageHeader } from "@/components/page-header";
@@ -50,7 +57,7 @@ import { AdminTour } from "@/components/admin-tour";
 import { z } from "zod";
 
 const adminSearchSchema = z.object({
-  tab: z.enum(["usuarios", "sistema"]).optional().default("usuarios"),
+  tab: z.enum(["usuarios", "sistema", "ia"]).optional().default("usuarios"),
 });
 
 export const Route = createFileRoute("/admin")({
@@ -303,8 +310,8 @@ function AdminPage() {
       <AdminTour />
       <PageHeader
         eyebrow="Administrador master"
-        title="Gestão Master"
-        description="Base de usuários, créditos e infraestrutura."
+        title="Gestão Master (White Label)"
+        description="Controle total da infraestrutura, provedores e modelos de IA da Zaply."
         icon={ShieldCheck}
         actions={
           <>
@@ -405,7 +412,12 @@ function AdminPage() {
           </TabsTrigger>
           <TabsTrigger value="sistema" asChild>
             <Link from="/admin" search={{ tab: "sistema" }} className="flex items-center gap-1.5">
-              <ShieldCheck className="size-3.5" /> Configuração do Sistema
+              <ZapIcon className="size-3.5" /> Automação & Canais
+            </Link>
+          </TabsTrigger>
+          <TabsTrigger value="ia" asChild>
+            <Link from="/admin" search={{ tab: "ia" }} className="flex items-center gap-1.5">
+              <Cpu className="size-3.5" /> Central de IA
             </Link>
           </TabsTrigger>
         </TabsList>
@@ -687,6 +699,152 @@ function AdminPage() {
             </Card>
           </div>
 
+        </TabsContent>
+
+        <TabsContent value="ia" className="mt-0 space-y-6">
+          <div className="grid gap-6 lg:grid-cols-[1fr_350px]">
+            <div className="space-y-6">
+              <Card className="panel border-primary/20 bg-primary/[0.02]">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="rounded-lg bg-primary/20 p-2 text-primary">
+                        <Network className="size-5" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg">AI Router (Zaply Engine)</CardTitle>
+                        <CardDescription className="text-xs">Roteamento inteligente e invisível para o cliente.</CardDescription>
+                      </div>
+                    </div>
+                    <Badge className="bg-success/20 text-success border-success/30">ATIVO</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {[
+                      { task: "Texto", model: "Gemini 2.0 Flash", provider: "Google AI" },
+                      { task: "Imagem", model: "Imagen 3", provider: "Google AI" },
+                      { task: "Vídeo", model: "Veo 1 (Alpha)", provider: "Google AI" },
+                      { task: "Audio/Locução", model: "Eleven v2", provider: "ElevenLabs" },
+                    ].map((item) => (
+                      <div key={item.task} className="panel-quiet p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{item.task}</span>
+                          <Badge variant="outline" className="text-[9px] px-1.5 h-4">PRIORIDADE 1</Badge>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-bold">{item.model}</p>
+                          <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                            <Server className="size-2.5" /> {item.provider}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2 pt-1">
+                          <div className="h-1 flex-1 rounded-full bg-success/20">
+                            <div className="h-full w-full rounded-full bg-success shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
+                          </div>
+                          <span className="text-[9px] font-bold text-success">100% UP</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="space-y-3">
+                    <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Fallback Automático</h4>
+                    <div className="rounded-xl border border-warning/30 bg-warning/5 p-4 flex items-center gap-4">
+                      <ShieldAlert className="size-6 text-warning" />
+                      <div className="text-xs leading-relaxed">
+                        <p className="font-bold text-warning mb-1">Proteção contra Falhas (Auto-Healing)</p>
+                        <p className="text-warning/70">Se o provedor primário falhar, a Zaply tenta automaticamente o segundo e terceiro provedor sem que o cliente perceba.</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="panel">
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <Server className="size-4 text-primary" />
+                    <CardTitle className="text-sm">Configuração de Provedores</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="hover:bg-transparent">
+                        <TableHead className="text-[10px] uppercase font-bold">Provedor</TableHead>
+                        <TableHead className="text-[10px] uppercase font-bold">Modelos Ativos</TableHead>
+                        <TableHead className="text-[10px] uppercase font-bold text-right">Ação</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {[
+                        { name: "Google AI (Gemini/Imagen)", models: "Flash, Pro, Vision, Imagen 3" },
+                        { name: "OpenAI Compatible Gateway", models: "gpt-4o, gpt-3.5-turbo" },
+                        { name: "Anthropic", models: "Claude 3.5 Sonnet" },
+                        { name: "DeepSeek", models: "DeepSeek-V3" },
+                      ].map((p) => (
+                        <TableRow key={p.name} className="border-border/40">
+                          <TableCell className="text-xs font-bold">{p.name}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">{p.models}</TableCell>
+                          <TableCell className="text-right">
+                            <Button variant="ghost" size="sm" className="h-7 text-[10px] font-bold">CONFIGURAR</Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="space-y-6">
+              <Card className="panel border-primary/20 bg-primary/[0.02]">
+                <CardHeader>
+                  <CardTitle className="text-xs font-bold uppercase tracking-widest text-primary">Balanceamento Global</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label className="text-[11px] text-muted-foreground">Prioridade de Entrega</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button variant="outline" className="h-8 text-[10px] font-bold border-primary/40 bg-primary/5 text-primary">QUALIDADE</Button>
+                      <Button variant="outline" className="h-8 text-[10px] font-bold">VELOCIDADE</Button>
+                      <Button variant="outline" className="h-8 text-[10px] font-bold">CUSTO</Button>
+                      <Button variant="outline" className="h-8 text-[10px] font-bold">EQUILIBRADO</Button>
+                    </div>
+                  </div>
+                  <div className="pt-4 space-y-3">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-muted-foreground">Economia de Tokens</span>
+                      <span className="font-bold text-success">32%</span>
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-border/50">
+                      <div className="h-full w-[32%] bg-success" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="panel">
+                <CardHeader>
+                  <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">White Label Status</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px]">Ocultar Provedores</span>
+                    <Badge className="bg-success text-[9px]">ATIVO</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px]">Marca Própria (Zaply AI)</span>
+                    <Badge className="bg-success text-[9px]">ATIVO</Badge>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground leading-relaxed">
+                    Toda a infraestrutura de IA é abstraída. O cliente final vê apenas o nome "IA Zaply" em todos os logs e rascunhos.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

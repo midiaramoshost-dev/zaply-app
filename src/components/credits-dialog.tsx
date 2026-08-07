@@ -69,8 +69,8 @@ export function CreditsDialog({ userId, name, balance, onDone, className }: Prop
         <DialogHeader>
           <DialogTitle>Gerar créditos</DialogTitle>
           <DialogDescription>
-            {name} — saldo atual: <strong>{balance}</strong> crédito(s). Use valores negativos para
-            estornar.
+            {name} — saldo atual: <strong>{balance}</strong> créditos Zaply. 
+            Estes créditos permitem que o usuário gere conteúdos através da IA Zaply.
           </DialogDescription>
         </DialogHeader>
 

@@ -65,7 +65,7 @@ function AccountPage() {
           <>
             {isAdmin && (
               <Button asChild size="sm" variant="outline">
-                <Link to="/admin">Painel do administrador</Link>
+                <Link to="/admin" search={{ tab: "usuarios" }}>Painel do administrador</Link>
               </Button>
             )}
             <Button

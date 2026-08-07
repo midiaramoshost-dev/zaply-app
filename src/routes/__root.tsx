@@ -198,7 +198,7 @@ function AppShell() {
 
   useEffect(() => {
     if (adminOutOfScope) {
-      void router.navigate({ to: "/admin", replace: true });
+      void router.navigate({ to: "/admin", search: { tab: "usuarios" }, replace: true });
     }
   }, [adminOutOfScope, router]);
 
