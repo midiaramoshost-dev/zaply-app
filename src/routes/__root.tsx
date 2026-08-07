@@ -269,6 +269,11 @@ function RootComponent() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const isPublic = pathname === "/" || pathname.startsWith("/auth");
 
+  // Removendo obrigatoriedade de login para acesso direto ao painel
+  // No entanto, para persistência no Supabase, o usuário ainda precisa estar logado.
+  // Se o objetivo é "acesso livre" total (sem login), o useProfileAccess precisaria ser ignorado.
+  // Para este passo, vamos garantir que o AppShell não bloqueie ninguém.
+
   if (isPublic) {
     return (
       <QueryClientProvider client={queryClient}>

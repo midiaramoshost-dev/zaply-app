@@ -193,8 +193,8 @@ function LandingPage() {
               </Link>
             </Button>
             <Button asChild size="sm">
-              <Link to="/auth" search={{ mode: "criar" }}>
-                Criar conta grátis
+              <Link to="/painel">
+                Acessar plataforma
                 <ArrowRight className="size-4" />
               </Link>
             </Button>
@@ -226,14 +226,14 @@ function LandingPage() {
 
               <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300 mt-10 flex flex-wrap items-center gap-4">
                 <Button asChild size="lg" className="h-14 px-8 text-base shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)] transition-all hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.6)] hover:scale-[1.02] active:scale-[0.98]">
-                  <Link to="/auth" search={{ mode: "criar" }}>
+                  <Link to="/painel">
                     <Zap className="mr-2 size-5 fill-current" />
-                    Começar agora — é grátis
+                    Entrar agora — acesso livre
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="h-14 border-white/10 bg-white/5 px-8 text-base backdrop-blur-md transition-all hover:bg-white/10 hover:scale-[1.02] active:scale-[0.98]">
-                  <Link to="/auth" search={{ mode: "entrar" }}>
-                    Acessar minha conta
+                  <Link to="/auth">
+                    Fazer login / Criar conta
                   </Link>
                 </Button>
               </div>
