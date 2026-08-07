@@ -198,10 +198,14 @@ function AppShell() {
     !accessLoading && isAdmin && !ADMIN_ALLOWED.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   useEffect(() => {
+    if (!accessLoading && user && !profile?.tenantId && pathname !== "/onboarding") {
+      void router.navigate({ to: "/onboarding", replace: true });
+      return;
+    }
     if (adminOutOfScope) {
       void router.navigate({ to: "/admin", search: { tab: "usuarios" }, replace: true });
     }
-  }, [adminOutOfScope, router]);
+  }, [adminOutOfScope, router, accessLoading, user, profile?.tenantId, pathname]);
 
   if (accessLoading && user) {
     return (
