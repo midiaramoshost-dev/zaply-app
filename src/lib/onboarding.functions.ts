@@ -18,8 +18,7 @@ export const setupInitialTenant = createServerFn({ method: "POST" })
       .from("tenants")
       .insert({
         name: data.tenantName,
-        // Usando as colunas reais do schema detectado: name e subdomain (no lugar de slug)
-        subdomain: data.tenantName.toLowerCase().replace(/[^a-z0-9]/g, "-"),
+        subdomain: data.tenantName.toLowerCase().replace(/[^a-z0-9]/g, "-") + "-" + Math.random().toString(36).substring(2, 7),
       })
       .select()
       .single();
@@ -39,8 +38,6 @@ export const setupInitialTenant = createServerFn({ method: "POST" })
     if (orgError) throw new Error(`Erro ao criar organização: ${orgError.message}`);
 
     // 3. Vincular Usuário ao Tenant como admin
-    // O tipo user_role_type no schema geralmente é algo como 'admin', 'user', 'owner'.
-    // Vou usar 'master_admin' se o schema permitir, ou apenas 'admin'.
     const { error: profileError } = await supabaseAdmin
       .from("profiles")
       .update({
