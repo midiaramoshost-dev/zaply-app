@@ -51,8 +51,8 @@ export const Route = createFileRoute("/")({
 const features = [
   {
     icon: Sparkles,
-    title: "IA de Texto e Vídeo Curto",
-    text: "Legendas, hashtags e ganchos para vídeos de 6 segundos. Tom de voz adaptado por rede social.",
+    title: "IA Zaply (Texto, Imagem e Vídeo)",
+    text: "Motor proprietário que gera legendas, hashtags, roteiros de 6s e imagens realistas de forma integrada.",
     span: "lg:col-span-2",
   },
   {
