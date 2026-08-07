@@ -27,7 +27,7 @@ export const zaplyAIRouter = createServerFn({ method: "POST" })
       tenant_id: tenantId,
       action: "ai_generation_request",
       resource_type: "ai_gateway",
-      payload: { taskType, agentId },
+      payload: { taskType, agentId } as any,
     });
 
     // 2. Buscar Provedores Ativos para o Tenant ou Globais

@@ -1,35 +1,38 @@
+// src/repository/tenant.repository.ts
 import { supabase } from "@/integrations/supabase/client";
+import { Tenant } from "@/types/enterprise";
 
-export interface Tenant {
-  id: string;
-  name: string;
-  slug: string | null;
-  is_white_label: boolean | null;
-}
-
-export class TenantRepository {
-  async getBySlug(slug: string): Promise<Tenant | null> {
-    const { data, error } = await supabase
-      .from("tenants")
-      .select("*")
-      .eq("slug" as any, slug)
-      .maybeSingle();
-
-    if (error) throw error;
-    return data as any;
-  }
-
+export const tenantRepository = {
   async getById(id: string): Promise<Tenant | null> {
     const { data, error } = await supabase
       .from("tenants")
       .select("*")
       .eq("id", id)
-      .maybeSingle();
+      .single();
+
+    if (error || !data) return null;
+    return data as unknown as Tenant;
+  },
+
+  async getBySlug(slug: string): Promise<Tenant | null> {
+    const { data, error } = await supabase
+      .from("tenants")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+
+    if (error || !data) return null;
+    return data as unknown as Tenant;
+  },
+
+  async create(tenant: Partial<Tenant>): Promise<Tenant> {
+    const { data, error } = await supabase
+      .from("tenants")
+      .insert(tenant)
+      .select()
+      .single();
 
     if (error) throw error;
-    return data as any;
+    return data as unknown as Tenant;
   }
-}
-
-export const tenantRepository = new TenantRepository();
-
+};
