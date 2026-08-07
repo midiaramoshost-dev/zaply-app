@@ -110,7 +110,7 @@ function AuthPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="rounded-xl border border-border/70 bg-surface/60 px-3 py-2 text-[11px] text-muted-foreground">
-            A criação de novas contas está restrita. O acesso para usuários deve ser solicitado e configurado pelo administrador master.
+            Acesso liberado. O Zaply está em modo de acesso livre.
           </p>
 
 
