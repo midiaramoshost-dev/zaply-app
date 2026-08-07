@@ -154,6 +154,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/clientes": "Clientes",
   "/planos": "Planos",
   "/auth": "Entrar",
+  "/onboarding": "Configuração inicial",
 };
 
 function AppHeader({ isAdmin }: { isAdmin: boolean }) {
