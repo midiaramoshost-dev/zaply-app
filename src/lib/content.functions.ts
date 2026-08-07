@@ -1,8 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { generateText, NoObjectGeneratedError, Output } from "ai";
 import { z } from "zod";
-
-import { createLovableAiGatewayProvider } from "./ai-gateway.server";
+import { runZaplyAiTask } from "./ai-router/router.server";
 
 export const CHANNELS = [
   "Instagram",
@@ -60,11 +58,6 @@ export type GeneratedIdea = {
 export const generateContent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => GenerateInput.parse(input))
   .handler(async ({ data }): Promise<{ ideas: GeneratedIdea[] }> => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("A chave da IA não está configurada.");
-
-    const gateway = createLovableAiGatewayProvider(key, { structuredOutputs: true });
-
     const total = data.channels.length * data.variations;
     const prompt = [
       `Crie ${data.variations} variação(ões) de conteúdo para CADA um destes canais: ${data.channels.join(", ")}.`,
@@ -80,43 +73,31 @@ export const generateContent = createServerFn({ method: "POST" })
       "No X (Twitter) use no máximo 1 emoji e mantenha o texto curto; no LinkedIn evite excesso de emojis.",
     ].join("\n");
 
+    const schema = z.object({
+      ideas: z.array(
+        z.object({
+          channel: z.string(),
+          title: z.string(),
+          body: z.string(),
+          cta: z.string(),
+          emojis: z.array(z.string()),
+          hashtags: z.array(z.string()),
+        }),
+      ),
+    });
 
     try {
-      const { output } = await generateText({
-        model: gateway("google/gemini-3.6-flash"),
-        output: Output.object({
-          schema: z.object({
-            ideas: z.array(
-              z.object({
-                channel: z.string(),
-                title: z.string(),
-                body: z.string(),
-                cta: z.string(),
-                emojis: z.array(z.string()),
-                hashtags: z.array(z.string()),
-              }),
-            ),
-          }),
-        }),
+      const output = await runZaplyAiTask("text", {
         prompt,
+        schema,
+        system: "Você é o assistente de conteúdo da Zaply. Gere conteúdos virais e otimizados para redes sociais.",
       });
 
       return { ideas: normalize(output.ideas, total, data.channels) };
     } catch (error) {
-      if (NoObjectGeneratedError.isInstance(error)) {
-        const fallback = parseFallback(error.text);
-        if (fallback.length > 0) return { ideas: normalize(fallback, total, data.channels) };
-      }
-
       const message = error instanceof Error ? error.message : String(error);
       console.error("generateContent failed:", message);
-      if (message.includes("429")) {
-        throw new Error("Muitas solicitações agora. Tente novamente em instantes.");
-      }
-      if (message.includes("402")) {
-        throw new Error("Os créditos de IA acabaram. Adicione créditos para continuar.");
-      }
-      throw new Error("Não foi possível gerar o conteúdo. Tente novamente.");
+      throw new Error(message);
     }
   });
 
