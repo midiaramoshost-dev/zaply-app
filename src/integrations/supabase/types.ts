@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_models: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          model_name: string
+          priority: number | null
+          provider_id: string | null
+          task_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          model_name: string
+          priority?: number | null
+          provider_id?: string | null
+          task_type: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          model_name?: string
+          priority?: number | null
+          provider_id?: string | null
+          task_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_models_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "ai_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_prompts: {
         Row: {
           company_id: string | null
@@ -57,6 +95,50 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_providers: {
+        Row: {
+          api_key: string | null
+          base_url: string | null
+          config: Json | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          provider_type: string
+          tenant_id: string | null
+        }
+        Insert: {
+          api_key?: string | null
+          base_url?: string | null
+          config?: Json | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          provider_type: string
+          tenant_id?: string | null
+        }
+        Update: {
+          api_key?: string | null
+          base_url?: string | null
+          config?: Json | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          provider_type?: string
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_providers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -161,6 +243,57 @@ export type Database = {
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          ip_address: string | null
+          payload: Json | null
+          tenant_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          payload?: Json | null
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          payload?: Json | null
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -402,6 +535,80 @@ export type Database = {
         }
         Relationships: []
       }
+      organization_members: {
+        Row: {
+          created_at: string | null
+          id: string
+          org_id: string | null
+          role: Database["public"]["Enums"]["user_role_type"] | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          org_id?: string | null
+          role?: Database["public"]["Enums"]["user_role_type"] | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          org_id?: string | null
+          role?: Database["public"]["Enums"]["user_role_type"] | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_members_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          branding: Json | null
+          created_at: string | null
+          id: string
+          name: string
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          branding?: Json | null
+          created_at?: string | null
+          id?: string
+          name: string
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          branding?: Json | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       plans: {
         Row: {
           code: string
@@ -517,6 +724,7 @@ export type Database = {
           hashtags: string[]
           id: string
           image_url: string | null
+          org_id: string | null
           published_at: string | null
           scheduled_at: string | null
           status: string
@@ -534,6 +742,7 @@ export type Database = {
           hashtags?: string[]
           id?: string
           image_url?: string | null
+          org_id?: string | null
           published_at?: string | null
           scheduled_at?: string | null
           status?: string
@@ -551,6 +760,7 @@ export type Database = {
           hashtags?: string[]
           id?: string
           image_url?: string | null
+          org_id?: string | null
           published_at?: string | null
           scheduled_at?: string | null
           status?: string
@@ -566,6 +776,13 @@ export type Database = {
             referencedRelation: "companies"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "posts_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -578,8 +795,11 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          is_active: boolean | null
           phone: string | null
           requested_plan: string | null
+          role: Database["public"]["Enums"]["user_role_type"] | null
+          tenant_id: string | null
           updated_at: string
         }
         Insert: {
@@ -591,8 +811,11 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          is_active?: boolean | null
           phone?: string | null
           requested_plan?: string | null
+          role?: Database["public"]["Enums"]["user_role_type"] | null
+          tenant_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -604,11 +827,22 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          is_active?: boolean | null
           phone?: string | null
           requested_plan?: string | null
+          role?: Database["public"]["Enums"]["user_role_type"] | null
+          tenant_id?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       schedules: {
         Row: {
@@ -754,6 +988,39 @@ export type Database = {
           },
         ]
       }
+      tenants: {
+        Row: {
+          created_at: string | null
+          custom_domain: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          primary_color: string | null
+          subdomain: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          custom_domain?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          primary_color?: string | null
+          subdomain?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          custom_domain?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          primary_color?: string | null
+          subdomain?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       user_credits: {
         Row: {
           balance: number
@@ -828,6 +1095,8 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      post_status: "draft" | "scheduled" | "published" | "failed"
+      user_role_type: "master_admin" | "org_admin" | "member"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -956,6 +1225,8 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      post_status: ["draft", "scheduled", "published", "failed"],
+      user_role_type: ["master_admin", "org_admin", "member"],
     },
   },
 } as const
