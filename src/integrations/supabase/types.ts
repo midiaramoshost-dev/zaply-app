@@ -898,6 +898,7 @@ export type Database = {
           external_id: string | null
           id: string
           metadata: Json
+          org_id: string | null
           provider: string
           token_expires_at: string | null
           updated_at: string
@@ -912,6 +913,7 @@ export type Database = {
           external_id?: string | null
           id?: string
           metadata?: Json
+          org_id?: string | null
           provider: string
           token_expires_at?: string | null
           updated_at?: string
@@ -926,6 +928,7 @@ export type Database = {
           external_id?: string | null
           id?: string
           metadata?: Json
+          org_id?: string | null
           provider?: string
           token_expires_at?: string | null
           updated_at?: string
@@ -937,6 +940,13 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "social_accounts_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
