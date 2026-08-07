@@ -11,6 +11,7 @@ export type ProfileAccess = {
   fullName: string | null;
   email: string | null;
   requestedPlan: string | null;
+  subscriptionStatus: string | null;
 };
 
 export function useProfileAccess() {
@@ -27,7 +28,7 @@ export function useProfileAccess() {
     setLoading(true);
     const { data } = await supabase
       .from("profiles")
-      .select("role, tenant_id, full_name, email, is_active, requested_plan")
+      .select("role, tenant_id, full_name, email, is_active, requested_plan, tenants(subscription_status)")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -40,6 +41,7 @@ export function useProfileAccess() {
             fullName: data.full_name,
             email: data.email,
             requestedPlan: data.requested_plan,
+            subscriptionStatus: (data as any).tenants?.subscription_status || null,
           }
         : null,
     );
@@ -57,7 +59,7 @@ export function useProfileAccess() {
     role,
     profile,
     loading: roleLoading || loading,
-    approved: isAdmin || Boolean(profile?.approved),
+    approved: isAdmin || (Boolean(profile?.approved) && (profile?.subscriptionStatus === 'active' || profile?.subscriptionStatus === 'trialing')),
     reload: load,
     blocked: false,
     trialActive: false,

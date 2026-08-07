@@ -238,12 +238,13 @@ function AppShell() {
         </div>
       );
     }
-  } else if (!isAdmin && blocked && user) {
+  } else if (!isAdmin && (!approved || blocked) && user) {
+    const isInactiveSubscription = profile?.subscriptionStatus && !['active', 'trialing'].includes(profile.subscriptionStatus);
     return (
       <div className="min-h-screen bg-background grid-backdrop">
         <PendingApprovalScreen
           requestedPlan={profile?.requestedPlan ?? null}
-          trialExpired={trialExpired}
+          trialExpired={trialExpired || isInactiveSubscription}
           onRequested={() => void reload()}
         />
         <FloatingContact />
