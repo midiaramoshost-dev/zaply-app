@@ -15,6 +15,7 @@ import { Route as RelatoriosRouteImport } from './routes/relatorios'
 import { Route as PublicacaoRouteImport } from './routes/publicacao'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as PainelRouteImport } from './routes/painel'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as N8nRouteImport } from './routes/n8n'
 import { Route as ImagensRouteImport } from './routes/imagens'
 import { Route as CriarRouteImport } from './routes/criar'
@@ -60,6 +61,11 @@ const PlanosRoute = PlanosRouteImport.update({
 const PainelRoute = PainelRouteImport.update({
   id: '/painel',
   path: '/painel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const N8nRoute = N8nRouteImport.update({
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
+  '/onboarding': typeof OnboardingRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
   '/publicacao': typeof PublicacaoRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
+  '/onboarding': typeof OnboardingRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
   '/publicacao': typeof PublicacaoRoute
@@ -207,6 +215,7 @@ export interface FileRoutesById {
   '/criar': typeof CriarRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
+  '/onboarding': typeof OnboardingRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
   '/publicacao': typeof PublicacaoRoute
@@ -233,6 +242,7 @@ export interface FileRouteTypes {
     | '/criar'
     | '/imagens'
     | '/n8n'
+    | '/onboarding'
     | '/painel'
     | '/planos'
     | '/publicacao'
@@ -257,6 +267,7 @@ export interface FileRouteTypes {
     | '/criar'
     | '/imagens'
     | '/n8n'
+    | '/onboarding'
     | '/painel'
     | '/planos'
     | '/publicacao'
@@ -281,6 +292,7 @@ export interface FileRouteTypes {
     | '/criar'
     | '/imagens'
     | '/n8n'
+    | '/onboarding'
     | '/painel'
     | '/planos'
     | '/publicacao'
@@ -306,6 +318,7 @@ export interface RootRouteChildren {
   CriarRoute: typeof CriarRoute
   ImagensRoute: typeof ImagensRoute
   N8nRoute: typeof N8nRoute
+  OnboardingRoute: typeof OnboardingRoute
   PainelRoute: typeof PainelRoute
   PlanosRoute: typeof PlanosRoute
   PublicacaoRoute: typeof PublicacaoRoute
@@ -358,6 +371,13 @@ declare module '@tanstack/react-router' {
       path: '/painel'
       fullPath: '/painel'
       preLoaderRoute: typeof PainelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/n8n': {
@@ -490,6 +510,7 @@ const rootRouteChildren: RootRouteChildren = {
   CriarRoute: CriarRoute,
   ImagensRoute: ImagensRoute,
   N8nRoute: N8nRoute,
+  OnboardingRoute: OnboardingRoute,
   PainelRoute: PainelRoute,
   PlanosRoute: PlanosRoute,
   PublicacaoRoute: PublicacaoRoute,
@@ -502,13 +523,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
