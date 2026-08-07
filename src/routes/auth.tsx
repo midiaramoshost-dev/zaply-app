@@ -110,7 +110,7 @@ function AuthPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="rounded-xl border border-border/70 bg-surface/60 px-3 py-2 text-[11px] text-muted-foreground">
-            Acesso liberado. O Zaply está em modo de acesso livre.
+            O acesso ao painel é livre. O login é opcional para salvar seus dados e acessar recursos de administrador.
           </p>
 
 

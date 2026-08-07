@@ -259,33 +259,31 @@ function AdminPage() {
 
   if (!user) {
     return (
-      <Card className="panel mx-auto mt-10 max-w-md">
-        <CardHeader>
-          <CardTitle>Entre para continuar</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 text-sm text-muted-foreground">
-          <p>Este painel é exclusivo do administrador master.</p>
-          <Button asChild size="sm">
-            <Link to="/auth">Entrar</Link>
-          </Button>
-        </CardContent>
-      </Card>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
+        <ShieldAlert className="size-12 text-muted-foreground/30" />
+        <div>
+          <h3 className="text-lg font-bold">Painel Restrito</h3>
+          <p className="text-sm text-muted-foreground">Faça login para gerenciar a plataforma.</p>
+        </div>
+        <Button asChild size="sm">
+          <Link to="/auth">Entrar</Link>
+        </Button>
+      </div>
     );
   }
 
   if (!isAdmin) {
     return (
-      <Card className="panel mx-auto mt-10 max-w-md">
-        <CardHeader>
-          <CardTitle>Acesso restrito</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 text-sm text-muted-foreground">
-          <p>Sua conta não tem permissão de administrador master.</p>
-          <Button asChild size="sm" variant="outline">
-            <Link to="/conta">Ir para o meu painel</Link>
-          </Button>
-        </CardContent>
-      </Card>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
+        <ShieldAlert className="size-12 text-warning/30" />
+        <div>
+          <h3 className="text-lg font-bold">Acesso Negado</h3>
+          <p className="text-sm text-muted-foreground">Você não tem permissões de administrador.</p>
+        </div>
+        <Button asChild size="sm" variant="outline">
+          <Link to="/painel">Ir para o meu painel</Link>
+        </Button>
+      </div>
     );
   }
 

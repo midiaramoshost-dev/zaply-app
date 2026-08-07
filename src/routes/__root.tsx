@@ -202,7 +202,7 @@ function AppShell() {
     }
   }, [adminOutOfScope, router]);
 
-  if (accessLoading) {
+  if (accessLoading && user) {
     return (
       <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
         <div className="flex flex-col items-center gap-3">
@@ -232,7 +232,7 @@ function AppShell() {
         </div>
       );
     }
-  } else if (!isAdmin && blocked) {
+  } else if (!isAdmin && blocked && user) {
     return (
       <div className="min-h-screen bg-background grid-backdrop">
         <PendingApprovalScreen
@@ -269,10 +269,9 @@ function RootComponent() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const isPublic = pathname === "/" || pathname.startsWith("/auth");
 
-  // Removendo obrigatoriedade de login para acesso direto ao painel
-  // No entanto, para persistência no Supabase, o usuário ainda precisa estar logado.
+  // Removendo obrigatoriedade de login para acesso direto ao painel.
+  // No entanto, para persistência no Supabase, o usuário ainda precisa estar logado para salvar dados.
   // Se o objetivo é "acesso livre" total (sem login), o useProfileAccess precisaria ser ignorado.
-  // Para este passo, vamos garantir que o AppShell não bloqueie ninguém.
 
   if (isPublic) {
     return (
