@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, Copy, FolderOpen, Trash2 } from "lucide-react";
+import { CheckCircle2, Copy, FolderOpen, Pencil, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -24,6 +24,7 @@ import {
   type PostCategory,
   type PostStatus,
 } from "@/lib/posts-store";
+import { PostEditorDialog } from "@/components/post-editor-dialog";
 
 export const Route = createFileRoute("/biblioteca")({
   head: () => ({
@@ -55,6 +56,7 @@ function LibraryPage() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<PostStatus | "todos">("todos");
   const [category, setCategory] = useState<PostCategory | "todas">("todas");
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
 
   const filtered = useMemo(
     () =>
@@ -227,6 +229,14 @@ function LibraryPage() {
                       <Button
                         size="sm"
                         variant="ghost"
+                        onClick={() => setEditingPost(post)}
+                      >
+                        <Pencil className="size-4" />
+                        Editar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
                         onClick={() => {
                           void navigator.clipboard.writeText(`${post.title}\n\n${post.body}`);
                           toast.success("Copiado.");
@@ -255,6 +265,17 @@ function LibraryPage() {
           </section>
         ))}
       </div>
+
+      <PostEditorDialog
+        open={!!editingPost}
+        onOpenChange={(open) => !open && setEditingPost(null)}
+        post={editingPost}
+        onSave={(id, updates) => {
+          updatePost(id, updates);
+          toast.success("Conteúdo atualizado com sucesso.");
+          setEditingPost(null);
+        }}
+      />
     </div>
   );
 }

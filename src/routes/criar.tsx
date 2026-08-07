@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
-import { CalendarPlus, Copy, Loader2, Save, Sparkles } from "lucide-react";
+import { CalendarPlus, Copy, Loader2, Save, Sparkles, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -77,6 +77,11 @@ function CreatePage() {
       next[index] = { ...next[index], [field]: value };
       return next;
     });
+  }
+  
+  function removeIdea(index: number) {
+    setEditingIdeas((prev) => prev.filter((_, i) => i !== index));
+    setIdeas((prev) => prev.filter((_, i) => i !== index));
   }
 
   function save(idea: GeneratedIdea, schedule: boolean) {
@@ -247,6 +252,14 @@ function CreatePage() {
                 <Badge variant="secondary" className="shrink-0">
                   {idea.channel}
                 </Badge>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="size-8 text-muted-foreground hover:text-destructive"
+                  onClick={() => removeIdea(i)}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
