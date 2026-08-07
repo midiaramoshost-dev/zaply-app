@@ -1,13 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Building2, Layout, CreditCard, CheckCircle2, Zap } from "lucide-react";
+import { Loader2, Building2, Layout, CreditCard, CheckCircle2, Zap, ArrowRight } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { setupInitialTenant } from "@/lib/onboarding.functions";
+import { createCheckoutSession } from "@/lib/checkout.functions";
 
 export const Route = createFileRoute("/onboarding")({
   component: OnboardingPage,
