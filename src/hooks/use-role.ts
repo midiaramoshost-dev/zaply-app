@@ -9,14 +9,23 @@ export function useRole() {
   const [role, setRole] = useState<AppRole | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Verificação de acesso livre ao painel admin
+  const isAtAdminRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
+
   useEffect(() => {
     let active = true;
     if (authLoading) return;
+
     if (!user) {
-      setRole(null);
+      if (isAtAdminRoute) {
+        setRole("master_admin");
+      } else {
+        setRole(null);
+      }
       setLoading(false);
       return;
     }
+
     setLoading(true);
     supabase
       .from("profiles")
@@ -39,12 +48,14 @@ export function useRole() {
     return () => {
       active = false;
     };
-  }, [user, authLoading]);
+  }, [user, authLoading, isAtAdminRoute]);
+
+  const isAdmin = role === "master_admin" || (isAtAdminRoute && !user);
 
   return { 
-    role, 
-    isAdmin: role === "master_admin", 
-    isOrgAdmin: role === "org_admin" || role === "master_admin",
+    role: isAdmin ? "master_admin" : role, 
+    isAdmin, 
+    isOrgAdmin: role === "org_admin" || isAdmin,
     loading: loading || authLoading, 
     user 
   };
