@@ -81,12 +81,14 @@ async function callInternalAIProvider(provider: any, model: any, prompt: string,
   // Em uma implementação real, aqui carregaríamos a API Key do Lovable Secrets
   // e faríamos o fetch para OpenAI/Gemini/etc.
   
-  // Exemplo de integração Gemini (já existente no projeto)
-  if (provider.provider_type === 'google') {
-    // Import dinâmico para evitar problemas de bundler no server
-    const { generateContent } = await import("@/lib/ai-gateway.server");
-    const content = await generateContent(prompt);
-    return { success: true, content };
+  // Exemplo de integração com o roteador base
+  if (provider.provider_type === 'google' || provider.provider_type === 'openai') {
+    const { runZaplyAiTask } = await import("@/lib/ai-router/router.server");
+    const output = await runZaplyAiTask(model.task_type as any, {
+      prompt,
+      system: "Você é a IA Zaply Enterprise. Gere conteúdos de alta qualidade.",
+    });
+    return { success: true, content: typeof output === 'string' ? output : JSON.stringify(output) };
   }
 
   // Mock de resposta para outros provedores por enquanto

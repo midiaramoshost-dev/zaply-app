@@ -18,14 +18,14 @@ export const tenantRepository = {
     const { data, error } = await supabase
       .from("tenants")
       .select("*")
-      .eq("slug", slug)
+      .eq("slug" as any, slug)
       .single();
 
     if (error || !data) return null;
-    return data as unknown as Tenant;
+    return data as any;
   },
 
-  async create(tenant: Partial<Tenant>): Promise<Tenant> {
+  async create(tenant: any): Promise<Tenant> {
     const { data, error } = await supabase
       .from("tenants")
       .insert(tenant)
@@ -33,6 +33,6 @@ export const tenantRepository = {
       .single();
 
     if (error) throw error;
-    return data as unknown as Tenant;
+    return data as any;
   }
 };
