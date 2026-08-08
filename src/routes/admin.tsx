@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { LayoutDashboard, Users, CreditCard, Settings, Globe, Bot, ShieldCheck, Loader2, Save, Palette, Type, Search, UserPlus } from "lucide-react";
+import { LayoutDashboard, Users, CreditCard, Globe, Bot, ShieldCheck, Loader2, Save, Palette, Type, Search, UserPlus, HelpCircle, Tags, Activity } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { AdminOverview } from "@/modules/admin/components/admin-overview";
@@ -78,7 +78,8 @@ function AdminMasterPage() {
           <TabsTrigger value="ai" className="gap-2 px-6"><Bot className="size-4" /> IA Gateway</TabsTrigger>
           <TabsTrigger value="finance" className="gap-2 px-6"><CreditCard className="size-4" /> Financeiro</TabsTrigger>
           <TabsTrigger value="site" className="gap-2 px-6"><Globe className="size-4" /> Gestão do Site</TabsTrigger>
-          <TabsTrigger value="settings" className="gap-2 px-6"><Settings className="size-4" /> Sistema</TabsTrigger>
+          <TabsTrigger value="settings" className="gap-2 px-6"><Activity className="size-4" /> Auditoria & Logs</TabsTrigger>
+          <TabsTrigger value="system" className="gap-2 px-6"><HelpCircle className="size-4" /> Sistema</TabsTrigger>
         </TabsList>
 
         <Suspense fallback={
@@ -157,7 +158,7 @@ function AdminMasterPage() {
                         <Input 
                           value={localLanding.hero.headline} 
                           onChange={(e) => setLocalLanding({...localLanding, hero: {...localLanding.hero, headline: e.target.value}})}
-                          className="bg-surface/50"
+                          className="bg-surface/50 border-white/10 focus:border-primary/50"
                         />
                       </div>
                       <div className="space-y-4">
@@ -165,7 +166,7 @@ function AdminMasterPage() {
                         <Textarea 
                           value={localLanding.hero.subheadline} 
                           onChange={(e) => setLocalLanding({...localLanding, hero: {...localLanding.hero, subheadline: e.target.value}})}
-                          className="bg-surface/50 h-24"
+                          className="bg-surface/50 h-24 border-white/10 focus:border-primary/50"
                         />
                       </div>
                       <div className="space-y-4">
@@ -173,7 +174,7 @@ function AdminMasterPage() {
                         <Input 
                           value={localLanding.seo.title} 
                           onChange={(e) => setLocalLanding({...localLanding, seo: {...localLanding.seo, title: e.target.value}})}
-                          className="bg-surface/50"
+                          className="bg-surface/50 border-white/10 focus:border-primary/50"
                         />
                       </div>
                       <div className="space-y-4">
@@ -182,10 +183,26 @@ function AdminMasterPage() {
                           <Input 
                             value={settings.branding.primary_color} 
                             onChange={(e) => updateMutation.mutate({ key: 'branding', value: {...settings.branding, primary_color: e.target.value} })}
-                            className="bg-surface/50 font-mono"
+                            className="bg-surface/50 font-mono border-white/10 focus:border-primary/50"
                           />
-                          <div className="size-10 rounded-lg border border-white/10" style={{ backgroundColor: settings.branding.primary_color }} />
+                          <div className="size-10 rounded-lg border border-white/20 shadow-[0_0_15px_-3px_rgba(var(--primary),0.4)]" style={{ backgroundColor: settings.branding.primary_color }} />
                         </div>
+                      </div>
+                      <div className="space-y-4">
+                        <label className="text-sm font-bold text-white flex items-center gap-2"><Tags className="size-4" /> CTA Principal</label>
+                        <Input 
+                          value={localLanding.hero.cta_primary} 
+                          onChange={(e) => setLocalLanding({...localLanding, hero: {...localLanding.hero, cta_primary: e.target.value}})}
+                          className="bg-surface/50 border-white/10 focus:border-primary/50"
+                        />
+                      </div>
+                      <div className="space-y-4">
+                        <label className="text-sm font-bold text-white flex items-center gap-2"><Tags className="size-4" /> CTA Secundário</label>
+                        <Input 
+                          value={localLanding.hero.cta_secondary} 
+                          onChange={(e) => setLocalLanding({...localLanding, hero: {...localLanding.hero, cta_secondary: e.target.value}})}
+                          className="bg-surface/50 border-white/10 focus:border-primary/50"
+                        />
                       </div>
                     </div>
                     <div className="flex justify-end gap-3">
@@ -206,11 +223,47 @@ function AdminMasterPage() {
           <TabsContent value="settings" className="outline-none space-y-6">
             <Card className="panel border-border/50 bg-surface/30">
               <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Activity className="size-5 text-primary" /> Auditoria do Sistema</CardTitle>
+                <CardDescription>Ações recentes executadas na infraestrutura Master.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[
+                    { action: "Ajuste de Créditos", user: "Admin", target: "Mariana Costa", time: "Há 10 min", type: "success" },
+                    { action: "Atualização de Branding", user: "Admin", target: "Global", time: "Há 25 min", type: "info" },
+                    { action: "Suspensão de Tenant", user: "System", target: "Agência Demo", time: "Há 2 horas", type: "warning" },
+                    { action: "Novo Usuário", user: "Public", target: "Felipe Souza", time: "Há 5 horas", type: "info" },
+                  ].map((log, i) => (
+                    <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface/20 border border-white/5 hover:bg-surface/30 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className={`size-2 rounded-full ${
+                          log.type === 'success' ? 'bg-emerald-500' : 
+                          log.type === 'warning' ? 'bg-amber-500' : 'bg-primary'
+                        }`} />
+                        <div>
+                          <p className="text-sm font-bold text-white">{log.action}</p>
+                          <p className="text-xs text-muted-foreground">{log.user} &rarr; {log.target}</p>
+                        </div>
+                      </div>
+                      <span className="text-[10px] text-muted-foreground font-mono">{log.time}</span>
+                    </div>
+                  ))}
+                  <div className="text-center pt-4">
+                    <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-primary">Ver log completo &rarr;</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="system" className="outline-none space-y-6">
+            <Card className="panel border-border/50 bg-surface/30">
+              <CardHeader>
                 <CardTitle>Configurações do Sistema</CardTitle>
                 <CardDescription>Parâmetros globais de operação do Zaply.</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-6 md:grid-cols-2">
-                <div className="panel p-4 bg-surface/20 space-y-4">
+                <div className="panel p-4 bg-surface/20 space-y-4 border border-white/5">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-bold text-white">Modo de Manutenção</p>
@@ -224,7 +277,7 @@ function AdminMasterPage() {
                     </Button>
                   </div>
                 </div>
-                <div className="panel p-4 bg-surface/20 space-y-4">
+                <div className="panel p-4 bg-surface/20 space-y-4 border border-white/5">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-bold text-white">Trial Grátis</p>
@@ -232,13 +285,13 @@ function AdminMasterPage() {
                     </div>
                     <Input 
                       type="number"
-                      className="w-20 bg-background/50 text-center" 
+                      className="w-20 bg-background/50 text-center border-white/10" 
                       defaultValue={settings.system_config?.trial_duration_hours || 3} 
                       onBlur={(e) => updateMutation.mutate({ key: 'system_config', value: {...settings.system_config, trial_duration_hours: parseInt(e.target.value)} })}
                     />
                   </div>
                 </div>
-                <div className="panel p-4 bg-surface/20 space-y-4">
+                <div className="panel p-4 bg-surface/20 space-y-4 border border-white/5">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-bold text-white">Créditos Iniciais</p>
@@ -246,7 +299,7 @@ function AdminMasterPage() {
                     </div>
                     <Input 
                       type="number"
-                      className="w-20 bg-background/50 text-center" 
+                      className="w-20 bg-background/50 text-center border-white/10" 
                       defaultValue={settings.system_config?.default_credits || 100} 
                       onBlur={(e) => updateMutation.mutate({ key: 'system_config', value: {...settings.system_config, default_credits: parseInt(e.target.value)} })}
                     />

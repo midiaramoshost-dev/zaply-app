@@ -86,7 +86,7 @@ export function AdminUsersCredits() {
                 <TableHead>Tenant</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Saldo</TableHead>
-                <TableHead>Limites (Post/Mídia/Social)</TableHead>
+                <TableHead>Quotas (Posts / Mídias / Contas)</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
@@ -150,12 +150,12 @@ export function AdminUsersCredits() {
                   <TableCell className="min-w-[220px]">
                     <div className="flex items-center gap-2">
                       {/* Posts Daily Limit */}
-                      <div className="flex flex-col gap-1">
-                        <span className="text-[10px] text-muted-foreground uppercase">Posts/Dia</span>
-                        <div className="flex items-center gap-1">
+                      <div className="flex flex-col gap-1 flex-1">
+                        <span className="text-[10px] text-muted-foreground uppercase font-bold">Posts</span>
+                        <div className="relative group">
                           <Input 
                             type="number" 
-                            className="h-7 w-12 text-xs bg-surface/50 border-border/30 px-1"
+                            className="h-8 w-full text-xs bg-surface/50 border-border/30 px-2 pr-6 focus:border-primary/50 transition-colors"
                             defaultValue={user.user_credits?.[0]?.daily_post_limit || 5}
                             onBlur={(e) => {
                               const val = parseInt(e.target.value);
@@ -164,16 +164,17 @@ export function AdminUsersCredits() {
                               }
                             }}
                           />
+                          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground group-hover:text-primary transition-colors">/dia</span>
                         </div>
                       </div>
 
                       {/* Media Daily Limit */}
-                      <div className="flex flex-col gap-1">
-                        <span className="text-[10px] text-muted-foreground uppercase">Mídias/Dia</span>
-                        <div className="flex items-center gap-1">
+                      <div className="flex flex-col gap-1 flex-1">
+                        <span className="text-[10px] text-muted-foreground uppercase font-bold">Mídias</span>
+                        <div className="relative group">
                           <Input 
                             type="number" 
-                            className="h-7 w-12 text-xs bg-surface/50 border-border/30 px-1"
+                            className="h-8 w-full text-xs bg-surface/50 border-border/30 px-2 pr-6 focus:border-primary/50 transition-colors"
                             defaultValue={user.user_credits?.[0]?.daily_media_limit || 10}
                             onBlur={(e) => {
                               const val = parseInt(e.target.value);
@@ -182,16 +183,17 @@ export function AdminUsersCredits() {
                               }
                             }}
                           />
+                          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground group-hover:text-primary transition-colors">/dia</span>
                         </div>
                       </div>
 
                       {/* Max Social Accounts */}
-                      <div className="flex flex-col gap-1">
-                        <span className="text-[10px] text-muted-foreground uppercase">Contas</span>
-                        <div className="flex items-center gap-1">
+                      <div className="flex flex-col gap-1 flex-1">
+                        <span className="text-[10px] text-muted-foreground uppercase font-bold">Contas</span>
+                        <div className="relative group">
                           <Input 
                             type="number" 
-                            className="h-7 w-12 text-xs bg-surface/50 border-border/30 px-1"
+                            className="h-8 w-full text-xs bg-surface/50 border-border/30 px-2 pr-8 focus:border-primary/50 transition-colors"
                             defaultValue={user.user_credits?.[0]?.max_social_accounts || 3}
                             onBlur={(e) => {
                               const val = parseInt(e.target.value);
@@ -200,6 +202,7 @@ export function AdminUsersCredits() {
                               }
                             }}
                           />
+                          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground group-hover:text-primary transition-colors text-right">total</span>
                         </div>
                       </div>
                     </div>
