@@ -114,7 +114,8 @@ export function AdminUsersCredits() {
                         <Button 
                           variant="outline" 
                           size="icon" 
-                          className="size-7 border-border/50"
+                          className="size-7 border-border/50 hover:bg-primary/20 hover:text-primary transition-colors"
+                          disabled={updateCredits.isPending}
                           onClick={() => updateCredits.mutate({ id: user.id, amount: 50 })}
                         >
                           <Plus className="size-3" />
@@ -122,7 +123,8 @@ export function AdminUsersCredits() {
                         <Button 
                           variant="outline" 
                           size="icon" 
-                          className="size-7 border-border/50"
+                          className="size-7 border-border/50 hover:bg-destructive/20 hover:text-destructive transition-colors"
+                          disabled={updateCredits.isPending}
                           onClick={() => updateCredits.mutate({ id: user.id, amount: -50 })}
                         >
                           <Minus className="size-3" />

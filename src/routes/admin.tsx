@@ -217,10 +217,10 @@ function AdminMasterPage() {
                       <p className="text-xs text-muted-foreground">Bloqueia acesso de usuários comuns.</p>
                     </div>
                     <Button 
-                      variant={settings.system_config.maintenance_mode ? "destructive" : "outline"}
-                      onClick={() => updateMutation.mutate({ key: 'system_config', value: {...settings.system_config, maintenance_mode: !settings.system_config.maintenance_mode} })}
+                      variant={settings.system_config?.maintenance_mode ? "destructive" : "outline"}
+                      onClick={() => updateMutation.mutate({ key: 'system_config', value: {...settings.system_config, maintenance_mode: !settings.system_config?.maintenance_mode} })}
                     >
-                      {settings.system_config.maintenance_mode ? "Desativar" : "Ativar"}
+                      {settings.system_config?.maintenance_mode ? "Desativar" : "Ativar"}
                     </Button>
                   </div>
                 </div>
@@ -233,8 +233,22 @@ function AdminMasterPage() {
                     <Input 
                       type="number"
                       className="w-20 bg-background/50 text-center" 
-                      defaultValue={settings.system_config.trial_duration_hours} 
+                      defaultValue={settings.system_config?.trial_duration_hours || 3} 
                       onBlur={(e) => updateMutation.mutate({ key: 'system_config', value: {...settings.system_config, trial_duration_hours: parseInt(e.target.value)} })}
+                    />
+                  </div>
+                </div>
+                <div className="panel p-4 bg-surface/20 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-bold text-white">Créditos Iniciais</p>
+                      <p className="text-xs text-muted-foreground">Tokens concedidos a novos usuários.</p>
+                    </div>
+                    <Input 
+                      type="number"
+                      className="w-20 bg-background/50 text-center" 
+                      defaultValue={settings.system_config?.default_credits || 100} 
+                      onBlur={(e) => updateMutation.mutate({ key: 'system_config', value: {...settings.system_config, default_credits: parseInt(e.target.value)} })}
                     />
                   </div>
                 </div>
