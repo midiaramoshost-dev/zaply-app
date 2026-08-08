@@ -1,3 +1,4 @@
+
 import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { z } from "zod";
@@ -50,4 +51,48 @@ export const approveUser = createServerFn({ method: "POST" })
       .eq("id", data.userId);
     if (error) throw error;
     return { success: true };
+  });
+
+export const getUsersList = createServerFn({ method: "GET" })
+  .handler(async () => {
+    const { data, error } = await supabaseAdmin
+      .from("profiles")
+      .select("*, user_credits(balance), tenants(name)")
+      .order("created_at", { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
+  });
+
+export const updateUserStatus = createServerFn({ method: "POST" })
+  .inputValidator((data) => z.object({ 
+    userId: z.string(), 
+    isActive: z.boolean() 
+  }).parse(data))
+  .handler(async ({ data }) => {
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update({ is_active: data.isActive } as any)
+      .eq("id", data.userId);
+    
+    if (error) throw error;
+    return { success: true };
+  });
+
+export const adjustCredits = createServerFn({ method: "POST" })
+  .inputValidator((data) => z.object({ 
+    userId: z.string(), 
+    amount: z.number(),
+    reason: z.string().optional()
+  }).parse(data))
+  .handler(async ({ data }) => {
+    const { data: result, error } = await supabaseAdmin
+      .rpc("grant_user_credits", {
+        _user_id: data.userId,
+        _amount: data.amount,
+        _reason: data.reason || "Ajuste manual administrativo"
+      });
+    
+    if (error) throw error;
+    return { success: true, newBalance: result };
   });
