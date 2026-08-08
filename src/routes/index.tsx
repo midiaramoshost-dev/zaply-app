@@ -19,6 +19,7 @@ import {
   Zap,
   Music2,
   Youtube,
+  ShieldCheck,
 } from "lucide-react";
 
 import heroDashboard from "@/assets/hero-dashboard.jpg";
@@ -534,7 +535,12 @@ function LandingPage() {
               Entrar
             </Link>
           </nav>
-          <p className="ml-auto">© {new Date().getFullYear()} Zaply. Conteúdo com IA.</p>
+          <p className="ml-auto flex items-center gap-4">
+            <Link to="/admin" className="opacity-0 hover:opacity-100 transition-opacity">
+              <ShieldCheck className="size-3" />
+            </Link>
+            <span>© {new Date().getFullYear()} Zaply. Conteúdo com IA.</span>
+          </p>
         </div>
       </footer>
     </div>
