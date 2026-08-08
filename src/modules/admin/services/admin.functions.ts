@@ -101,9 +101,9 @@ export const adjustCredits = createServerFn({ method: "POST" })
         if (profile) {
             await supabaseAdmin.from("user_credits").upsert({
                 user_id: data.userId,
-                tenant_id: profile.tenant_id,
+                tenant_id: (profile as any).tenant_id,
                 balance: data.amount > 0 ? data.amount : 0
-            }, { onConflict: 'user_id' });
+            } as any, { onConflict: 'user_id' });
             return { success: true, newBalance: data.amount > 0 ? data.amount : 0 };
         }
         throw error;
