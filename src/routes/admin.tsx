@@ -32,7 +32,9 @@ function AdminMasterPage() {
           <TabsTrigger value="ai" className="gap-2 px-6"><Bot className="size-4" /> IA Gateway</TabsTrigger>
           <TabsTrigger value="billing" className="gap-2 px-6"><CreditCard className="size-4" /> Financeiro</TabsTrigger>
           <TabsTrigger value="settings" className="gap-2 px-6"><Settings className="size-4" /> Sistema</TabsTrigger>
+          <TabsTrigger value="site" className="gap-2 px-6"><Globe className="size-4" /> Gestão do Site</TabsTrigger>
         </TabsList>
+
 
         <Suspense fallback={
           <div className="flex h-64 items-center justify-center">
@@ -51,7 +53,54 @@ function AdminMasterPage() {
             <AdminAiGateway />
           </TabsContent>
 
+          <TabsContent value="site" className="outline-none">
+            <Card className="panel border-border/50 bg-surface/30">
+              <CardHeader>
+                <CardTitle>Editor Global do Site</CardTitle>
+                <CardDescription>Altere textos, Headlines e configurações visuais da Landing Page.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div className="p-10 text-center border-2 border-dashed border-border/30 rounded-2xl bg-surface/20">
+                    <Globe className="size-12 mx-auto mb-4 text-primary/40" />
+                    <h3 className="text-lg font-bold mb-2">Interface de Edição Visual</h3>
+                    <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6">
+                      Você pode editar o conteúdo da página inicial diretamente. Esta funcionalidade está sendo conectada ao repositório de conteúdo.
+                    </p>
+                    <Button variant="outline" asChild>
+                      <Link to="/">Ver Site Agora</Link>
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="bg-background/50">
+                      <CardHeader className="py-3">
+                        <CardTitle className="text-sm">Headline Principal</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <textarea className="w-full bg-surface/50 border border-border/50 rounded p-2 text-xs h-20" defaultValue="Sua próxima ideia em escala." />
+                        <Button size="sm" className="w-full">Salvar Alteração</Button>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-background/50">
+                      <CardHeader className="py-3">
+                        <CardTitle className="text-sm">Configuração de Cores (Brand)</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <div className="size-6 rounded bg-[#d9f99d] border border-white/10" />
+                          <span className="text-xs font-mono">#d9f99d (Neon Green)</span>
+                        </div>
+                        <Button size="sm" variant="outline" className="w-full">Alterar Tema</Button>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Suspense>
+
       </Tabs>
     </div>
   );
