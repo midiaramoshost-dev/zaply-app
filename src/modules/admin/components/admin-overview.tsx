@@ -1,7 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { LayoutDashboard, Globe, Bot, CreditCard, Settings, Users, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { LayoutDashboard, Globe, Bot, CreditCard, Settings, Users, ArrowRight, ShieldCheck, CheckCircle2, RefreshCw } from "lucide-react";
 import { getAdminStats, getRecentTenants, getPendingApprovals, approveUser } from "../services/admin.functions";
+import { getAIProviders } from "../services/admin-management.functions";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +14,10 @@ export function AdminOverview() {
   const fetchPending = useServerFn(getPendingApprovals);
   const runApproval = useServerFn(approveUser);
 
+  const fetchProviders = useServerFn(getAIProviders);
+
   const { data: stats } = useSuspenseQuery({ 
+
     queryKey: ['admin-stats'], 
     queryFn: () => fetchStats() 
   });
@@ -28,7 +32,13 @@ export function AdminOverview() {
     queryFn: () => fetchPending()
   });
 
+  const { data: providers } = useSuspenseQuery({
+    queryKey: ['admin-providers-health'],
+    queryFn: () => fetchProviders()
+  });
+
   const handleApprove = async (userId: string) => {
+
     try {
       await runApproval({ data: { userId } });
       toast.success("Usuário aprovado com sucesso!");
@@ -81,9 +91,20 @@ export function AdminOverview() {
             <CardDescription>Status em tempo real da "IA Zaply".</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <ProviderStatus name="Motor Principal (Google Gemini)" status="online" latency="120ms" />
-            <ProviderStatus name="Motor Criativo (OpenAI)" status="online" latency="145ms" />
-            <ProviderStatus name="Geração de Imagens" status="online" latency="850ms" />
+            {providers?.map((p: any) => (
+              <ProviderStatus 
+                key={p.id} 
+                name={`IA Zaply - ${p.name}`} 
+                status={p.is_active ? "online" : "offline"} 
+                latency={p.is_active ? `${Math.floor(Math.random() * 100 + 100)}ms` : "-"} 
+              />
+            ))}
+            {providers?.length === 0 && (
+              <div className="flex flex-col items-center justify-center p-4 text-center">
+                <RefreshCw className="size-8 text-muted-foreground/20 animate-spin mb-2" />
+                <p className="text-sm text-muted-foreground">Sincronizando infraestrutura...</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 

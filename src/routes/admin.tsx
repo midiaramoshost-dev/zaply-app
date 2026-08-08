@@ -1,10 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { LayoutDashboard, Users, CreditCard, Settings, Globe, Bot, ShieldCheck } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { LayoutDashboard, Users, CreditCard, Settings, Globe, Bot, ShieldCheck, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { AdminOverview } from "@/modules/admin/components/admin-overview";
+import { AdminTenants } from "@/modules/admin/components/admin-tenants";
+import { AdminAiGateway } from "@/modules/admin/components/admin-ai-gateway";
 import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/admin")({
   component: AdminMasterPage,
@@ -30,7 +32,9 @@ function AdminMasterPage() {
           <TabsTrigger value="ai" className="gap-2 px-6"><Bot className="size-4" /> IA Gateway</TabsTrigger>
           <TabsTrigger value="billing" className="gap-2 px-6"><CreditCard className="size-4" /> Financeiro</TabsTrigger>
           <TabsTrigger value="settings" className="gap-2 px-6"><Settings className="size-4" /> Sistema</TabsTrigger>
+          <TabsTrigger value="site" className="gap-2 px-6"><Globe className="size-4" /> Gestão do Site</TabsTrigger>
         </TabsList>
+
 
         <Suspense fallback={
           <div className="flex h-64 items-center justify-center">
@@ -41,24 +45,62 @@ function AdminMasterPage() {
             <AdminOverview />
           </TabsContent>
           
+          <TabsContent value="tenants" className="outline-none">
+            <AdminTenants />
+          </TabsContent>
+          
           <TabsContent value="ai" className="outline-none">
+            <AdminAiGateway />
+          </TabsContent>
+
+          <TabsContent value="site" className="outline-none">
             <Card className="panel border-border/50 bg-surface/30">
               <CardHeader>
-                <CardTitle>Configuração Global do AI Router</CardTitle>
-                <CardDescription>Gerencie o balanceamento e fallback entre LLMs sob a marca IA Zaply.</CardDescription>
+                <CardTitle>Editor Global do Site</CardTitle>
+                <CardDescription>Altere textos, Headlines e configurações visuais da Landing Page.</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="p-20 text-center border-2 border-dashed border-border/30 rounded-2xl bg-surface/20">
-                  <Bot className="size-16 mx-auto mb-6 text-muted-foreground/20" />
-                  <h3 className="text-lg font-bold mb-2">Zaply AI Router Enterprise</h3>
-                  <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                    Configurações de roteamento inteligente e fallback para garantir 99.9% de uptime na geração de conteúdo.
-                  </p>
+                <div className="space-y-6">
+                  <div className="p-10 text-center border-2 border-dashed border-border/30 rounded-2xl bg-surface/20">
+                    <Globe className="size-12 mx-auto mb-4 text-primary/40" />
+                    <h3 className="text-lg font-bold mb-2">Interface de Edição Visual</h3>
+                    <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6">
+                      Você pode editar o conteúdo da página inicial diretamente. Esta funcionalidade está sendo conectada ao repositório de conteúdo.
+                    </p>
+                    <Button variant="outline" asChild>
+                      <Link to="/">Ver Site Agora</Link>
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="bg-background/50">
+                      <CardHeader className="py-3">
+                        <CardTitle className="text-sm">Headline Principal</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <textarea className="w-full bg-surface/50 border border-border/50 rounded p-2 text-xs h-20" defaultValue="Sua próxima ideia em escala." />
+                        <Button size="sm" className="w-full">Salvar Alteração</Button>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-background/50">
+                      <CardHeader className="py-3">
+                        <CardTitle className="text-sm">Configuração de Cores (Brand)</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <div className="size-6 rounded bg-[#d9f99d] border border-white/10" />
+                          <span className="text-xs font-mono">#d9f99d (Neon Green)</span>
+                        </div>
+                        <Button size="sm" variant="outline" className="w-full">Alterar Tema</Button>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
         </Suspense>
+
       </Tabs>
     </div>
   );
