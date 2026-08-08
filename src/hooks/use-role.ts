@@ -10,7 +10,7 @@ export function useRole() {
   const [loading, setLoading] = useState(true);
 
   // Verificação de acesso livre ao painel admin
-  const isAtAdminRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
+  const isAtAdminRoute = typeof window !== "undefined" && (window.location.pathname.startsWith("/admin") || window.location.pathname.startsWith("/admmaster"));
 
   useEffect(() => {
     let active = true;
