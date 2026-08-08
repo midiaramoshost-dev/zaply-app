@@ -19,6 +19,7 @@ import {
   Zap,
   Music2,
   Youtube,
+  ShieldCheck,
 } from "lucide-react";
 
 import heroDashboard from "@/assets/hero-dashboard.jpg";
