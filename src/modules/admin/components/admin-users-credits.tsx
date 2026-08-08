@@ -147,7 +147,7 @@ export function AdminUsersCredits() {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="min-w-[220px]">
                     <div className="flex items-center gap-2">
                       {/* Posts Daily Limit */}
                       <div className="flex flex-col gap-1">
