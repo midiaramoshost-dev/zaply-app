@@ -1,12 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { LayoutDashboard, Users, CreditCard, Settings, Globe, Bot, ShieldCheck } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { LayoutDashboard, Users, CreditCard, Settings, Globe, Bot, ShieldCheck, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { AdminOverview } from "@/modules/admin/components/admin-overview";
 import { AdminTenants } from "@/modules/admin/components/admin-tenants";
 import { AdminAiGateway } from "@/modules/admin/components/admin-ai-gateway";
 import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/admin")({
   component: AdminMasterPage,
