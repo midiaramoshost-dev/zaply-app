@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { LayoutDashboard, Users, CreditCard, Settings, Globe, Bot, ShieldCheck, Loader2, Save, Palette, Type, Search } from "lucide-react";
+import { LayoutDashboard, Users, CreditCard, Settings, Globe, Bot, ShieldCheck, Loader2, Save, Palette, Type, Search, UserPlus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { AdminOverview } from "@/modules/admin/components/admin-overview";
 import { AdminTenants } from "@/modules/admin/components/admin-tenants";
 import { AdminAiGateway } from "@/modules/admin/components/admin-ai-gateway";
+import { AdminUsersCredits } from "@/modules/admin/components/admin-users-credits";
 import { Suspense, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,6 +74,7 @@ function AdminMasterPage() {
         <TabsList className="bg-surface/50 p-1 border border-border/50 h-12 inline-flex">
           <TabsTrigger value="overview" className="gap-2 px-6"><LayoutDashboard className="size-4" /> Geral</TabsTrigger>
           <TabsTrigger value="tenants" className="gap-2 px-6"><Users className="size-4" /> Tenants</TabsTrigger>
+          <TabsTrigger value="users" className="gap-2 px-6"><UserPlus className="size-4" /> Usuários & Créditos</TabsTrigger>
           <TabsTrigger value="ai" className="gap-2 px-6"><Bot className="size-4" /> IA Gateway</TabsTrigger>
           <TabsTrigger value="finance" className="gap-2 px-6"><CreditCard className="size-4" /> Financeiro</TabsTrigger>
           <TabsTrigger value="site" className="gap-2 px-6"><Globe className="size-4" /> Gestão do Site</TabsTrigger>
@@ -90,6 +92,10 @@ function AdminMasterPage() {
           
           <TabsContent value="tenants" className="outline-none">
             <AdminTenants />
+          </TabsContent>
+          
+          <TabsContent value="users" className="outline-none">
+            <AdminUsersCredits />
           </TabsContent>
           
           <TabsContent value="ai" className="outline-none">
