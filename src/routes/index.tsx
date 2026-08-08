@@ -206,7 +206,7 @@ function LandingPage() {
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
             <BrandMark className="size-9 shadow-lg shadow-primary/20" />
-            <span className="font-display text-xl font-bold tracking-tighter text-white">zaply.</span>
+            <span className="font-display text-xl font-bold tracking-tighter text-white">{branding.name.toLowerCase()}.</span>
           </Link>
 
           <nav className="ml-12 hidden items-center gap-8 text-sm font-medium text-muted-foreground/80 md:flex">
@@ -229,7 +229,7 @@ function LandingPage() {
                 Entrar
               </Link>
             </Button>
-            <Button asChild size="sm" className="h-10 rounded-full bg-[#d9f99d] px-5 text-sm font-bold text-black hover:bg-[#bef264]">
+            <Button asChild size="sm" className="h-10 rounded-full bg-primary px-5 text-sm font-bold text-black hover:opacity-90">
               <Link to="/painel" className="flex items-center gap-1.5">
                 Começar grátis
                 <ArrowRight className="size-4" />
@@ -249,24 +249,22 @@ function LandingPage() {
           <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 lg:pb-32 lg:pt-28">
             <div className="flex flex-col items-start">
               <Badge variant="outline" className="animate-in fade-in slide-in-from-bottom-4 duration-700 flex items-center gap-2 rounded-full border-white/10 bg-white/5 px-3 py-1 text-[11px] font-medium text-gray-400 backdrop-blur-md">
-                <span className="size-1.5 rounded-full bg-[#d9f99d]" />
+                <span className="size-1.5 rounded-full bg-primary" />
                 O cockpit de conteúdo para times que fazem acontecer
               </Badge>
               <h1 className="animate-in fade-in slide-in-from-bottom-6 duration-1000 mt-8 text-balance text-6xl font-bold leading-[1.05] tracking-tighter sm:text-8xl">
-                Sua próxima
+                {hero.headline.split(' ').slice(0, -1).join(' ')}
                 <br />
-                <span className="text-white">ideia em</span>
-                <br />
-                <span className="text-[#d9f99d]">escala.</span>
+                <span className="text-primary">{hero.headline.split(' ').slice(-1)}</span>
               </h1>
               <p className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 mt-8 max-w-lg text-lg leading-relaxed text-gray-400">
-                Do briefing ao post publicado: o Zaply transforma estratégia em um mês inteiro de conteúdo consistente, no ritmo da sua equipe.
+                {hero.subheadline}
               </p>
 
               <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300 mt-10 flex flex-wrap items-center gap-4">
-                <Button asChild size="lg" className="h-14 rounded-full bg-[#d9f99d] px-8 text-base font-bold text-black shadow-[0_0_30px_-5px_rgba(217,249,157,0.3)] transition-all hover:bg-[#bef264] hover:scale-[1.02] active:scale-[0.98]">
+                <Button asChild size="lg" className="h-14 rounded-full bg-primary px-8 text-base font-bold text-black shadow-[0_0_30px_-5px_rgba(var(--primary),0.3)] transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]">
                   <Link to="/painel" className="flex items-center gap-2">
-                    Criar meu primeiro mês
+                    {hero.cta_primary}
                     <ArrowRight className="size-5" />
                   </Link>
                 </Button>
@@ -275,10 +273,11 @@ function LandingPage() {
                     <span className="flex size-10 items-center justify-center rounded-full bg-white/10">
                       <Zap className="size-4 fill-white text-white" />
                     </span>
-                    Ver em 90 segundos
+                    {hero.cta_secondary}
                   </Link>
                 </Button>
               </div>
+
 
               <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500 mt-10 flex items-center gap-3">
                 <div className="flex -space-x-2">
