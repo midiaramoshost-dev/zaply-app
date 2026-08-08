@@ -3,6 +3,8 @@ import { LayoutDashboard, Users, CreditCard, Settings, Globe, Bot, ShieldCheck }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { AdminOverview } from "@/modules/admin/components/admin-overview";
+import { AdminTenants } from "@/modules/admin/components/admin-tenants";
+import { AdminAiGateway } from "@/modules/admin/components/admin-ai-gateway";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -41,23 +43,14 @@ function AdminMasterPage() {
             <AdminOverview />
           </TabsContent>
           
-          <TabsContent value="ai" className="outline-none">
-            <Card className="panel border-border/50 bg-surface/30">
-              <CardHeader>
-                <CardTitle>Configuração Global do AI Router</CardTitle>
-                <CardDescription>Gerencie o balanceamento e fallback entre LLMs sob a marca IA Zaply.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="p-20 text-center border-2 border-dashed border-border/30 rounded-2xl bg-surface/20">
-                  <Bot className="size-16 mx-auto mb-6 text-muted-foreground/20" />
-                  <h3 className="text-lg font-bold mb-2">Zaply AI Router Enterprise</h3>
-                  <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                    Configurações de roteamento inteligente e fallback para garantir 99.9% de uptime na geração de conteúdo.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="tenants" className="outline-none">
+            <AdminTenants />
           </TabsContent>
+          
+          <TabsContent value="ai" className="outline-none">
+            <AdminAiGateway />
+          </TabsContent>
+
         </Suspense>
       </Tabs>
     </div>
