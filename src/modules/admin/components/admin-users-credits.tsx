@@ -30,15 +30,27 @@ export function AdminUsersCredits() {
   });
 
   const updateCredits = useMutation({
-    mutationFn: (vars: { id: string; amount: number }) => 
-      adjustCredits({ data: { userId: vars.id, amount: vars.amount } }),
+    mutationFn: (vars: { 
+      id: string; 
+      amount?: number; 
+      dailyPostLimit?: number; 
+      dailyMediaLimit?: number; 
+      maxSocialAccounts?: number 
+    }) => 
+      adjustCredits({ data: { 
+        userId: vars.id, 
+        amount: vars.amount,
+        dailyPostLimit: vars.dailyPostLimit,
+        dailyMediaLimit: vars.dailyMediaLimit,
+        maxSocialAccounts: vars.maxSocialAccounts
+      } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users-list"] });
-      toast.success("Créditos atualizados");
+      toast.success("Configurações de créditos atualizadas");
     }
   });
 
-  if (isLoading) return <Loader2 className="animate-spin mx-auto mt-10" />;
+  if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary size-8" /></div>;
 
   const filteredUsers = users?.filter((u: any) => 
     u.email?.toLowerCase().includes(search.toLowerCase()) || 
@@ -73,7 +85,8 @@ export function AdminUsersCredits() {
                 <TableHead>Usuário</TableHead>
                 <TableHead>Tenant</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Créditos</TableHead>
+                <TableHead>Saldo</TableHead>
+                <TableHead>Limites (Post/Mídia/Social)</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
@@ -105,30 +118,89 @@ export function AdminUsersCredits() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10 text-primary font-mono text-sm border border-primary/20">
-                        <Coins className="size-3" />
-                        {user.user_credits?.[0]?.balance || 0}
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10 text-primary font-mono text-sm border border-primary/20">
+                          <Coins className="size-3" />
+                          {user.user_credits?.[0]?.balance || 0}
+                        </div>
+                        <div className="flex gap-1">
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="size-7 border-border/50 hover:bg-primary/20 hover:text-primary transition-colors"
+                            disabled={updateCredits.isPending}
+                            onClick={() => updateCredits.mutate({ id: user.id, amount: 50 })}
+                          >
+                            <Plus className="size-3" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="size-7 border-border/50 hover:bg-destructive/20 hover:text-destructive transition-colors"
+                            disabled={updateCredits.isPending}
+                            onClick={() => updateCredits.mutate({ id: user.id, amount: -50 })}
+                          >
+                            <Minus className="size-3" />
+                          </Button>
+                        </div>
                       </div>
-                      <div className="flex gap-1">
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="size-7 border-border/50 hover:bg-primary/20 hover:text-primary transition-colors"
-                          disabled={updateCredits.isPending}
-                          onClick={() => updateCredits.mutate({ id: user.id, amount: 50 })}
-                        >
-                          <Plus className="size-3" />
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="size-7 border-border/50 hover:bg-destructive/20 hover:text-destructive transition-colors"
-                          disabled={updateCredits.isPending}
-                          onClick={() => updateCredits.mutate({ id: user.id, amount: -50 })}
-                        >
-                          <Minus className="size-3" />
-                        </Button>
+                    </div>
+                  </TableCell>
+                  <TableCell className="min-w-[220px]">
+                    <div className="flex items-center gap-2">
+                      {/* Posts Daily Limit */}
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] text-muted-foreground uppercase">Posts/Dia</span>
+                        <div className="flex items-center gap-1">
+                          <Input 
+                            type="number" 
+                            className="h-7 w-12 text-xs bg-surface/50 border-border/30 px-1"
+                            defaultValue={user.user_credits?.[0]?.daily_post_limit || 5}
+                            onBlur={(e) => {
+                              const val = parseInt(e.target.value);
+                              if (val !== user.user_credits?.[0]?.daily_post_limit) {
+                                updateCredits.mutate({ id: user.id, dailyPostLimit: val });
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Media Daily Limit */}
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] text-muted-foreground uppercase">Mídias/Dia</span>
+                        <div className="flex items-center gap-1">
+                          <Input 
+                            type="number" 
+                            className="h-7 w-12 text-xs bg-surface/50 border-border/30 px-1"
+                            defaultValue={user.user_credits?.[0]?.daily_media_limit || 10}
+                            onBlur={(e) => {
+                              const val = parseInt(e.target.value);
+                              if (val !== user.user_credits?.[0]?.daily_media_limit) {
+                                updateCredits.mutate({ id: user.id, dailyMediaLimit: val });
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Max Social Accounts */}
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] text-muted-foreground uppercase">Contas</span>
+                        <div className="flex items-center gap-1">
+                          <Input 
+                            type="number" 
+                            className="h-7 w-12 text-xs bg-surface/50 border-border/30 px-1"
+                            defaultValue={user.user_credits?.[0]?.max_social_accounts || 3}
+                            onBlur={(e) => {
+                              const val = parseInt(e.target.value);
+                              if (val !== user.user_credits?.[0]?.max_social_accounts) {
+                                updateCredits.mutate({ id: user.id, maxSocialAccounts: val });
+                              }
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                   </TableCell>

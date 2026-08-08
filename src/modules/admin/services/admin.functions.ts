@@ -82,31 +82,49 @@ export const updateUserStatus = createServerFn({ method: "POST" })
 export const adjustCredits = createServerFn({ method: "POST" })
   .inputValidator((data) => z.object({ 
     userId: z.string(), 
-    amount: z.number(),
+    amount: z.number().optional(),
+    dailyPostLimit: z.number().optional(),
+    dailyMediaLimit: z.number().optional(),
+    maxSocialAccounts: z.number().optional(),
     reason: z.string().optional()
   }).parse(data))
   .handler(async ({ data }) => {
-    // Check if user has a credit record first, or handle in RPC
-    const { data: result, error } = await supabaseAdmin
-      .rpc("grant_user_credits", {
-        _user_id: data.userId,
-        _amount: data.amount,
-        _reason: data.reason || "Ajuste manual administrativo"
-      });
-    
-    if (error) {
+    // If amount is provided, use RPC for balance
+    if (data.amount !== undefined) {
+      const { data: result, error } = await supabaseAdmin
+        .rpc("grant_user_credits", {
+          _user_id: data.userId,
+          _amount: data.amount,
+          _reason: data.reason || "Ajuste manual administrativo"
+        });
+      
+      if (error) {
         // Fallback: if user_credits record doesn't exist, create it
         const { data: profile } = await supabaseAdmin.from("profiles").select("tenant_id").eq("id", data.userId).single();
-        
         if (profile) {
             await supabaseAdmin.from("user_credits").upsert({
                 user_id: data.userId,
                 tenant_id: (profile as any).tenant_id,
                 balance: data.amount > 0 ? data.amount : 0
             } as any, { onConflict: 'user_id' });
-            return { success: true, newBalance: data.amount > 0 ? data.amount : 0 };
         }
-        throw error;
+      }
     }
-    return { success: true, newBalance: result };
+
+    // Update limits if provided
+    const updates: any = {};
+    if (data.dailyPostLimit !== undefined) updates.daily_post_limit = data.dailyPostLimit;
+    if (data.dailyMediaLimit !== undefined) updates.daily_media_limit = data.dailyMediaLimit;
+    if (data.maxSocialAccounts !== undefined) updates.max_social_accounts = data.maxSocialAccounts;
+
+    if (Object.keys(updates).length > 0) {
+      const { error } = await supabaseAdmin
+        .from("user_credits")
+        .update(updates)
+        .eq("user_id", data.userId);
+      
+      if (error) throw error;
+    }
+
+    return { success: true };
   });
