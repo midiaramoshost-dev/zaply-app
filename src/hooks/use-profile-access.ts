@@ -43,7 +43,7 @@ export function useProfileAccess() {
   }, [roleLoading, load]);
 
   const subscriptionStatus = (profile as any)?.tenants?.subscription_status || null;
-  const isAtAdminRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
+  const isAtAdminRoute = typeof window !== "undefined" && (window.location.pathname.startsWith("/admin") || window.location.pathname.startsWith("/admmaster"));
   const approved = isAdmin || isAtAdminRoute || (profile?.is_active && (subscriptionStatus === 'active' || subscriptionStatus === 'trialing'));
 
   return {
