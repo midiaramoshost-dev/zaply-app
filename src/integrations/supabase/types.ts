@@ -1056,18 +1056,27 @@ export type Database = {
         Row: {
           balance: number
           created_at: string
+          daily_media_limit: number | null
+          daily_post_limit: number | null
+          max_social_accounts: number | null
           updated_at: string
           user_id: string
         }
         Insert: {
           balance?: number
           created_at?: string
+          daily_media_limit?: number | null
+          daily_post_limit?: number | null
+          max_social_accounts?: number | null
           updated_at?: string
           user_id: string
         }
         Update: {
           balance?: number
           created_at?: string
+          daily_media_limit?: number | null
+          daily_post_limit?: number | null
+          max_social_accounts?: number | null
           updated_at?: string
           user_id?: string
         }
