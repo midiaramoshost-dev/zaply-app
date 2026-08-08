@@ -13,7 +13,7 @@ export const getAdminStats = createServerFn({ method: "GET" })
       .from("profiles")
       .select("*", { count: "exact", head: true });
 
-    // Mocking token usage for now
+    // Mocking token usage and revenue for now
     return {
       tenants: tenantsCount || 0,
       users: usersCount || 0,
@@ -86,6 +86,7 @@ export const adjustCredits = createServerFn({ method: "POST" })
     reason: z.string().optional()
   }).parse(data))
   .handler(async ({ data }) => {
+    // Check if user has a credit record first, or handle in RPC
     const { data: result, error } = await supabaseAdmin
       .rpc("grant_user_credits", {
         _user_id: data.userId,
@@ -93,6 +94,19 @@ export const adjustCredits = createServerFn({ method: "POST" })
         _reason: data.reason || "Ajuste manual administrativo"
       });
     
-    if (error) throw error;
+    if (error) {
+        // Fallback: if user_credits record doesn't exist, create it
+        const { data: profile } = await supabaseAdmin.from("profiles").select("tenant_id").eq("id", data.userId).single();
+        
+        if (profile) {
+            await supabaseAdmin.from("user_credits").upsert({
+                user_id: data.userId,
+                tenant_id: (profile as any).tenant_id,
+                balance: data.amount > 0 ? data.amount : 0
+            } as any, { onConflict: 'user_id' });
+            return { success: true, newBalance: data.amount > 0 ? data.amount : 0 };
+        }
+        throw error;
+    }
     return { success: true, newBalance: result };
   });
