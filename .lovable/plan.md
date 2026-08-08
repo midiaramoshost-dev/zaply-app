@@ -1,27 +1,26 @@
-# Plan: API Key Management Interface for Master Admin
+# Plan: Admin Access and Master Panel Improvements
 
-Implementing a comprehensive interface in the Master Admin panel to manage AI provider API keys, models, and global router configurations, fulfilling the "Central de IA" requirement.
+The user wants to know how to access the Master Admin panel and is requesting "free access" without login/password. The current implementation already has some bypass logic for `/admin` routes, but we need to ensure it's intuitive and fully functional as requested.
 
-## 1. Backend: API Management Server Functions
-- Create `src/modules/ai-gateway/services/ai-management.functions.ts`:
-  - `getAIProviders`: Fetches all providers and their models (system-wide and tenant-specific).
-  - `updateAIProvider`: Creates or updates provider settings (name, type, priority, active status).
-  - `saveAPIKey`: Securely handles API keys. Since direct secret management is abstracted, this will store a reference to the secret name in the `ai_providers` table.
-  - `toggleAIModel`: Enables/disables specific models for a provider.
-  - `updateRouterConfig`: Updates the default task-to-model mapping.
+## Proposed Changes
 
-## 2. Frontend: Admin UI Enhancements
-- Refactor the "IA Gateway" tab in `src/routes/admin.tsx`:
-  - Replace the placeholder with a professional management dashboard.
-  - **Provider List**: Cards showing active providers, their status, and priority.
-  - **Configuration Modal**: A form to add/edit providers (Select type: OpenAI, Gemini, etc.), input API keys (masked), and set priority.
-  - **Model Management**: Toggle switches for individual models (GPT-4o, Claude 3.5, etc.) within each provider.
-  - **Global Routing Rules**: A section to define which model is the "Primary" for Text, Images, and Video.
+### 1. Authentication & Authorization
+- **Bypass for Admin**: Refine `src/hooks/use-role.ts` and `src/hooks/use-profile-access.ts` to ensure that any request to `/admin` automatically treats the visitor as a `master_admin` with all permissions, bypassing the authentication gate in `src/routes/__root.tsx`.
+- **Navigation**: Ensure the "Entrar" button on the landing page or a dedicated hidden entry point (like `/admin` directly) works seamlessly without redirects.
 
-## 3. Database & Security
-- Ensure RLS policies in `ai_providers` and `ai_models` allow `master_admin` full access.
-- Use `supabaseAdmin` for write operations to bypass RLS when necessary (Admin context).
+### 2. Admin Master Panel Enhancements
+- **Intuitive UI**: Simplify the `src/routes/admin.tsx` layout. Instead of a generic dashboard, focus on the immediate management tasks: User Approvals, Tenant Health, and AI Provider status.
+- **Onboarding/Tour**: Ensure the `react-joyride` tour is correctly triggered for new admin sessions to explain the modules.
+- **Social Media Integration**: Expand the "Sistema" or "Canais" tab in the admin panel to show real-time connectivity status for all configured socials (Instagram, TikTok, etc.).
 
-## 4. Validation
-- Verify that changes in the Admin panel correctly reflect in the `ai_providers` table.
-- Test the fallback logic by disabling a high-priority provider and ensuring the `zaplyAIRouter` picks the next one.
+### 3. User Experience
+- **Direct Link**: Add a clear (or subtle, depending on preference) link to the Admin panel if the user is already detected as an admin, or simply allow the `/admin` URL to be the "Master Key".
+
+## Verification Plan
+
+### Automated Tests
+- Run Playwright scripts to verify that navigating to `http://localhost:8080/admin` while unauthenticated correctly renders the `AdminMasterPage` without redirecting to `/auth` or `/onboarding`.
+- Verify that standard users *cannot* access `/admin` if they are logged in but don't have the role (though the current request asks for "free access", we should clarify if it's "anyone who knows the URL" or just "bypass for the owner"). *Self-correction: The user explicitly asked for "acesso livre ao painel adm master sem login e senha", implying URL-based access.*
+
+### Manual Verification
+- Check the visual layout of the Admin panel to ensure it matches the "Dark Tech" aesthetic and is "less complicated".
