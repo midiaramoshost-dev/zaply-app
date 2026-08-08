@@ -20,12 +20,16 @@ import {
   Music2,
   Youtube,
   ShieldCheck,
+  Loader2,
 } from "lucide-react";
 
 import heroDashboard from "@/assets/hero-dashboard.jpg";
 import { Badge } from "@/components/ui/badge";
 import { BrandMark } from "@/components/brand-mark";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { getPlatformSettings } from "@/modules/admin/services/platform-management.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -163,8 +167,40 @@ const testimonials = [
 ];
 
 function LandingPage() {
+  const fetchSettings = useServerFn(getPlatformSettings);
+  const { data: settings, isLoading } = useQuery({
+    queryKey: ["platform-settings-public"],
+    queryFn: () => fetchSettings(),
+    staleTime: 60000,
+  });
+
+  if (isLoading) return (
+    <div className="min-h-screen bg-[#02040a] flex items-center justify-center">
+      <Loader2 className="size-10 animate-spin text-primary" />
+    </div>
+  );
+
+  const hero = settings?.landing_page?.hero || {
+    headline: "Sua próxima ideia em escala.",
+    subheadline: "Do briefing ao post publicado: o Zaply transforma estratégia em um mês inteiro de conteúdo consistente, no ritmo da sua equipe.",
+    cta_primary: "Criar meu primeiro mês",
+    cta_secondary: "Ver em 90 segundos"
+  };
+
+  const branding = settings?.branding || {
+      name: "Zaply",
+      primary_color: "#d9f99d"
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Dynamic Brand Color Injection */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        :root {
+          --color-primary: ${branding.primary_color};
+        }
+      `}} />
+
       {/* Nav */}
       <header className="sticky top-0 z-40 border-b border-white/5 bg-black/60 backdrop-blur-2xl">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
