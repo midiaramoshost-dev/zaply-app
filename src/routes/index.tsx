@@ -50,7 +50,7 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: () => null,
+  component: () => <div className="min-h-screen bg-background" />,
 });
 
 const features = [
