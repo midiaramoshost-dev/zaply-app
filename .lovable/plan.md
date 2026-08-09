@@ -1,17 +1,35 @@
-# Plan - Remove "Meu Painel" Menu
+# Plan: Enterprise Master Admin Expansion
 
-The user requested to remove the "Meu Painel" menu item. This item appears in the sidebar and is associated with the `/conta` route.
+Expanding the Master Admin Control Center to include the full "Enterprise" suite as requested, focusing on Marketplace, Audit Logs, and granular permissions.
 
 ## Proposed Changes
 
-### Components
-#### [src/components/app-sidebar.tsx]
-- Remove the "Meu painel" item from the `groups` array (under the "Conta" label).
+### 1. Database & Infrastructure
+- Create `audit_logs` table to track all admin actions.
+- Create `prompt_marketplace` table for shared AI templates.
+- Update `profiles` and `user_roles` to support more granular status (e.g., support_staff, billing_admin).
 
-### Routes
-#### [src/routes/conta.tsx]
-- Review if this route should be kept or if it's redundant now that the link is removed. Given the name "Meu painel" linked to `/conta`, it seems to be the profile/account settings page. I will keep the route but remove the entry point from the sidebar as requested.
+### 2. Services Expansion
+- Update `src/modules/admin/services/admin.functions.ts` to include:
+  - `getAuditLogs`: Fetch recent system actions.
+  - `getMarketplaceItems`: Fetch prompt templates.
+  - `createMarketplaceItem`: Allow admin to add new prompts to the library.
+  - `deleteMarketplaceItem`: Remove prompts.
 
-## Validation Plan
-1. Check the sidebar in the preview to ensure "Meu painel" is no longer visible.
-2. Verify that other items in the "Conta" group (Clientes, Planos) are still present.
+### 3. UI Modules Expansion
+- Create `src/modules/admin/components/admin-marketplace.tsx`: A grid to manage prompt templates.
+- Create `src/modules/admin/components/admin-audit-logs.tsx`: A detailed list of system changes.
+- Update `src/routes/admin.tsx`:
+  - Add new Tabs: "Marketplace" and "Suporte".
+  - Integrate the new components.
+  - Improve the "Sistema" tab with more granular toggles.
+
+### 4. Support & CRM
+- Add a "Suporte" tab in `src/routes/admin.tsx` showing users who requested contact (from the landing page/plans waiting list).
+
+## Verification Plan
+- Navigate to `/admin`.
+- Verify new tabs appear: Marketplace, Auditoria, Suporte.
+- Test adding a new prompt to the marketplace.
+- Verify that toggling a system setting generates an entry in the Audit Log.
+- Check if user status changes are correctly reflected in the Users & Credits list.
