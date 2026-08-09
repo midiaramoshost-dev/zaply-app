@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { LayoutDashboard, Users, CreditCard, Globe, Bot, ShieldCheck, Loader2, Save, Palette, Type, Search, UserPlus, HelpCircle, Tags, Activity } from "lucide-react";
+import { LayoutDashboard, Users, CreditCard, Globe, Bot, ShieldCheck, Loader2, Save, Palette, Type, Search, UserPlus, HelpCircle, Tags, Activity, BookOpen, MessageSquare } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { AdminOverview } from "@/modules/admin/components/admin-overview";
 import { AdminTenants } from "@/modules/admin/components/admin-tenants";
 import { AdminAiGateway } from "@/modules/admin/components/admin-ai-gateway";
 import { AdminUsersCredits } from "@/modules/admin/components/admin-users-credits";
+import { AdminMarketplace } from "@/modules/admin/components/admin-marketplace";
+import { AdminAuditLogs } from "@/modules/admin/components/admin-audit-logs";
 import { Suspense, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,14 +73,16 @@ function AdminMasterPage() {
       </header>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-surface/50 p-1 border border-border/50 h-12 inline-flex">
+        <TabsList className="bg-surface/50 p-1 border border-border/50 h-12 inline-flex overflow-x-auto">
           <TabsTrigger value="overview" className="gap-2 px-6"><LayoutDashboard className="size-4" /> Geral</TabsTrigger>
           <TabsTrigger value="tenants" className="gap-2 px-6"><Users className="size-4" /> Tenants</TabsTrigger>
           <TabsTrigger value="users" className="gap-2 px-6"><UserPlus className="size-4" /> Usuários & Créditos</TabsTrigger>
           <TabsTrigger value="ai" className="gap-2 px-6"><Bot className="size-4" /> IA Gateway</TabsTrigger>
+          <TabsTrigger value="marketplace" className="gap-2 px-6"><BookOpen className="size-4" /> Marketplace</TabsTrigger>
           <TabsTrigger value="finance" className="gap-2 px-6"><CreditCard className="size-4" /> Financeiro</TabsTrigger>
           <TabsTrigger value="site" className="gap-2 px-6"><Globe className="size-4" /> Gestão do Site</TabsTrigger>
-          <TabsTrigger value="settings" className="gap-2 px-6"><Activity className="size-4" /> Auditoria & Logs</TabsTrigger>
+          <TabsTrigger value="support" className="gap-2 px-6"><MessageSquare className="size-4" /> Suporte</TabsTrigger>
+          <TabsTrigger value="logs" className="gap-2 px-6"><Activity className="size-4" /> Auditoria</TabsTrigger>
           <TabsTrigger value="system" className="gap-2 px-6"><HelpCircle className="size-4" /> Sistema</TabsTrigger>
         </TabsList>
 
@@ -101,6 +105,10 @@ function AdminMasterPage() {
           
           <TabsContent value="ai" className="outline-none">
             <AdminAiGateway />
+          </TabsContent>
+          
+          <TabsContent value="marketplace" className="outline-none">
+            <AdminMarketplace />
           </TabsContent>
 
           <TabsContent value="finance" className="outline-none space-y-6">
@@ -220,40 +228,23 @@ function AdminMasterPage() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="settings" className="outline-none space-y-6">
+          <TabsContent value="support" className="outline-none space-y-6">
             <Card className="panel border-border/50 bg-surface/30">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Activity className="size-5 text-primary" /> Auditoria do Sistema</CardTitle>
-                <CardDescription>Ações recentes executadas na infraestrutura Master.</CardDescription>
+                <CardTitle className="flex items-center gap-2"><MessageSquare className="size-5 text-primary" /> Tickets de Suporte & Leads</CardTitle>
+                <CardDescription>Usuários solicitando contato ou upgrade de plano.</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {[
-                    { action: "Ajuste de Créditos", user: "Admin", target: "Mariana Costa", time: "Há 10 min", type: "success" },
-                    { action: "Atualização de Branding", user: "Admin", target: "Global", time: "Há 25 min", type: "info" },
-                    { action: "Suspensão de Tenant", user: "System", target: "Agência Demo", time: "Há 2 horas", type: "warning" },
-                    { action: "Novo Usuário", user: "Public", target: "Felipe Souza", time: "Há 5 horas", type: "info" },
-                  ].map((log, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface/20 border border-white/5 hover:bg-surface/30 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className={`size-2 rounded-full ${
-                          log.type === 'success' ? 'bg-emerald-500' : 
-                          log.type === 'warning' ? 'bg-amber-500' : 'bg-primary'
-                        }`} />
-                        <div>
-                          <p className="text-sm font-bold text-white">{log.action}</p>
-                          <p className="text-xs text-muted-foreground">{log.user} &rarr; {log.target}</p>
-                        </div>
-                      </div>
-                      <span className="text-[10px] text-muted-foreground font-mono">{log.time}</span>
-                    </div>
-                  ))}
-                  <div className="text-center pt-4">
-                    <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-primary">Ver log completo &rarr;</Button>
-                  </div>
+                <div className="text-center py-20 text-muted-foreground border-2 border-dashed border-border/20 rounded-2xl">
+                  <MessageSquare className="size-12 mx-auto mb-4 opacity-10" />
+                  Nenhuma solicitação de suporte pendente.
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="logs" className="outline-none space-y-6">
+            <AdminAuditLogs />
           </TabsContent>
 
           <TabsContent value="system" className="outline-none space-y-6">
