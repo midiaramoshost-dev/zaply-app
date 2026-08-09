@@ -207,8 +207,14 @@ function CreatePage() {
             <Button
               className="w-full"
               size="lg"
-              disabled={mutation.isPending || topic.trim().length < 3}
-              onClick={() => mutation.mutate()}
+              disabled={mutation.isPending || topic.trim().length < 2}
+              onClick={() => {
+                if (!topic.trim()) {
+                  toast.error("Por favor, descreva um tema ou objetivo.");
+                  return;
+                }
+                mutation.mutate();
+              }}
             >
               {mutation.isPending ? (
                 <Loader2 className="size-4 animate-spin" />
