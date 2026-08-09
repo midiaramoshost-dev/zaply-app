@@ -50,7 +50,7 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: LandingPage,
+  component: () => null,
 });
 
 const features = [

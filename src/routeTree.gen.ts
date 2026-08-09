@@ -18,6 +18,7 @@ import { Route as PainelRouteImport } from './routes/painel'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as N8nRouteImport } from './routes/n8n'
 import { Route as ImagensRouteImport } from './routes/imagens'
+import { Route as HomeBlankRouteImport } from './routes/home-blank'
 import { Route as CriarRouteImport } from './routes/criar'
 import { Route as ContaRouteImport } from './routes/conta'
 import { Route as ConfiguracaoApiRouteImport } from './routes/configuracao-api'
@@ -78,6 +79,11 @@ const N8nRoute = N8nRouteImport.update({
 const ImagensRoute = ImagensRouteImport.update({
   id: '/imagens',
   path: '/imagens',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeBlankRoute = HomeBlankRouteImport.update({
+  id: '/home-blank',
+  path: '/home-blank',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CriarRoute = CriarRouteImport.update({
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/configuracao-api': typeof ConfiguracaoApiRoute
   '/conta': typeof ContaRoute
   '/criar': typeof CriarRoute
+  '/home-blank': typeof HomeBlankRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
   '/onboarding': typeof OnboardingRoute
@@ -203,6 +210,7 @@ export interface FileRoutesByTo {
   '/configuracao-api': typeof ConfiguracaoApiRoute
   '/conta': typeof ContaRoute
   '/criar': typeof CriarRoute
+  '/home-blank': typeof HomeBlankRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
   '/onboarding': typeof OnboardingRoute
@@ -231,6 +239,7 @@ export interface FileRoutesById {
   '/configuracao-api': typeof ConfiguracaoApiRoute
   '/conta': typeof ContaRoute
   '/criar': typeof CriarRoute
+  '/home-blank': typeof HomeBlankRoute
   '/imagens': typeof ImagensRoute
   '/n8n': typeof N8nRoute
   '/onboarding': typeof OnboardingRoute
@@ -260,6 +269,7 @@ export interface FileRouteTypes {
     | '/configuracao-api'
     | '/conta'
     | '/criar'
+    | '/home-blank'
     | '/imagens'
     | '/n8n'
     | '/onboarding'
@@ -287,6 +297,7 @@ export interface FileRouteTypes {
     | '/configuracao-api'
     | '/conta'
     | '/criar'
+    | '/home-blank'
     | '/imagens'
     | '/n8n'
     | '/onboarding'
@@ -314,6 +325,7 @@ export interface FileRouteTypes {
     | '/configuracao-api'
     | '/conta'
     | '/criar'
+    | '/home-blank'
     | '/imagens'
     | '/n8n'
     | '/onboarding'
@@ -342,6 +354,7 @@ export interface RootRouteChildren {
   ConfiguracaoApiRoute: typeof ConfiguracaoApiRoute
   ContaRoute: typeof ContaRoute
   CriarRoute: typeof CriarRoute
+  HomeBlankRoute: typeof HomeBlankRoute
   ImagensRoute: typeof ImagensRoute
   N8nRoute: typeof N8nRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -418,6 +431,13 @@ declare module '@tanstack/react-router' {
       path: '/imagens'
       fullPath: '/imagens'
       preLoaderRoute: typeof ImagensRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home-blank': {
+      id: '/home-blank'
+      path: '/home-blank'
+      fullPath: '/home-blank'
+      preLoaderRoute: typeof HomeBlankRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/criar': {
@@ -550,6 +570,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfiguracaoApiRoute: ConfiguracaoApiRoute,
   ContaRoute: ContaRoute,
   CriarRoute: CriarRoute,
+  HomeBlankRoute: HomeBlankRoute,
   ImagensRoute: ImagensRoute,
   N8nRoute: N8nRoute,
   OnboardingRoute: OnboardingRoute,
