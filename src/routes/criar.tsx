@@ -207,7 +207,7 @@ function CreatePage() {
             <Button
               className="w-full"
               size="lg"
-              disabled={mutation.isPending || topic.trim().length < 3}
+              disabled={mutation.isPending || topic.trim().length < 2}
               onClick={() => {
                 if (!topic.trim()) {
                   toast.error("Por favor, descreva um tema ou objetivo.");
