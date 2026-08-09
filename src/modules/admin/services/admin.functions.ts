@@ -13,7 +13,6 @@ export const getAdminStats = createServerFn({ method: "GET" })
       .from("profiles")
       .select("*", { count: "exact", head: true });
 
-    // Mocking token usage and revenue for now
     return {
       tenants: tenantsCount || 0,
       users: usersCount || 0,
@@ -49,7 +48,17 @@ export const approveUser = createServerFn({ method: "POST" })
       .from("profiles")
       .update({ approved: true, is_active: true } as any)
       .eq("id", data.userId);
+    
     if (error) throw error;
+
+    // Log action
+    await supabaseAdmin.from("audit_logs").insert({
+      action: "Usuário Aprovado",
+      target_type: "user",
+      target_id: data.userId,
+      details: { timestamp: new Date().toISOString() }
+    });
+
     return { success: true };
   });
 
@@ -57,7 +66,7 @@ export const getUsersList = createServerFn({ method: "GET" })
   .handler(async () => {
     const { data, error } = await supabaseAdmin
       .from("profiles")
-      .select("*, user_credits(balance), tenants(name)")
+      .select("*, user_credits(balance, daily_post_limit, daily_media_limit, max_social_accounts), tenants(name)")
       .order("created_at", { ascending: false });
     
     if (error) throw error;
@@ -76,6 +85,13 @@ export const updateUserStatus = createServerFn({ method: "POST" })
       .eq("id", data.userId);
     
     if (error) throw error;
+
+    await supabaseAdmin.from("audit_logs").insert({
+      action: data.isActive ? "Usuário Ativado" : "Usuário Suspenso",
+      target_type: "user",
+      target_id: data.userId
+    });
+
     return { success: true };
   });
 
@@ -89,9 +105,8 @@ export const adjustCredits = createServerFn({ method: "POST" })
     reason: z.string().optional()
   }).parse(data))
   .handler(async ({ data }) => {
-    // If amount is provided, use RPC for balance
     if (data.amount !== undefined) {
-      const { data: result, error } = await supabaseAdmin
+      const { error } = await supabaseAdmin
         .rpc("grant_user_credits", {
           _user_id: data.userId,
           _amount: data.amount,
@@ -99,7 +114,6 @@ export const adjustCredits = createServerFn({ method: "POST" })
         });
       
       if (error) {
-        // Fallback: if user_credits record doesn't exist, create it
         const { data: profile } = await supabaseAdmin.from("profiles").select("tenant_id").eq("id", data.userId).single();
         if (profile) {
             await supabaseAdmin.from("user_credits").upsert({
@@ -111,7 +125,6 @@ export const adjustCredits = createServerFn({ method: "POST" })
       }
     }
 
-    // Update limits if provided
     const updates: any = {};
     if (data.dailyPostLimit !== undefined) updates.daily_post_limit = data.dailyPostLimit;
     if (data.dailyMediaLimit !== undefined) updates.daily_media_limit = data.dailyMediaLimit;
@@ -126,5 +139,70 @@ export const adjustCredits = createServerFn({ method: "POST" })
       if (error) throw error;
     }
 
+    await supabaseAdmin.from("audit_logs").insert({
+      action: "Ajuste de Créditos/Quotas",
+      target_type: "user",
+      target_id: data.userId,
+      details: { ...updates, amount: data.amount }
+    });
+
+    return { success: true };
+  });
+
+export const getAuditLogs = createServerFn({ method: "GET" })
+  .handler(async () => {
+    const { data, error } = await supabaseAdmin
+      .from("audit_logs")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    
+    if (error) throw error;
+    return data || [];
+  });
+
+export const getMarketplaceItems = createServerFn({ method: "GET" })
+  .handler(async () => {
+    const { data, error } = await supabaseAdmin
+      .from("prompt_marketplace")
+      .select("*")
+      .order("created_at", { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
+  });
+
+export const createMarketplaceItem = createServerFn({ method: "POST" })
+  .inputValidator((data) => z.object({
+    title: z.string(),
+    description: z.string(),
+    prompt_text: z.string(),
+    category: z.string()
+  }).parse(data))
+  .handler(async ({ data }) => {
+    const { error } = await supabaseAdmin
+      .from("prompt_marketplace")
+      .insert(data);
+    
+    if (error) throw error;
+
+    await supabaseAdmin.from("audit_logs").insert({
+      action: "Novo Prompt Marketplace",
+      target_type: "platform_setting",
+      details: { title: data.title }
+    });
+
+    return { success: true };
+  });
+
+export const deleteMarketplaceItem = createServerFn({ method: "POST" })
+  .inputValidator((data) => z.object({ id: z.string() }).parse(data))
+  .handler(async ({ data }) => {
+    const { error } = await supabaseAdmin
+      .from("prompt_marketplace")
+      .delete()
+      .eq("id", data.id);
+    
+    if (error) throw error;
     return { success: true };
   });
