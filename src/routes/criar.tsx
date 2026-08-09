@@ -208,7 +208,13 @@ function CreatePage() {
               className="w-full"
               size="lg"
               disabled={mutation.isPending || topic.trim().length < 3}
-              onClick={() => mutation.mutate()}
+              onClick={() => {
+                if (!topic.trim()) {
+                  toast.error("Por favor, descreva um tema ou objetivo.");
+                  return;
+                }
+                mutation.mutate();
+              }}
             >
               {mutation.isPending ? (
                 <Loader2 className="size-4 animate-spin" />
