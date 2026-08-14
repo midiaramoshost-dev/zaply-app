@@ -21,7 +21,7 @@ import { usePosts } from "@/lib/posts-store";
 import {
   N8N_STEPS,
   buildN8nPayload,
-  sendToN8n,
+  
   useN8n,
 } from "@/lib/n8n-store";
 
