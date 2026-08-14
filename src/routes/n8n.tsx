@@ -257,11 +257,41 @@ function N8nPage() {
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                O envio é feito em modo <code>no-cors</code>: confirme o recebimento no histórico de
-                execuções do n8n.
+                O envio passa pelo servidor com a chave de API: você recebe a resposta real do n8n.
               </p>
             </CardContent>
           </Card>
+
+          <Card className="panel">
+            <CardHeader>
+              <CardTitle className="text-base">Automações na sua conta</CardTitle>
+              <CardDescription>
+                Ative ou pause os workflows diretamente por aqui.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {workflows.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  Conecte sua instância para listar as automações.
+                </p>
+              ) : (
+                workflows.map((w) => (
+                  <div
+                    key={w.id}
+                    className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-card/40 px-3 py-2"
+                  >
+                    <span className="min-w-0 flex-1 truncate text-sm">{w.name}</span>
+                    <Switch
+                      checked={w.active}
+                      onCheckedChange={(v) => onToggleFlow(w.id, v)}
+                      aria-label={`Ativar ${w.name}`}
+                    />
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+
 
           <Card className="panel">
             <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
