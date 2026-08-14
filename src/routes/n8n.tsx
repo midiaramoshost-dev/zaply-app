@@ -50,6 +50,51 @@ function N8nPage() {
   const { posts } = usePosts();
   const { config, update, toggleStep } = useN8n();
   const [sending, setSending] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [connected, setConnected] = useState<boolean | null>(null);
+  const [workflows, setWorkflows] = useState<
+    { id: string; name: string; active: boolean; updatedAt: string }[]
+  >([]);
+
+  const testConn = useServerFn(testN8nConnection);
+  const loadFlows = useServerFn(listN8nWorkflows);
+  const toggleFlow = useServerFn(setN8nWorkflowActive);
+  const fireWebhook = useServerFn(triggerN8nWebhook);
+
+  const connect = async () => {
+    if (!config.baseUrl) {
+      toast.error("Informe a URL da sua instância n8n.");
+      return;
+    }
+    setChecking(true);
+    try {
+      const res = await testConn({ data: { baseUrl: config.baseUrl } });
+      setConnected(res.ok);
+      if (!res.ok) {
+        toast.error(res.error ?? "Falha na conexão.");
+        setWorkflows([]);
+        return;
+      }
+      const list = await loadFlows({ data: { baseUrl: config.baseUrl } });
+      setWorkflows(list);
+      toast.success(`Conectado ao n8n — ${list.length} automação(ões) encontradas.`);
+    } catch (e) {
+      setConnected(false);
+      toast.error(e instanceof Error ? e.message : "Falha na conexão.");
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  const onToggleFlow = async (id: string, active: boolean) => {
+    try {
+      await toggleFlow({ data: { baseUrl: config.baseUrl, workflowId: id, active } });
+      setWorkflows((prev) => prev.map((w) => (w.id === id ? { ...w, active } : w)));
+      toast.success(active ? "Automação ativada." : "Automação pausada.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Não foi possível alterar a automação.");
+    }
+  };
 
   const queue = useMemo(
     () =>
