@@ -199,10 +199,35 @@ function N8nPage() {
                 <Webhook className="size-4 text-primary" /> Conexão
               </CardTitle>
               <CardDescription>
-                No n8n, crie um Zap/Workflow com o nó <strong>Webhook</strong> e cole a URL abaixo.
+                A chave de API já está guardada com segurança no servidor. Informe o endereço da sua
+                instância para conectar.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="base">URL da instância n8n</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="base"
+                    placeholder="https://seu-n8n.app"
+                    value={config.baseUrl}
+                    onChange={(e) => update({ baseUrl: e.target.value })}
+                  />
+                  <Button onClick={connect} disabled={checking} variant="secondary">
+                    {checking ? (
+                      <RefreshCw className="size-4 animate-spin" />
+                    ) : (
+                      <PlugZap className="size-4" />
+                    )}
+                    Conectar
+                  </Button>
+                </div>
+                {connected !== null && (
+                  <Badge variant={connected ? "secondary" : "outline"}>
+                    {connected ? "Conectado" : "Sem conexão"}
+                  </Badge>
+                )}
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="hook">URL do webhook</Label>
                 <Input
