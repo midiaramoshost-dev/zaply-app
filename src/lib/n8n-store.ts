@@ -34,12 +34,14 @@ export const N8N_STEPS: { id: N8nStepId; label: string; hint: string }[] = [
 
 export type N8nConfig = {
   webhookUrl: string;
+  baseUrl: string;
   cron: string;
   steps: Record<N8nStepId, boolean>;
 };
 
 const DEFAULT: N8nConfig = {
   webhookUrl: "",
+  baseUrl: "",
   cron: "0 9,14,18 * * 1,3,5",
   steps: N8N_STEPS.reduce(
     (acc, s) => ({ ...acc, [s.id]: true }),
