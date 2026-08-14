@@ -125,12 +125,23 @@ function N8nPage() {
     }
     setSending(true);
     try {
+      let ok = 0;
+      let lastError = "";
       for (const post of batch) {
-        await sendToN8n(config.webhookUrl, buildN8nPayload(post, config.steps));
+        const res = await fireWebhook({
+          data: {
+            webhookUrl: config.webhookUrl,
+            payload: buildN8nPayload(post, config.steps),
+          },
+        });
+        if (res.ok) ok += 1;
+        else lastError = `${res.status || "sem resposta"} — ${res.response}`;
       }
-      toast.success(
-        `${batch.length} post(s) enviados ao n8n. Confira o histórico de execuções do fluxo.`,
-      );
+      if (ok === batch.length) {
+        toast.success(`${ok} post(s) recebidos pelo n8n com sucesso.`);
+      } else {
+        toast.error(`${ok}/${batch.length} enviados. Último erro: ${lastError}`);
+      }
     } catch {
       toast.error("Falha ao chamar o webhook.");
     } finally {
