@@ -1,7 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowDown, Copy, Send, Webhook, Workflow } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { ArrowDown, Copy, PlugZap, RefreshCw, Send, Webhook, Workflow } from "lucide-react";
 import { toast } from "sonner";
+
+import {
+  listN8nWorkflows,
+  setN8nWorkflowActive,
+  testN8nConnection,
+  triggerN8nWebhook,
+} from "@/lib/n8n.functions";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,7 +21,7 @@ import { usePosts } from "@/lib/posts-store";
 import {
   N8N_STEPS,
   buildN8nPayload,
-  sendToN8n,
+  
   useN8n,
 } from "@/lib/n8n-store";
 
@@ -42,6 +50,51 @@ function N8nPage() {
   const { posts } = usePosts();
   const { config, update, toggleStep } = useN8n();
   const [sending, setSending] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [connected, setConnected] = useState<boolean | null>(null);
+  const [workflows, setWorkflows] = useState<
+    { id: string; name: string; active: boolean; updatedAt: string }[]
+  >([]);
+
+  const testConn = useServerFn(testN8nConnection);
+  const loadFlows = useServerFn(listN8nWorkflows);
+  const toggleFlow = useServerFn(setN8nWorkflowActive);
+  const fireWebhook = useServerFn(triggerN8nWebhook);
+
+  const connect = async () => {
+    if (!config.baseUrl) {
+      toast.error("Informe a URL da sua instância n8n.");
+      return;
+    }
+    setChecking(true);
+    try {
+      const res = await testConn({ data: { baseUrl: config.baseUrl } });
+      setConnected(res.ok);
+      if (!res.ok) {
+        toast.error(res.error ?? "Falha na conexão.");
+        setWorkflows([]);
+        return;
+      }
+      const list = await loadFlows({ data: { baseUrl: config.baseUrl } });
+      setWorkflows(list);
+      toast.success(`Conectado ao n8n — ${list.length} automação(ões) encontradas.`);
+    } catch (e) {
+      setConnected(false);
+      toast.error(e instanceof Error ? e.message : "Falha na conexão.");
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  const onToggleFlow = async (id: string, active: boolean) => {
+    try {
+      await toggleFlow({ data: { baseUrl: config.baseUrl, workflowId: id, active } });
+      setWorkflows((prev) => prev.map((w) => (w.id === id ? { ...w, active } : w)));
+      toast.success(active ? "Automação ativada." : "Automação pausada.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Não foi possível alterar a automação.");
+    }
+  };
 
   const queue = useMemo(
     () =>
@@ -72,12 +125,23 @@ function N8nPage() {
     }
     setSending(true);
     try {
+      let ok = 0;
+      let lastError = "";
       for (const post of batch) {
-        await sendToN8n(config.webhookUrl, buildN8nPayload(post, config.steps));
+        const res = await fireWebhook({
+          data: {
+            webhookUrl: config.webhookUrl,
+            payload: buildN8nPayload(post, config.steps),
+          },
+        });
+        if (res.ok) ok += 1;
+        else lastError = `${res.status || "sem resposta"} — ${res.response}`;
       }
-      toast.success(
-        `${batch.length} post(s) enviados ao n8n. Confira o histórico de execuções do fluxo.`,
-      );
+      if (ok === batch.length) {
+        toast.success(`${ok} post(s) recebidos pelo n8n com sucesso.`);
+      } else {
+        toast.error(`${ok}/${batch.length} enviados. Último erro: ${lastError}`);
+      }
     } catch {
       toast.error("Falha ao chamar o webhook.");
     } finally {
@@ -135,10 +199,35 @@ function N8nPage() {
                 <Webhook className="size-4 text-primary" /> Conexão
               </CardTitle>
               <CardDescription>
-                No n8n, crie um Zap/Workflow com o nó <strong>Webhook</strong> e cole a URL abaixo.
+                A chave de API já está guardada com segurança no servidor. Informe o endereço da sua
+                instância para conectar.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="base">URL da instância n8n</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="base"
+                    placeholder="https://seu-n8n.app"
+                    value={config.baseUrl}
+                    onChange={(e) => update({ baseUrl: e.target.value })}
+                  />
+                  <Button onClick={connect} disabled={checking} variant="secondary">
+                    {checking ? (
+                      <RefreshCw className="size-4 animate-spin" />
+                    ) : (
+                      <PlugZap className="size-4" />
+                    )}
+                    Conectar
+                  </Button>
+                </div>
+                {connected !== null && (
+                  <Badge variant={connected ? "secondary" : "outline"}>
+                    {connected ? "Conectado" : "Sem conexão"}
+                  </Badge>
+                )}
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="hook">URL do webhook</Label>
                 <Input
@@ -168,11 +257,41 @@ function N8nPage() {
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                O envio é feito em modo <code>no-cors</code>: confirme o recebimento no histórico de
-                execuções do n8n.
+                O envio passa pelo servidor com a chave de API: você recebe a resposta real do n8n.
               </p>
             </CardContent>
           </Card>
+
+          <Card className="panel">
+            <CardHeader>
+              <CardTitle className="text-base">Automações na sua conta</CardTitle>
+              <CardDescription>
+                Ative ou pause os workflows diretamente por aqui.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {workflows.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  Conecte sua instância para listar as automações.
+                </p>
+              ) : (
+                workflows.map((w) => (
+                  <div
+                    key={w.id}
+                    className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-card/40 px-3 py-2"
+                  >
+                    <span className="min-w-0 flex-1 truncate text-sm">{w.name}</span>
+                    <Switch
+                      checked={w.active}
+                      onCheckedChange={(v) => onToggleFlow(w.id, v)}
+                      aria-label={`Ativar ${w.name}`}
+                    />
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+
 
           <Card className="panel">
             <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
